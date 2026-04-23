@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<HBox prefHeight="750.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pantallas.VentaController">
+    <children>
+        <VBox prefWidth="240.0" styleClass="sidebar">
+            <children>
+                <VBox alignment="CENTER" prefHeight="150.0">
+                    <children>
+                        <Label styleClass="logo-text" text="Fabrica de Queso" />
+                        <Label style="-fx-text-fill: #808e9b; -fx-font-size: 10;" text="SISTEMA INTEGRADO" />
+                    </children>
+                </VBox>
+                <Button fx:id="btnNavVentas" onAction="#mostrarVentas" prefWidth="240" styleClass="nav-button-active" text="Registro de Ventas" />
+                <Button fx:id="btnNavEnvios" onAction="#mostrarEnvios" prefWidth="240" styleClass="nav-button" text="Gestión de Envíos" />
+                <Region VBox.vgrow="ALWAYS" />
+            </children>
+        </VBox>
+
+        <StackPane fx:id="contentArea" HBox.hgrow="ALWAYS">
+            <children>
+
+                <VBox fx:id="viewVentas" styleClass="main-content">
+                    <children>
+                        <Label styleClass="header-title" text="Nueva Transacción de Venta" />
+                        <GridPane hgap="20.0" style="-fx-padding: 30;" vgap="15.0">
+                            <children>
+                                <VBox spacing="5.0" GridPane.rowIndex="0">
+                                    <children>
+                                        <Label styleClass="form-label" text="CLIENTE" />
+                                        <ComboBox fx:id="cbCliente" prefHeight="40.0" prefWidth="400.0" promptText="Seleccionar..." styleClass="custom-combo" />
+                                    </children>
+                                </VBox>
+                                <VBox spacing="5.0" GridPane.rowIndex="1">
+                                    <children>
+                                        <Label styleClass="form-label" text="PRODUCTO, PESO E IMPORTE" />
+                                        <HBox spacing="10.0">
+                                            <children>
+                                                <ComboBox fx:id="cbProducto" prefHeight="40.0" prefWidth="150.0" promptText="Queso..." styleClass="custom-combo" />
+                                                <TextField fx:id="txtLibras" onKeyReleased="#calcularItem" prefWidth="60.0" promptText="Lbs" styleClass="custom-text-field" />
+                                                <TextField fx:id="txtPrecioUnitario" onKeyReleased="#calcularItem" prefWidth="70.0" promptText="Precio" styleClass="custom-text-field" />
+                                                <TextField fx:id="txtImporteTotal" editable="false" prefWidth="90.0" style="-fx-background-color: #dfe4ea;" styleClass="custom-text-field" />
+                                            </children>
+                                        </HBox>
+                                    </children>
+                                </VBox>
+                                <HBox alignment="BOTTOM_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                    <children>
+                                        <Button onAction="#calcularItem" prefHeight="40.0" styleClass="calc-button" text="CALCULAR" />
+                                        <Button onAction="#añadirItem" prefHeight="40.0" styleClass="add-button" text="+ AÑADIR ITEM" />
+                                        <Button onAction="#limpiarCampos" prefHeight="40.0" style="-fx-background-color: #7f8c8d; -fx-text-fill: white;" text="LIMPIAR" />
+                                        <Button onAction="#borrarItem" prefHeight="40.0" style="-fx-background-color: #ff4757; -fx-text-fill: white;" text="BORRAR ITEM" />
+                                    </children>
+                                </HBox>
+                            </children>
+                        </GridPane>
+                        <TableView fx:id="tablaVentas" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="colDesc" prefWidth="300" text="Descripción" />
+                                <TableColumn fx:id="colLbs" prefWidth="100" text="Libras" />
+                                <TableColumn fx:id="colPre" prefWidth="120" text="Precio Unit." />
+                                <TableColumn fx:id="colSub" prefWidth="120" text="Subtotal" />
+                            </columns>
+                        </TableView>
+                        <HBox alignment="CENTER_RIGHT" spacing="20.0" style="-fx-padding: 20;">
+                            <children>
+                                <VBox alignment="CENTER_RIGHT">
+                                    <Label styleClass="total-label" text="TOTAL GENERAL" />
+                                    <Label fx:id="lblTotal" styleClass="total-amount" text="RD$ 0.00" />
+                                </VBox>
+                                <Button onAction="#irACobro" prefHeight="50.0" prefWidth="200.0" styleClass="save-button" text="CONFIRMAR VENTA" />
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+
+                <VBox fx:id="viewEnvios" managed="false" visible="false" styleClass="main-content">
+                    <children>
+                        <Label styleClass="header-title" text="Panel de Control de Envíos" />
+                        <HBox spacing="15.0" style="-fx-padding: 0 30 20 30;">
+                            <children>
+                                <TextField prefHeight="40.0" prefWidth="350.0" promptText="Buscar por ID..." styleClass="custom-text-field" />
+                                <Button styleClass="save-button" text="BUSCAR" />
+                            </children>
+                        </HBox>
+                        <TableView fx:id="tablaEnvios" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn prefWidth="80" text="ID Orden" />
+                                <TableColumn prefWidth="180" text="Cliente" />
+                                <TableColumn prefWidth="110" text="Estatus" />
+                            </columns>
+                            <VBox.margin><Insets left="30.0" right="30.0" /></VBox.margin>
+                        </TableView>
+                        <HBox alignment="CENTER_RIGHT" spacing="15.0" style="-fx-background-color: #ecf0f1; -fx-padding: 20;">
+                            <Button styleClass="discard-button" text="GENERAR RUTA" />
+                            <Button styleClass="save-button" text="MARCAR ENTREGADO" />
+                        </HBox>
+                    </children>
+                </VBox>
+
+                <VBox fx:id="viewCobro" alignment="CENTER" managed="false" visible="false" spacing="20.0" styleClass="main-content">
+                    <children>
+                        <VBox maxWidth="450.0" spacing="20.0" style="-fx-background-color: white; -fx-padding: 35; -fx-background-radius: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 15, 0, 0, 8);">
+                            <children>
+                                <Label styleClass="header-title" text="Finalizar Operación" />
+                                <HBox alignment="CENTER_LEFT" spacing="10.0" style="-fx-background-color: #f8f9fa; -fx-padding: 10;">
+                                    <Label style="-fx-font-weight: bold;" text="TOTAL:" />
+                                    <Label fx:id="lblMontoCobro" style="-fx-font-size: 18; -fx-text-fill: #27ae60; -fx-font-weight: bold;" text="RD$ 0.00" />
+                                </HBox>
+                                <ComboBox fx:id="comboMetodoPago" prefHeight="45.0" prefWidth="450.0" promptText="Seleccione método..." styleClass="custom-combo" />
+                                <TextField fx:id="txtEfectivoRecibido" prefHeight="45.0" promptText="0.00" styleClass="custom-text-field" />
+                                <Button onAction="#finalizarPago" maxWidth="Infinity" prefHeight="55.0" styleClass="save-button" text="CONFIRMAR Y GENERAR RECIBO" />
+                                <Button onAction="#mostrarVentas" styleClass="discard-button" text="Cancelar y Volver" />
+                            </children>
+                        </VBox>
+                    </children>
+                </VBox>
+
+            </children>
+        </StackPane>
+    </children>
+    <stylesheets>
+        <URL value="@style.css" />
+    </stylesheets>
+</HBox>

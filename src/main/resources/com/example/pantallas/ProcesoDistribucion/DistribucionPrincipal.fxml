@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import java.net.URL?>
+
+<HBox prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pantallas.ProcesoDeDistribucion.DistribucionController">
+    <children>
+        <VBox prefWidth="240.0" styleClass="sidebar">
+            <children>
+                <Label style="-fx-padding: 20;" styleClass="logo-text" text="Fábrica de Queso" />
+                <Button fx:id="btnNavDespacho" onAction="#mostrarDespacho" prefWidth="240" styleClass="nav-button-active" text="1. Despacho / Rutas" />
+                <Button fx:id="btnNavEntrega" onAction="#mostrarEntrega" prefWidth="240" styleClass="nav-button" text="2. Confirmar Entrega" />
+                <Button fx:id="btnNavVehiculos" onAction="#mostrarVehiculos" prefWidth="240" styleClass="nav-button" text="3. Vehículos" />
+                <Button fx:id="btnNavInsumos" onAction="#mostrarInsumos" prefWidth="240" styleClass="nav-button" text="4. Proveedores / Quesos" />
+                <Separator style="-fx-padding: 10;" />
+                <Button onAction="#irAMenuPrincipal" prefWidth="240" styleClass="nav-button" text="← Menú Principal" />
+            </children>
+        </VBox>
+
+        <StackPane fx:id="contentArea" HBox.hgrow="ALWAYS">
+            <children>
+                <VBox fx:id="paneDespacho" styleClass="main-content">
+                    <children>
+                        <Label styleClass="header-title" text="Despacho de Mercancía" />
+                        <GridPane hgap="20.0" style="-fx-padding: 30;" vgap="15.0">
+                            <children>
+                                <VBox spacing="5.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                                    <children>
+                                        <Label styleClass="form-label" text="ORDEN DE VENTA / CLIENTE" />
+                                        <ComboBox fx:id="cbPedido" prefHeight="40.0" prefWidth="350.0" promptText="Seleccionar Pedido..." />
+                                    </children>
+                                </VBox>
+                                <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                                    <children>
+                                        <Label styleClass="form-label" text="VEHÍCULO / RUTA" />
+                                        <ComboBox fx:id="cbVehiculo" prefHeight="40.0" prefWidth="350.0" promptText="Asignar Transporte..." />
+                                    </children>
+                                </VBox>
+                                <HBox spacing="10" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                                    <children>
+                                        <Button onAction="#registrarDespacho" style="-fx-background-color: #27ae60; -fx-text-fill: white;" text="GUARDAR" />
+                                        <Button onAction="#actualizarDespacho" style="-fx-background-color: #2980b9; -fx-text-fill: white;" text="ACTUALIZAR" />
+                                        <Button onAction="#borrarDespacho" style="-fx-background-color: #e74c3c; -fx-text-fill: white;" text="BORRAR" />
+                                        <Button onAction="#limpiarDespacho" style="-fx-background-color: #95a5a6; -fx-text-fill: white;" text="LIMPIAR" />
+                                    </children>
+                                </HBox>
+                            </children>
+                        </GridPane>
+                        <TableView fx:id="tablaDespachos" VBox.vgrow="ALWAYS" style="-fx-margin: 0 30;">
+                            <columns>
+                                <TableColumn fx:id="colIdDespacho" prefWidth="100" text="ID" />
+                                <TableColumn fx:id="colPedidoDespacho" prefWidth="200" text="Pedido" />
+                                <TableColumn fx:id="colVehiculoDespacho" prefWidth="150" text="Vehículo" />
+                                <TableColumn fx:id="colEstadoDespacho" prefWidth="150" text="Estado" />
+                            </columns>
+                        </TableView>
+                    </children>
+                </VBox>
+
+                <VBox fx:id="paneEntrega" managed="false" visible="false" styleClass="main-content">
+                    <children>
+                        <Label styleClass="header-title" text="Liquidación de Entregas" />
+                        <VBox spacing="15" style="-fx-padding: 30;">
+                            <children>
+                                <Label text="Seleccione el Despacho que llegó a su destino:" />
+                                <ComboBox fx:id="cbDespachosActivos" prefWidth="400.0" promptText="Cargando despachos..." />
+                                <CheckBox fx:id="chkRecibido" text="Cliente firmó conformidad" />
+                                <TextArea fx:id="txtNovedades" prefHeight="100.0" promptText="Novedades (ej. Devoluciones, mal estado)..." />
+                                <Button onAction="#finalizarEntrega" style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-padding: 10 20;" text="CERRAR ENTREGA FINALIZADA" />
+                            </children>
+                        </VBox>
+                    </children>
+                </VBox>
+
+                <VBox fx:id="paneVehiculos" managed="false" visible="false" styleClass="main-content">
+                    <children>
+                        <Label styleClass="header-title" text="Flota de Transporte" />
+                        <GridPane hgap="10" vgap="10" style="-fx-padding: 20 30;">
+                            <children>
+                                <TextField fx:id="txtPlaca" promptText="Placa" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                                <TextField fx:id="txtChofer" promptText="Chofer" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                                <TextField fx:id="txtMarca" promptText="Marca" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                                <TextField fx:id="txtModelo" promptText="Modelo" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                                <HBox spacing="10" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="2">
+                                    <children>
+                                        <Button onAction="#registrarVehiculo" style="-fx-background-color: #27ae60; -fx-text-fill: white;" text="GUARDAR" />
+                                        <Button onAction="#actualizarVehiculo" style="-fx-background-color: #2980b9; -fx-text-fill: white;" text="ACTUALIZAR" />
+                                        <Button onAction="#borrarVehiculo" style="-fx-background-color: #e74c3c; -fx-text-fill: white;" text="BORRAR" />
+                                        <Button onAction="#limpiarVehiculo" style="-fx-background-color: #95a5a6; -fx-text-fill: white;" text="LIMPIAR" />
+                                    </children>
+                                </HBox>
+                            </children>
+                        </GridPane>
+                        <TableView fx:id="tablaVehiculos" VBox.vgrow="ALWAYS" style="-fx-margin: 0 30;">
+                            <columns>
+                                <TableColumn fx:id="colPlaca" prefWidth="100" text="Placa" />
+                                <TableColumn fx:id="colMarca" prefWidth="120" text="Marca" />
+                                <TableColumn fx:id="colModelo" prefWidth="120" text="Modelo" />
+                                <TableColumn fx:id="colChofer" prefWidth="180" text="Chofer" />
+                                <TableColumn fx:id="colEstadoVehiculo" prefWidth="120" text="Estado" />
+                            </columns>
+                        </TableView>
+                    </children>
+                </VBox>
+
+                <VBox fx:id="paneInsumos" managed="false" visible="false" styleClass="main-content">
+                    <children>
+                        <Label styleClass="header-title" text="Gestión de Insumos y Productos" />
+                        <HBox spacing="20" style="-fx-padding: 20;">
+                            <children>
+                                <VBox spacing="10" prefWidth="450">
+                                    <Label text="Proveedores" style="-fx-font-weight: bold;"/>
+                                    <TextField fx:id="txtProvNombre" promptText="Nombre del Proveedor" />
+                                    <TextField fx:id="txtProvTelefono" promptText="Teléfono" />
+                                    <HBox spacing="5">
+                                        <Button onAction="#agregarProveedor" text="Añadir Prov." />
+                                        <Button onAction="#borrarProveedor" text="Borrar Prov." style="-fx-background-color: #e74c3c; -fx-text-fill: white;"/>
+                                    </HBox>
+                                    <TableView fx:id="tablaProveedores" prefHeight="250">
+                                        <columns>
+                                            <TableColumn fx:id="colProvNombre" text="Nombre" prefWidth="150"/>
+                                            <TableColumn fx:id="colProvTel" text="Teléfono" prefWidth="150"/>
+                                        </columns>
+                                    </TableView>
+                                </VBox>
+                                <VBox spacing="10" prefWidth="450">
+                                    <Label text="Tipos de Quesos" style="-fx-font-weight: bold;"/>
+                                    <TextField fx:id="txtQuesoNombre" promptText="Nombre del Queso" />
+                                    <TextField fx:id="txtQuesoPrecio" promptText="Precio Unitario" />
+                                    <HBox spacing="5">
+                                        <Button onAction="#agregarQueso" text="Añadir Queso" />
+                                        <Button onAction="#borrarQueso" text="Borrar Queso" style="-fx-background-color: #e74c3c; -fx-text-fill: white;"/>
+                                    </HBox>
+                                    <TableView fx:id="tablaQuesos" prefHeight="250">
+                                        <columns>
+                                            <TableColumn fx:id="colQuesoNombre" text="Variedad" prefWidth="150"/>
+                                            <TableColumn fx:id="colQuesoPrecio" text="Precio" prefWidth="100"/>
+                                        </columns>
+                                    </TableView>
+                                </VBox>
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+            </children>
+        </StackPane>
+    </children>
+    <stylesheets>
+        <URL value="@../style.css" />
+    </stylesheets>
+</HBox>

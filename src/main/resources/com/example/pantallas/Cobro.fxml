@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="CENTER" prefHeight="600.0" prefWidth="655.0" spacing="20.0" styleClass="main-content" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pantallas.VentaController">
+    <children>
+        <Label styleClass="header-title" text="Finalizar Operación" />
+
+        <VBox maxWidth="450.0" spacing="20.0" style="-fx-background-color: white; -fx-padding: 35; -fx-background-radius: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 15, 0, 0, 8);">
+            <children>
+                <HBox alignment="CENTER_LEFT" spacing="10.0" style="-fx-background-color: #f8f9fa; -fx-padding: 10; -fx-background-radius: 10; -fx-border-color: #e9ecef; -fx-border-radius: 10;">
+                    <children>
+                        <Label styleClass="form-label" text="VENTA ID:" style="-fx-font-weight: bold;" />
+                        <Label fx:id="lblIdVenta" style="-fx-font-family: 'Monospaced'; -fx-font-size: 16; -fx-text-fill: #e67e22;" text="#V-000001" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Label styleClass="form-label" text="TOTAL:" />
+                        <Label fx:id="lblMontoCobro" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #27ae60;" text="RD$ 0.00" />
+                    </children>
+                </HBox>
+
+                <Separator prefWidth="200.0" />
+
+                <VBox spacing="10.0">
+                    <Label styleClass="form-label" text="MÉTODO DE PAGO" />
+                    <ComboBox fx:id="comboMetodoPago" prefHeight="45.0" prefWidth="450.0" promptText="Seleccione método..." styleClass="custom-combo" />
+                </VBox>
+
+                <VBox spacing="10.0">
+                    <Label styleClass="form-label" text="MONTO RECIBIDO (EFECTIVO)" />
+                    <TextField fx:id="txtEfectivoRecibido" prefHeight="45.0" promptText="0.00" styleClass="custom-text-field" />
+                </VBox>
+
+                <VBox alignment="CENTER" spacing="10.0">
+                    <children>
+                        <Button maxWidth="Infinity" onAction="#finalizarPago" prefHeight="55.0" styleClass="save-button" text="CONFIRMAR Y GENERAR RECIBO" />
+                        <Button onAction="#irAVentas" styleClass="discard-button" text="Cancelar y Volver" />
+                    </children>
+                    <padding>
+                        <Insets top="10.0" />
+                    </padding>
+                </VBox>
+            </children>
+        </VBox>
+    </children>
+    <stylesheets>
+        <URL value="@style.css" />
+    </stylesheets>
+</VBox>

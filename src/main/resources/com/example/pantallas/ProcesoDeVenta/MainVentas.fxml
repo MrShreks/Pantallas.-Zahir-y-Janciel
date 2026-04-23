@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<HBox fx:id="rootPane" prefHeight="750.0" prefWidth="1250.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pantallas.ProcesoDeVenta.VentaController">
+    <children>
+        <VBox prefWidth="240.0" style="-fx-background-color: #1e272e;">
+            <children>
+                <VBox alignment="CENTER" prefHeight="150.0">
+                    <children>
+                        <Label text="🧀 Fabrica de queso" textFill="WHITE"><font><Font name="System Bold" size="22.0" /></font></Label>
+                        <Label text="Gestión de Fábrica" textFill="#808e9b" />
+                    </children>
+                </VBox>
+                <Button onAction="#mostrarVentas" prefHeight="55.0" prefWidth="240" style="-fx-background-color: #34495e; -fx-text-fill: white; -fx-alignment: CENTER_LEFT; -fx-padding: 0 25; -fx-cursor: hand;" text="🛒 Panel de Ventas" />
+                <Button onAction="#mostrarEnvios" prefHeight="55.0" prefWidth="240" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-alignment: CENTER_LEFT; -fx-padding: 0 25; -fx-cursor: hand;" text="🚚 Control de Envíos" />
+
+                <Region VBox.vgrow="ALWAYS" />
+
+                <Button onAction="#volverAlMenu" prefHeight="55.0" prefWidth="240" style="-fx-background-color: #c0392b; -fx-text-fill: white; -fx-alignment: CENTER_LEFT; -fx-padding: 0 25; -fx-cursor: hand;" text="🏠 Volver al Menú" />
+            </children>
+        </VBox>
+
+        <StackPane fx:id="contentArea" HBox.hgrow="ALWAYS">
+            <children>
+                <VBox fx:id="viewVentas" spacing="20.0" style="-fx-padding: 30; -fx-background-color: #f5f6fa;">
+                    <children>
+                        <Label text="Registro de Facturación"><font><Font name="System Bold" size="28.0" /></font></Label>
+                        <GridPane hgap="20.0" vgap="15.0" style="-fx-background-color: white; -fx-padding: 25; -fx-background-radius: 15;">
+                            <children>
+                                <Label text="CLIENTE" style="-fx-font-weight: bold;"/>
+                                <HBox spacing="10" GridPane.columnIndex="1">
+                                    <ComboBox fx:id="cbCliente" prefWidth="400.0" promptText="Seleccionar cliente..." />
+                                    <Button onAction="#mostrarNuevoCliente" style="-fx-background-color: #2ecc71; -fx-text-fill: white;" text="+" />
+                                </HBox>
+                                <Label text="PRODUCTO" GridPane.rowIndex="1" style="-fx-font-weight: bold;"/>
+                                <HBox spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                    <ComboBox fx:id="cbProducto" onAction="#cargarPrecioSugerido" prefWidth="200.0" promptText="Queso..." />
+                                    <TextField fx:id="txtLibras" onKeyReleased="#calcularItem" prefWidth="90.0" promptText="Lbs" />
+                                    <TextField fx:id="txtPrecioUnitario" onKeyReleased="#calcularItem" prefWidth="110.0" promptText="Precio" />
+                                    <TextField fx:id="txtImporteTotal" editable="false" prefWidth="120.0" style="-fx-background-color: #f1f2f6;" text="0.00" />
+                                </HBox>
+                                <HBox spacing="15" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                    <Button fx:id="btnAñadir" onAction="#añadirItem" prefWidth="150" style="-fx-background-color: #0984e3; -fx-text-fill: white; -fx-font-weight: bold;" text="AÑADIR" />
+                                    <Button fx:id="btnEditar" managed="false" onAction="#añadirItem" prefWidth="150" style="-fx-background-color: #fdcb6e; -fx-text-fill: white;" text="ACTUALIZAR" visible="false" />
+                                </HBox>
+                            </children>
+                        </GridPane>
+                        <TableView fx:id="tablaVentas" VBox.vgrow="ALWAYS" />
+                        <HBox alignment="CENTER_RIGHT" spacing="25.0">
+                            <Label fx:id="lblTotal" text="RD$ 0.00" textFill="#27ae60"><font><Font name="System Bold" size="36.0" /></font></Label>
+                            <Button onAction="#mostrarCobro" prefHeight="65.0" prefWidth="260.0" style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-size: 18; -fx-font-weight: bold; -fx-background-radius: 10;" text="PROCESAR PAGO" />
+                        </HBox>
+                    </children>
+                </VBox>
+
+                <VBox fx:id="viewEnvios" managed="false" visible="false" spacing="20.0" style="-fx-padding: 30; -fx-background-color: #f5f6fa;">
+                    <children>
+                        <Label text="Logística y Control de Entregas"><font><Font name="System Bold" size="28.0" /></font></Label>
+                        <TableView fx:id="tablaEnvios" VBox.vgrow="ALWAYS" />
+                        <HBox alignment="CENTER_RIGHT" spacing="15.0" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 10;">
+                            <children>
+                                <Label text="Cambiar Estado:" style="-fx-font-weight: bold;" />
+                                <ComboBox fx:id="cbCambiarEstado" prefWidth="180.0" promptText="Seleccionar..." />
+                                <Button onAction="#actualizarEstatusEnvio" style="-fx-background-color: #f39c12; -fx-text-fill: white; -fx-font-weight: bold;" text="CAMBIAR ESTADO" />
+                                <Separator orientation="VERTICAL" />
+                                <Button onAction="#marcarEntregado" style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold;" text="✓ ENTREGADO" />
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+
+                <VBox fx:id="viewCobro" alignment="CENTER" managed="false" visible="false" style="-fx-background-color: rgba(0,0,0,0.7);">
+                    <VBox alignment="CENTER" maxWidth="450" spacing="25" style="-fx-background-color: white; -fx-padding: 40; -fx-background-radius: 20;">
+                        <Label text="Finalizar Factura" textFill="#2d3436"><font><Font name="System Bold" size="24.0" /></font></Label>
+                        <Label fx:id="lblMontoCobro" text="RD$ 0.00" textFill="#27ae60" style="-fx-font-size: 26; -fx-font-weight: bold;" />
+                        <ComboBox fx:id="comboMetodoPago" prefWidth="400" prefHeight="45" promptText="Método de Pago" />
+                        <TextField fx:id="txtEfectivoRecibido" onKeyReleased="#calcularDevuelta" prefHeight="50" promptText="Monto Recibido RD$" style="-fx-font-size: 18; -fx-alignment: center;"/>
+                        <Label fx:id="lblDevuelta" text="Devuelta: RD$ 0.00" textFill="#e67e22" style="-fx-font-size: 20; -fx-font-weight: bold;" />
+                        <Button onAction="#finalizarVenta" prefWidth="400" prefHeight="55" style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold;" text="CONFIRMAR Y CREAR ENVÍO" />
+                        <Button onAction="#mostrarVentas" prefWidth="400" text="CANCELAR" />
+                    </VBox>
+                </VBox>
+
+                <VBox fx:id="viewNuevoCliente" alignment="CENTER" managed="false" visible="false" style="-fx-background-color: rgba(0,0,0,0.7);">
+                    <VBox alignment="CENTER" maxWidth="420" spacing="20" style="-fx-background-color: white; -fx-padding: 40; -fx-background-radius: 20;">
+                        <Label text="Nuevo Cliente" textFill="#0984e3"><font><Font name="System Bold" size="22.0" /></font></Label>
+                        <TextField fx:id="txtNewNombre" prefHeight="45" promptText="Nombre" />
+                        <TextField fx:id="txtNewRnc" prefHeight="45" promptText="RNC / Cédula" />
+                        <TextField fx:id="txtNewTel" prefHeight="45" promptText="Teléfono" />
+                        <Button onAction="#guardarCliente" prefWidth="400" prefHeight="55" style="-fx-background-color: #0984e3; -fx-text-fill: white; -fx-font-weight: bold;" text="REGISTRAR" />
+                        <Button onAction="#mostrarVentas" prefWidth="400" text="CANCELAR" />
+                    </VBox>
+                </VBox>
+            </children>
+        </StackPane>
+    </children>
+</HBox>
