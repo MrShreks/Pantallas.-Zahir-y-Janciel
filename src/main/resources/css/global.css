@@ -1,0 +1,776 @@
+/* ===================================================================
+   ESTILOS GLOBALES - FÁBRICA DE QUESO REPÚBLICA DOMINICANA
+   =================================================================== */
+
+/* VARIABLES DE COLOR - PALETA PROFESIONAL */
+.root {
+    /* Colores Primarios - Corporativos */
+    -primary-color: #2c3e50;
+    -primary-light: #34495e;
+    -primary-dark: #1a252f;
+    
+    /* Colores Secundarios */
+    -secondary-color: #3498db;
+    -secondary-light: #5dade2;
+    -secondary-dark: #2874a6;
+    
+    /* Colores de Éxito y Advertencia */
+    -success-color: #27ae60;
+    -success-light: #52c77e;
+    -success-dark: #1e8449;
+    
+    -warning-color: #f39c12;
+    -warning-light: #f5b041;
+    -warning-dark: #d68910;
+    
+    -danger-color: #e74c3c;
+    -danger-light: #ec7063;
+    -danger-dark: #c0392b;
+    
+    /* Colores Neutros */
+    -gray-50: #f8f9fa;
+    -gray-100: #e9ecef;
+    -gray-200: #dee2e6;
+    -gray-300: #ced4da;
+    -gray-400: #adb5bd;
+    -gray-500: #6c757d;
+    -gray-600: #495057;
+    -gray-700: #343a40;
+    -gray-800: #212529;
+    -gray-900: #000000;
+    
+    /* Colores de Fondo */
+    -bg-primary: #ffffff;
+    -bg-secondary: #f4f7f6;
+    -bg-sidebar: #1a2a3a;
+    -bg-card: #ffffff;
+    -bg-modal: rgba(0, 0, 0, 0.5);
+    
+    /* Tipografía */
+    -font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
+    -font-size-xs: 11px;
+    -font-size-sm: 12px;
+    -font-size-base: 14px;
+    -font-size-lg: 16px;
+    -font-size-xl: 18px;
+    -font-size-2xl: 20px;
+    -font-size-3xl: 24px;
+    -font-size-4xl: 28px;
+    -font-size-5xl: 32px;
+    
+    /* Espaciado */
+    -spacing-xs: 4px;
+    -spacing-sm: 8px;
+    -spacing-md: 16px;
+    -spacing-lg: 24px;
+    -spacing-xl: 32px;
+    -spacing-2xl: 48px;
+    
+    /* Bordes y Sombras */
+    -border-radius-sm: 4px;
+    -border-radius-md: 8px;
+    -border-radius-lg: 12px;
+    -border-radius-xl: 16px;
+    -border-radius-2xl: 20px;
+    
+    -shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
+    -shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    -shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+    -shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1);
+    
+    /* Transiciones */
+    -transition-fast: 0.15s ease;
+    -transition-normal: 0.3s ease;
+    -transition-slow: 0.5s ease;
+}
+
+/* RESET Y ESTILOS BASE */
+* {
+    -fx-font-family: -font-family;
+    -fx-font-size: -font-size-base;
+}
+
+/* SCROLLBARS PERSONALIZADOS */
+.scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-width: 12px;
+    -fx-padding: 0;
+}
+
+.scroll-bar:vertical .track {
+    -fx-background-color: -gray-100;
+    -fx-background-insets: 0;
+    -fx-border-color: transparent;
+    -fx-border-radius: 6px;
+}
+
+.scroll-bar:vertical .thumb {
+    -fx-background-color: -gray-400;
+    -fx-background-insets: 2px;
+    -fx-border-radius: 6px;
+    -fx-cursor: hand;
+}
+
+.scroll-bar:vertical .thumb:hover {
+    -fx-background-color: -gray-500;
+}
+
+.scroll-bar:horizontal {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-height: 12px;
+    -fx-padding: 0;
+}
+
+.scroll-bar:horizontal .track {
+    -fx-background-color: -gray-100;
+    -fx-background-insets: 0;
+    -fx-border-color: transparent;
+    -fx-border-radius: 6px;
+}
+
+.scroll-bar:horizontal .thumb {
+    -fx-background-color: -gray-400;
+    -fx-background-insets: 2px;
+    -fx-border-radius: 6px;
+    -fx-cursor: hand;
+}
+
+.scroll-bar:horizontal .thumb:hover {
+    -fx-background-color: -gray-500;
+}
+
+/* ===================================================================
+   COMPONENTES PRINCIPALES
+   =================================================================== */
+
+/* SIDEBAR - MENÚ LATERAL */
+.sidebar {
+    -fx-background-color: -bg-sidebar;
+    -fx-background-radius: 0;
+    -fx-border-color: transparent;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 2, 0);
+}
+
+.sidebar-header {
+    -fx-background-color: -primary-dark;
+    -fx-padding: -spacing-xl;
+    -fx-alignment: center;
+}
+
+.logo-text {
+    -fx-font-size: -font-size-3xl;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-alignment: center;
+}
+
+.logo-subtitle {
+    -fx-font-size: -font-size-sm;
+    -fx-text-fill: -gray-400;
+    -fx-alignment: center;
+}
+
+/* BOTONES DE NAVEGACIÓN */
+.nav-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: -gray-300;
+    -fx-font-size: -font-size-base;
+    -fx-font-weight: 500;
+    -fx-padding: -spacing-md -spacing-lg;
+    -fx-alignment: center-left;
+    -fx-cursor: hand;
+    -fx-border-radius: 0;
+    -fx-background-insets: 0;
+    -fx-transition: -transition-normal;
+}
+
+.nav-button:hover {
+    -fx-background-color: -primary-light;
+    -fx-text-fill: white;
+    -fx-translate-x: 4px;
+}
+
+.nav-button-active {
+    -fx-background-color: -secondary-color;
+    -fx-text-fill: white;
+    -fx-border-left: 4px solid -warning-color;
+}
+
+/* ===================================================================
+   CONTENIDO PRINCIPAL
+   =================================================================== */
+
+.main-content {
+    -fx-background-color: -bg-secondary;
+    -fx-padding: -spacing-xl;
+    -fx-alignment: top-center;
+}
+
+.content-header {
+    -fx-background-color: -bg-primary;
+    -fx-background-radius: -border-radius-lg;
+    -fx-padding: -spacing-lg;
+    -fx-effect: -shadow-md;
+    -fx-spacing: -spacing-md;
+}
+
+.header-title {
+    -fx-font-size: -font-size-3xl;
+    -fx-font-weight: bold;
+    -fx-text-fill: -primary-color;
+    -fx-wrap-text: true;
+}
+
+.header-subtitle {
+    -fx-font-size: -font-size-lg;
+    -fx-text-fill: -gray-600;
+    -fx-wrap-text: true;
+}
+
+/* ===================================================================
+   TARJETAS (CARDS)
+   =================================================================== */
+
+.card {
+    -fx-background-color: -bg-card;
+    -fx-background-radius: -border-radius-lg;
+    -fx-padding: -spacing-lg;
+    -fx-effect: -shadow-md;
+    -fx-cursor: hand;
+    -fx-transition: -transition-normal;
+}
+
+.card:hover {
+    -fx-effect: -shadow-lg;
+    -fx-translate-y: -2px;
+}
+
+.card-header {
+    -fx-font-size: -font-size-xl;
+    -fx-font-weight: bold;
+    -fx-text-fill: -primary-color;
+    -fx-padding: 0 0 -spacing-md 0;
+}
+
+.card-content {
+    -fx-text-fill: -gray-700;
+    -fx-wrap-text: true;
+}
+
+.card-footer {
+    -fx-alignment: center-right;
+    -fx-padding: -spacing-md 0 0 0;
+}
+
+/* ===================================================================
+   FORMULARIOS
+   =================================================================== */
+
+.form-container {
+    -fx-background-color: -bg-primary;
+    -fx-background-radius: -border-radius-lg;
+    -fx-padding: -spacing-xl;
+    -fx-effect: -shadow-md;
+    -fx-spacing: -spacing-lg;
+}
+
+.form-label {
+    -fx-font-size: -font-size-sm;
+    -fx-font-weight: 600;
+    -fx-text-fill: -gray-700;
+    -fx-padding: 0 0 -spacing-xs 0;
+}
+
+.form-label-required {
+    -fx-text-fill: -danger-color;
+}
+
+.custom-text-field {
+    -fx-background-color: white;
+    -fx-border-color: -gray-300;
+    -fx-border-radius: -border-radius-md;
+    -fx-border-width: 1px;
+    -fx-padding: -spacing-md;
+    -fx-font-size: -font-size-base;
+    -fx-transition: -transition-fast;
+}
+
+.custom-text-field:focused {
+    -fx-border-color: -secondary-color;
+    -fx-effect: dropshadow(gaussian, rgba(52, 152, 219, 0.2), 4, 0, 0, 1);
+}
+
+.custom-text-field:error {
+    -fx-border-color: -danger-color;
+    -fx-background-color: #fff5f5;
+}
+
+.custom-text-field:disabled {
+    -fx-background-color: -gray-100;
+    -fx-text-fill: -gray-500;
+}
+
+.custom-combo {
+    -fx-background-color: white;
+    -fx-border-color: -gray-300;
+    -fx-border-radius: -border-radius-md;
+    -fx-border-width: 1px;
+    -fx-padding: -spacing-md;
+    -fx-font-size: -font-size-base;
+}
+
+.custom-combo:focused {
+    -fx-border-color: -secondary-color;
+}
+
+.custom-combo .list-cell {
+    -fx-background-color: white;
+    -fx-text-fill: -gray-700;
+    -fx-padding: -spacing-sm -spacing-md;
+}
+
+.custom-combo .list-cell:hover {
+    -fx-background-color: -gray-50;
+}
+
+/* ===================================================================
+   BOTONES
+   =================================================================== */
+
+.btn {
+    -fx-font-size: -font-size-base;
+    -fx-font-weight: 600;
+    -fx-cursor: hand;
+    -fx-border-radius: -border-radius-md;
+    -fx-padding: -spacing-md -spacing-lg;
+    -fx-transition: -transition-fast;
+    -fx-background-insets: 0;
+}
+
+.btn-primary {
+    -fx-background-color: -primary-color;
+    -fx-text-fill: white;
+    -fx-border-color: transparent;
+}
+
+.btn-primary:hover {
+    -fx-background-color: -primary-light;
+    -fx-effect: -shadow-md;
+}
+
+.btn-secondary {
+    -fx-background-color: -secondary-color;
+    -fx-text-fill: white;
+    -fx-border-color: transparent;
+}
+
+.btn-secondary:hover {
+    -fx-background-color: -secondary-light;
+    -fx-effect: -shadow-md;
+}
+
+.btn-success {
+    -fx-background-color: -success-color;
+    -fx-text-fill: white;
+    -fx-border-color: transparent;
+}
+
+.btn-success:hover {
+    -fx-background-color: -success-light;
+    -fx-effect: -shadow-md;
+}
+
+.btn-warning {
+    -fx-background-color: -warning-color;
+    -fx-text-fill: white;
+    -fx-border-color: transparent;
+}
+
+.btn-warning:hover {
+    -fx-background-color: -warning-light;
+    -fx-effect: -shadow-md;
+}
+
+.btn-danger {
+    -fx-background-color: -danger-color;
+    -fx-text-fill: white;
+    -fx-border-color: transparent;
+}
+
+.btn-danger:hover {
+    -fx-background-color: -danger-light;
+    -fx-effect: -shadow-md;
+}
+
+.btn-outline {
+    -fx-background-color: transparent;
+    -fx-text-fill: -primary-color;
+    -fx-border-color: -primary-color;
+    -fx-border-width: 2px;
+}
+
+.btn-outline:hover {
+    -fx-background-color: -primary-color;
+    -fx-text-fill: white;
+}
+
+.btn-lg {
+    -fx-font-size: -font-size-lg;
+    -fx-padding: -spacing-lg -spacing-xl;
+    -fx-border-radius: -border-radius-lg;
+}
+
+.btn-sm {
+    -fx-font-size: -font-size-sm;
+    -fx-padding: -spacing-sm -spacing-md;
+}
+
+/* ===================================================================
+   TABLAS
+   =================================================================== */
+
+.custom-table {
+    -fx-background-color: -bg-primary;
+    -fx-background-radius: -border-radius-lg;
+    -fx-effect: -shadow-md;
+    -fx-border-color: transparent;
+}
+
+.custom-table .column-header {
+    -fx-background-color: -gray-50;
+    -fx-font-size: -font-size-sm;
+    -fx-font-weight: 700;
+    -fx-text-fill: -gray-700;
+    -fx-border-color: -gray-200;
+    -fx-border-width: 0 0 1px 0;
+    -fx-padding: -spacing-md;
+}
+
+.custom-table .column-header-background {
+    -fx-background-color: -gray-50;
+    -fx-border-color: -gray-200;
+    -fx-border-width: 0 0 1px 0;
+}
+
+.custom-table .table-cell {
+    -fx-padding: -spacing-md;
+    -fx-border-color: -gray-100;
+    -fx-border-width: 0 1px 0 0;
+    -fx-text-fill: -gray-700;
+}
+
+.custom-table .table-row-cell {
+    -fx-background-color: -bg-primary;
+    -fx-transition: -transition-fast;
+}
+
+.custom-table .table-row-cell:hover {
+    -fx-background-color: -gray-50;
+}
+
+.custom-table .table-row-cell:selected {
+    -fx-background-color: -secondary-color;
+    -fx-text-fill: white;
+}
+
+.custom-table .table-row-cell:selected .table-cell {
+    -fx-text-fill: white;
+}
+
+/* ===================================================================
+   MODALES Y DIÁLOGOS
+   =================================================================== */
+
+.modal-overlay {
+    -fx-background-color: -bg-modal;
+    -fx-alignment: center;
+}
+
+.modal-content {
+    -fx-background-color: -bg-primary;
+    -fx-background-radius: -border-radius-xl;
+    -fx-padding: -spacing-2xl;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 20, 0, 0, 10);
+    -fx-max-width: 600px;
+    -fx-alignment: center;
+}
+
+.modal-header {
+    -fx-font-size: -font-size-2xl;
+    -fx-font-weight: bold;
+    -fx-text-fill: -primary-color;
+    -fx-padding: 0 0 -spacing-lg 0;
+    -fx-alignment: center-left;
+}
+
+.modal-body {
+    -fx-text-fill: -gray-700;
+    -fx-wrap-text: true;
+    -fx-padding: 0 0 -spacing-lg 0;
+}
+
+.modal-footer {
+    -fx-alignment: center-right;
+    -fx-spacing: -spacing-md;
+}
+
+/* ===================================================================
+   INDICADORES Y ESTADOS
+   =================================================================== */
+
+.badge {
+    -fx-background-color: -gray-500;
+    -fx-text-fill: white;
+    -fx-background-radius: 20px;
+    -fx-padding: 2px 8px;
+    -fx-font-size: -font-size-xs;
+    -fx-font-weight: bold;
+}
+
+.badge-success {
+    -fx-background-color: -success-color;
+}
+
+.badge-warning {
+    -fx-background-color: -warning-color;
+}
+
+.badge-danger {
+    -fx-background-color: -danger-color;
+}
+
+.badge-info {
+    -fx-background-color: -secondary-color;
+}
+
+.status-indicator {
+    -fx-background-radius: 50px;
+    -fx-pref-width: 8px;
+    -fx-pref-height: 8px;
+}
+
+.status-success {
+    -fx-background-color: -success-color;
+}
+
+.status-warning {
+    -fx-background-color: -warning-color;
+}
+
+.status-danger {
+    -fx-background-color: -danger-color;
+}
+
+.status-info {
+    -fx-background-color: -secondary-color;
+}
+
+/* ===================================================================
+   COMPONENTES ESPECÍFICOS PARA RD
+   =================================================================== */
+
+.currency-display {
+    -fx-font-size: -font-size-xl;
+    -fx-font-weight: bold;
+    -fx-text-fill: -success-color;
+    -fx-alignment: center-right;
+}
+
+.currency-symbol {
+    -fx-text-fill: -gray-600;
+    -fx-font-size: -font-size-lg;
+}
+
+.itbis-display {
+    -fx-text-fill: -warning-color;
+    -fx-font-weight: 600;
+}
+
+.total-display {
+    -fx-font-size: -font-size-2xl;
+    -fx-font-weight: bold;
+    -fx-text-fill: -primary-color;
+}
+
+/* ===================================================================
+   UTILIDADES
+   =================================================================== */
+
+.text-center {
+    -fx-alignment: center;
+}
+
+.text-left {
+    -fx-alignment: center-left;
+}
+
+.text-right {
+    -fx-alignment: center-right;
+}
+
+.text-bold {
+    -fx-font-weight: bold;
+}
+
+.text-italic {
+    -fx-font-style: italic;
+}
+
+.text-uppercase {
+    -fx-text-transform: uppercase;
+}
+
+.text-lowercase {
+    -fx-text-transform: lowercase;
+}
+
+.text-primary {
+    -fx-text-fill: -primary-color;
+}
+
+.text-secondary {
+    -fx-text-fill: -secondary-color;
+}
+
+.text-success {
+    -fx-text-fill: -success-color;
+}
+
+.text-warning {
+    -fx-text-fill: -warning-color;
+}
+
+.text-danger {
+    -fx-text-fill: -danger-color;
+}
+
+.text-muted {
+    -fx-text-fill: -gray-500;
+}
+
+.bg-primary {
+    -fx-background-color: -primary-color;
+}
+
+.bg-secondary {
+    -fx-background-color: -secondary-color;
+}
+
+.bg-success {
+    -fx-background-color: -success-color;
+}
+
+.bg-warning {
+    -fx-background-color: -warning-color;
+}
+
+.bg-danger {
+    -fx-background-color: -danger-color;
+}
+
+.bg-light {
+    -fx-background-color: -gray-50;
+}
+
+.bg-dark {
+    -fx-background-color: -gray-800;
+}
+
+/* ===================================================================
+   RESPONSIVE DESIGN
+   =================================================================== */
+
+@media (max-width: 768px) {
+    .sidebar {
+        -fx-pref-width: 60px;
+    }
+    
+    .nav-button {
+        -fx-padding: -spacing-md;
+        -fx-text-fill: transparent;
+    }
+    
+    .main-content {
+        -fx-padding: -spacing-md;
+    }
+    
+    .card {
+        -fx-padding: -spacing-md;
+    }
+}
+
+/* ===================================================================
+   ANIMACIONES
+   =================================================================== */
+
+.fade-in {
+    -fx-opacity: 0;
+    -fx-animation: fadeIn 0.3s ease-in forwards;
+}
+
+.slide-in-left {
+    -fx-translate-x: -100px;
+    -fx-opacity: 0;
+    -fx-animation: slideInLeft 0.3s ease-out forwards;
+}
+
+.slide-in-right {
+    -fx-translate-x: 100px;
+    -fx-opacity: 0;
+    -fx-animation: slideInRight 0.3s ease-out forwards;
+}
+
+.scale-in {
+    -fx-scale-x: 0.8;
+    -fx-scale-y: 0.8;
+    -fx-opacity: 0;
+    -fx-animation: scaleIn 0.2s ease-out forwards;
+}
+
+/* ===================================================================
+   CLASES PARA ESTADOS DE CARGA
+   =================================================================== */
+
+.loading {
+    -fx-opacity: 0.6;
+    -fx-cursor: wait;
+}
+
+.loading-overlay {
+    -fx-background-color: rgba(255, 255, 255, 0.9);
+    -fx-alignment: center;
+}
+
+.spinner {
+    -fx-pref-width: 40px;
+    -fx-pref-height: 40px;
+    -fx-background-color: -secondary-color;
+    -fx-background-radius: 50%;
+    -fx-animation: spin 1s linear infinite;
+}
+
+/* ===================================================================
+   IMPRESIÓN
+   =================================================================== */
+
+@media print {
+    .sidebar {
+        -fx-display: none;
+    }
+    
+    .main-content {
+        -fx-background-color: white;
+        -fx-padding: 0;
+    }
+    
+    .btn {
+        -fx-display: none;
+    }
+    
+    .card {
+        -fx-effect: none;
+        -fx-border: 1px solid -gray-300;
+    }
+}

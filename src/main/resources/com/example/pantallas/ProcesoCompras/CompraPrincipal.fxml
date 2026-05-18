@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import java.net.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+
+<HBox prefHeight="750.0" prefWidth="1300.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pantallas.ProcesoDeCompras.CompraController">
+    <children>
+        <VBox prefWidth="250.0" style="-fx-background-color: #2c3e50;">
+            <children>
+                <Label style="-fx-padding: 30 20;" text="🧀 Gestión de Compras" textFill="WHITE">
+                    <font><Font name="System Bold" size="18.0" /></font>
+                </Label>
+                <Button fx:id="btnNav1" onAction="#mostrarNuevaOrden" prefHeight="55.0" prefWidth="250.0" style="-fx-background-color: #34495e; -fx-text-fill: white; -fx-alignment: CENTER_LEFT; -fx-padding: 0 0 0 20;" text="🛒 Generar Orden" />
+                <Button fx:id="btnNav2" onAction="#mostrarRecepcion" prefHeight="55.0" prefWidth="250.0" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-alignment: CENTER_LEFT; -fx-padding: 0 0 0 20;" text="📦 Recepción de Insumos" />
+                <Button fx:id="btnNav4" onAction="#mostrarHistorial" prefHeight="55.0" prefWidth="250.0" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-alignment: CENTER_LEFT; -fx-padding: 0 0 0 20;" text="📋 Historial y Estados" />
+                <Region VBox.vgrow="ALWAYS" />
+                <Button onAction="#irAMenuPrincipal" prefHeight="50.0" prefWidth="250.0" style="-fx-background-color: #c0392b; -fx-text-fill: white;" text="← Volver al Menú" />
+            </children>
+        </VBox>
+
+        <StackPane HBox.hgrow="ALWAYS" style="-fx-background-color: #f4f7f6;">
+            <children>
+                <VBox fx:id="paneNuevaOrden" spacing="20.0" style="-fx-padding: 30;">
+                    <children>
+                        <Label text="Crear Nueva Orden de Compra" textFill="#2c3e50"><font><Font name="System Bold" size="24.0" /></font></Label>
+
+                        <GridPane hgap="20" vgap="15" style="-fx-background-color: white; -fx-padding: 25; -fx-background-radius: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);">
+                            <columnConstraints>
+                                <ColumnConstraints prefWidth="120" />
+                                <ColumnConstraints prefWidth="250" />
+                                <ColumnConstraints prefWidth="120" />
+                                <ColumnConstraints prefWidth="250" />
+                            </columnConstraints>
+                            <children>
+                                <Label text="Suplidor:" GridPane.rowIndex="0" />
+                                <ComboBox fx:id="cbSuplidor" prefWidth="250" GridPane.columnIndex="1" />
+
+                                <Label text="Insumo:" GridPane.rowIndex="1" />
+                                <ComboBox fx:id="cbInsumo" prefWidth="250" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                                <Label text="Cantidad:" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                                <HBox spacing="5" GridPane.columnIndex="3" GridPane.rowIndex="0">
+                                    <children>
+                                        <TextField fx:id="txtCantidad" prefWidth="150.0" />
+                                        <ComboBox fx:id="cbUnidad" prefWidth="100.0" />
+                                    </children>
+                                </HBox>
+
+                                <Label text="Precio Unit. (RD$):" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                <TextField fx:id="txtPrecio" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+
+                                <Label text="Fecha Entrega:" GridPane.rowIndex="2" />
+                                <DatePicker fx:id="dpFechaEntrega" prefWidth="250" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+                                <HBox spacing="10" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="3">
+                                    <padding><Insets top="10"/></padding>
+                                    <Button onAction="#generarOrden" prefHeight="35.0" prefWidth="150.0" style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold;" text="💾 GUARDAR ORDEN" />
+                                    <Button onAction="#limpiarDatosOrden" prefHeight="35.0" prefWidth="120.0" style="-fx-background-color: #95a5a6; -fx-text-fill: white;" text="LIMPIAR" />
+                                </HBox>
+                            </children>
+                        </GridPane>
+                        <TableView fx:id="tablaOrdenesPendientes" VBox.vgrow="ALWAYS" style="-fx-background-radius: 10;" />
+                    </children>
+                </VBox>
+
+                <VBox fx:id="paneRecepcion" managed="false" visible="false" spacing="20.0" style="-fx-padding: 30;">
+                    <children>
+                        <Label text="Recepción de Mercancía (Almacén)" textFill="#2c3e50"><font><Font name="System Bold" size="24.0" /></font></Label>
+                        <HBox spacing="20" style="-fx-background-color: white; -fx-padding: 25; -fx-background-radius: 15;">
+                            <VBox spacing="10">
+                                <Label text="Seleccionar Orden Pendiente:" style="-fx-font-weight: bold;"/>
+                                <ComboBox fx:id="cbOrdenesPendientes" prefWidth="300" promptText="ID Orden - Suplidor" />
+                            </VBox>
+                            <VBox spacing="10">
+                                <Label text="No. Factura/Conduce:" style="-fx-font-weight: bold;"/>
+                                <TextField fx:id="txtNoDocumento" prefWidth="200" />
+                            </VBox>
+                            <VBox spacing="10">
+                                <Label text="Cantidad Real Recibida:" style="-fx-font-weight: bold;"/>
+                                <TextField fx:id="txtCantidadRecibida" prefWidth="150" />
+                            </VBox>
+                        </HBox>
+                        <VBox spacing="10" VBox.vgrow="ALWAYS">
+                            <Label text="Observaciones de Calidad:" />
+                            <TextArea fx:id="txtNotasRecepcion" prefHeight="100" promptText="Ej: El empaque llegó húmedo, o mercancía completa..." />
+                            <Button onAction="#confirmarRecepcion" prefHeight="45.0" prefWidth="250.0" style="-fx-background-color: #2980b9; -fx-text-fill: white; -fx-font-weight: bold;" text="✅ REGISTRAR ENTRADA" />
+                        </VBox>
+                    </children>
+                </VBox>
+
+                <VBox fx:id="paneHistorial" managed="false" visible="false" spacing="20.0" style="-fx-padding: 30;">
+                    <children>
+                        <Label text="Historial y Control de Estados" textFill="#2c3e50"><font><Font name="System Bold" size="24.0" /></font></Label>
+                        <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-background-color: #dfe6e9; -fx-padding: 15; -fx-background-radius: 10;">
+                            <Label text="Cambiar Estado de Selección:" />
+                            <ComboBox fx:id="cbNuevoEstado" prefWidth="180" />
+                            <Button onAction="#actualizarEstadoMasivo" style="-fx-background-color: #f39c12; -fx-text-fill: white;" text="ACTUALIZAR ESTADO" />
+                            <Region HBox.hgrow="ALWAYS" />
+                            <Button onAction="#borrarRegistroHistorial" style="-fx-background-color: #e74c3c; -fx-text-fill: white;" text="ELIMINAR" />
+                        </HBox>
+                        <TableView fx:id="tablaHistorial" VBox.vgrow="ALWAYS" />
+                    </children>
+                </VBox>
+            </children>
+        </StackPane>
+    </children>
+</HBox>

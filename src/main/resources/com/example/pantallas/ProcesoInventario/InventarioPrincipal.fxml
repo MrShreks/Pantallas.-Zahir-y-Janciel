@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import java.net.URL?>
+<?import javafx.collections.FXCollections?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<HBox prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pantallas.ProcesoDeInventario.InventarioController">
+    <children>
+        <VBox prefWidth="240.0" styleClass="sidebar">
+            <children>
+                <Label style="-fx-padding: 20; -fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: white;" text="Fábrica de Queso" />
+                <Button fx:id="btnStock" onAction="#mostrarStock" prefWidth="240" styleClass="nav-button-active" text="1. Stock Actual" />
+                <Button fx:id="btnMovimientos" onAction="#mostrarMovimientos" prefWidth="240" styleClass="nav-button" text="2. Historial E/S" />
+                <Button fx:id="btnAjustes" onAction="#mostrarAjustes" prefWidth="240" styleClass="nav-button" text="3. Ajuste de Inventario" />
+                <Separator style="-fx-padding: 10 0;" />
+                <Button onAction="#volverAlMenu" prefWidth="240" styleClass="nav-button" text="← Volver al Menú" />
+            </children>
+        </VBox>
+
+        <StackPane fx:id="contentArea" HBox.hgrow="ALWAYS">
+            <children>
+                <VBox fx:id="viewStock" prefWidth="760.0" styleClass="main-content">
+                    <children>
+                        <HBox alignment="CENTER_LEFT" spacing="20" style="-fx-padding: 20 30;">
+                            <children>
+                                <Label styleClass="header-title" style="-fx-font-size: 24; -fx-font-weight: bold;" text="Panel de Inventario General" />
+                                <Button onAction="#mostrarAjustes" style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 20; -fx-padding: 8 15;" text="+ Añadir / Ajustar Stock" />
+                            </children>
+                        </HBox>
+
+                        <HBox spacing="10" style="-fx-padding: 0 30 20 30;">
+                            <children>
+                                <TextField fx:id="txtBusqueda" prefWidth="350.0" promptText="Buscar producto o insumo..." styleClass="custom-text-field" />
+                                <ComboBox fx:id="cbCategoria" prefWidth="200.0" promptText="Filtrar por Categoría">
+                                    <items>
+                                        <FXCollections fx:factory="observableArrayList">
+                                            <String fx:value="Todas las Categorías" />
+                                            <String fx:value="Quesos Frescos" />
+                                            <String fx:value="Quesos Madurados" />
+                                            <String fx:value="Materia Prima (Leche/Cuajo)" />
+                                            <String fx:value="Insumos de Limpieza" />
+                                            <String fx:value="Empaques y Etiquetas" />
+                                        </FXCollections>
+                                    </items>
+                                </ComboBox>
+                            </children>
+                        </HBox>
+
+                        <TableView fx:id="tablaStock" style="-fx-margin: 0 30;" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="colNombre" prefWidth="280" text="Descripción / Producto" />
+                                <TableColumn fx:id="colCategoria" prefWidth="180" text="Categoría" />
+                                <TableColumn fx:id="colCantidad" prefWidth="120" text="Stock Actual" />
+                                <TableColumn fx:id="colUnidad" prefWidth="120" text="Unidad" />
+                            </columns>
+                        </TableView>
+                    </children>
+                </VBox>
+
+                <VBox fx:id="viewMovimientos" managed="false" prefWidth="760.0" styleClass="main-content" visible="false">
+                    <children>
+                        <Label style="-fx-padding: 20 30; -fx-font-size: 24; -fx-font-weight: bold;" styleClass="header-title" text="Historial de Entradas y Salidas (Kardex)" />
+                        <HBox spacing="15.0" style="-fx-padding: 0 30 20 30;">
+                            <children>
+                                <DatePicker fx:id="dpInicio" promptText="Desde" />
+                                <DatePicker fx:id="dpFin" promptText="Hasta" />
+                                <Button onAction="#borrarMovimientoSeleccionado" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold;" text="BORRAR REPORTE SELECCIONADO" />
+                            </children>
+                        </HBox>
+                        <TableView fx:id="tablaKardex" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="colKFecha" prefWidth="160" text="Fecha/Hora" />
+                                <TableColumn fx:id="colKProducto" prefWidth="220" text="Producto/Insumo" />
+                                <TableColumn fx:id="colKTipo" prefWidth="100" text="Movimiento" />
+                                <TableColumn fx:id="colKCant" prefWidth="100" text="Cantidad" />
+                                <TableColumn fx:id="colKUnidad" prefWidth="120" text="Unidad" />
+                            </columns>
+                        </TableView>
+                    </children>
+                </VBox>
+
+                <VBox fx:id="viewAjustes" managed="false" prefWidth="760.0" styleClass="main-content" visible="false">
+                    <children>
+                        <Label style="-fx-padding: 20 30; -fx-font-size: 24; -fx-font-weight: bold;" styleClass="header-title" text="Gestión y Ajuste de Existencias" />
+                        <GridPane hgap="20.0" style="-fx-padding: 30;" vgap="20.0">
+                            <children>
+                                <VBox spacing="5.0" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="2">
+                                    <children>
+                                        <Label style="-fx-font-weight: bold;" text="PRODUCTO O LOTE A GESTIONAR" />
+                                        <ComboBox fx:id="cbItemAjuste" prefHeight="40.0" prefWidth="600.0" promptText="Seleccione un producto de la lista..." />
+                                    </children>
+                                </VBox>
+
+                                <VBox spacing="10.0" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                                    <children>
+                                        <Label style="-fx-font-weight: bold;" text="ACCIÓN DE AJUSTE" />
+                                        <RadioButton fx:id="rbEntrada" selected="true" text="Entrada de Inventario (+)">
+                                            <toggleGroup>
+                                                <ToggleGroup fx:id="tgAjuste" />
+                                            </toggleGroup>
+                                        </RadioButton>
+                                        <RadioButton fx:id="rbSalida" text="Salida / Merma / Venta (-)" toggleGroup="$tgAjuste" />
+                                    </children>
+                                </VBox>
+
+                                <HBox spacing="20" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                    <children>
+                                        <VBox spacing="5.0">
+                                            <children>
+                                                <Label style="-fx-font-weight: bold;" text="CANTIDAD" />
+                                                <TextField fx:id="txtCantidadAjuste" prefHeight="40.0" prefWidth="150.0" promptText="0.00" styleClass="custom-text-field" />
+                                            </children>
+                                        </VBox>
+                                        <VBox spacing="5.0">
+                                            <children>
+                                                <Label style="-fx-font-weight: bold;" text="UNIDAD DE MEDIDA" />
+                                                <ComboBox fx:id="cbUnidadMedida" prefHeight="40.0" prefWidth="180.0">
+                                                    <items>
+                                                        <FXCollections fx:factory="observableArrayList">
+                                                            <String fx:value="Libras (Lbs)" />
+                                                            <String fx:value="Kilos (Kg)" />
+                                                            <String fx:value="Litros (L)" />
+                                                            <String fx:value="Unidades (Und)" />
+                                                            <String fx:value="Gramos (g)" />
+                                                        </FXCollections>
+                                                    </items>
+                                                </ComboBox>
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </HBox>
+
+                                <HBox spacing="15" alignment="CENTER_LEFT" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="2" style="-fx-padding: 20 0;">
+                                    <children>
+                                        <Button onAction="#procesarAjuste" prefHeight="50.0" prefWidth="150.0" style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold;" text="GUARDAR / ENTRAR" />
+                                        <Button onAction="#actualizarAjuste" prefHeight="50.0" prefWidth="150.0" style="-fx-background-color: #2980b9; -fx-text-fill: white; -fx-font-weight: bold;" text="ACTUALIZAR INFO" />
+                                        <Button onAction="#borrarAjuste" prefHeight="50.0" prefWidth="150.0" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold;" text="BORRAR PRODUCTO" />
+                                        <Button onAction="#limpiarFormulario" prefHeight="50.0" prefWidth="120.0" style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-font-weight: bold;" text="LIMPIAR" />
+                                        <Button onAction="#volverAlMenu" prefWidth="240" styleClass="nav-button" text="← Volver al Menú" />
+                                    </children>
+                                </HBox>
+                            </children>
+                        </GridPane>
+                    </children>
+                </VBox>
+            </children>
+        </StackPane>
+    </children>
+    <stylesheets>
+        <URL value="@../style.css" />
+    </stylesheets>
+</HBox>

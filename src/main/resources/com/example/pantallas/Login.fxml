@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="500.0" prefWidth="400.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pantallas.LoginController">
+    <children>
+        <VBox alignment="CENTER" layoutX="40.0" layoutY="30.0" spacing="20.0" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="30.0">
+            <children>
+                <VBox alignment="CENTER" spacing="5.0">
+                    <children>
+                        <Label text="🧀 Fábrica de Queso" textFill="#2c3e50">
+                            <font>
+                                <Font name="System Bold" size="28.0" />
+                            </font>
+                        </Label>
+                        <Label text="Bienvenido de nuevo" textFill="#7f8c8d">
+                            <font>
+                                <Font size="14.0" />
+                            </font>
+                        </Label>
+                    </children>
+                </VBox>
+
+                <VBox spacing="15.0">
+                    <children>
+                        <VBox spacing="5.0">
+                            <children>
+                                <Label text="Usuario" style="-fx-font-weight: bold;" />
+                                <TextField fx:id="txtUsuario" prefHeight="40.0" promptText="Nombre de usuario o correo" style="-fx-background-radius: 8; -fx-border-color: #dcdde1; -fx-border-radius: 8;" />
+                            </children>
+                        </VBox>
+
+                        <VBox spacing="5.0">
+                            <children>
+                                <Label text="Contraseña" style="-fx-font-weight: bold;" />
+                                <PasswordField fx:id="txtClave" prefHeight="40.0" promptText="••••••••" style="-fx-background-radius: 8; -fx-border-color: #dcdde1; -fx-border-radius: 8;" />
+                            </children>
+                        </VBox>
+                    </children>
+                </VBox>
+
+                <HBox alignment="CENTER_RIGHT">
+                    <children>
+                        <Hyperlink onAction="#olvideContrasenia" text="¿Olvidaste tu contraseña?" style="-fx-text-fill: #3498db; -fx-font-size: 12px;" />
+                    </children>
+                </HBox>
+
+                <Button mnemonicParsing="false" onAction="#ingresar" prefHeight="45.0" prefWidth="Infinity" style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 8; -fx-cursor: hand;" text="INICIAR SESIÓN" />
+
+                <VBox alignment="CENTER" spacing="10.0">
+                    <children>
+                        <HBox alignment="CENTER" spacing="5.0">
+                            <children>
+                                <Label text="¿No tienes una cuenta?" />
+                                <Hyperlink onAction="#crearCuenta" text="Regístrate aquí" style="-fx-text-fill: #e67e22; -fx-font-weight: bold;" />
+                            </children>
+                        </HBox>
+                        <Label text="© 2026 Fabrica de Queso" textFill="#bdc3c7">
+                            <font>
+                                <Font size="10.0" />
+                            </font>
+                        </Label>
+                    </children>
+                </VBox>
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>

@@ -1,0 +1,59 @@
+
+.root {
+    -fx-background-color: #F4F6F7;
+    -fx-font-family: "Segoe UI", "Helvetica Neue", sans-serif;
+}
+
+.sidebar {
+    -fx-background-color: linear-gradient(to bottom, #212F3D, #17202A);
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 15, 0, 0, 0);
+}
+
+.titulo-app {
+    -fx-text-fill: #D4AC0D;
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-letter-spacing: 2px;
+}
+
+.label-elegante {
+    -fx-text-fill: #566573;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+}
+
+.text-field, .combo-box, .date-picker {
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-border-color: #D5DBDB;
+    -fx-border-radius: 8;
+    -fx-padding: 10;
+    -fx-font-size: 13px;
+}
+
+.text-field:focused, .combo-box:focused {
+    -fx-border-color: #D4AC0D;
+    -fx-border-width: 1.5;
+    -fx-effect: dropshadow(gaussian, rgba(212,172,13,0.2), 10, 0, 0, 0);
+}
+
+.button-premium {
+    -fx-background-color: #D4AC0D;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 10;
+    -fx-cursor: hand;
+    -fx-transition: 0.3s;
+}
+
+.button-premium:hover {
+    -fx-background-color: #B7950B;
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+
+.card {
+    -fx-background-color: white;
+    -fx-background-radius: 15;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 20, 0, 0, 5);
+}

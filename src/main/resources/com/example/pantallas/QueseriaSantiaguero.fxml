@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<HBox prefHeight="700.0" prefWidth="1000.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <VBox prefHeight="700.0" prefWidth="240.0" styleClass="sidebar">
+            <children>
+                <VBox alignment="CENTER" prefHeight="150.0" spacing="10.0">
+                    <children>
+                        <Label styleClass="logo-text" text="Fabrica de Queso" />
+                        <Label styleClass="sub-logo-text" text="QUESERÍA ARTESANAL" />
+                    </children>
+                </VBox>
+                <Separator opacity="0.1" prefWidth="200.0" />
+                <Button alignment="BASELINE_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="240.0" styleClass="nav-button" text="Panel de Control" />
+                <Button alignment="BASELINE_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="240.0" styleClass="nav-button-active" text="Registro de Ventas" />
+                <Button alignment="BASELINE_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="240.0" styleClass="nav-button" text="Gestión de Envíos" />
+                <Button alignment="BASELINE_LEFT" mnemonicParsing="false" prefHeight="50.0" prefWidth="240.0" styleClass="nav-button" text="Configuración" />
+                <Spacer VBox.vgrow="ALWAYS" />
+                <Label styleClass="status-label" text="OPERADOR: ACTIVO" />
+            </children>
+        </VBox>
+
+        <VBox prefHeight="700.0" prefWidth="760.0" styleClass="main-content" HBox.hgrow="ALWAYS">
+            <children>
+                <Label styleClass="header-title" text="Nueva Transacción de Venta" />
+                <Label styleClass="header-subtitle" text="Basado en el Diagrama de Clases: Proceso de Venta" />
+
+                <GridPane hgap="20.0" vgap="15.0">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                    <children>
+                        <VBox spacing="5.0">
+                            <children>
+                                <Label styleClass="form-label" text="CLIENTE" />
+                                <ComboBox prefHeight="40.0" prefWidth="400.0" promptText="Seleccionar o buscar cliente..." styleClass="custom-combo" />
+                            </children>
+                        </VBox>
+                        <VBox spacing="5.0" GridPane.columnIndex="1">
+                            <children>
+                                <Label styleClass="form-label" text="FECHA DE VENTA" />
+                                <DatePicker prefHeight="40.0" prefWidth="400.0" styleClass="custom-date-picker" />
+                            </children>
+                        </VBox>
+                        <VBox spacing="5.0" GridPane.rowIndex="1">
+                            <children>
+                                <Label styleClass="form-label" text="PRODUCTO (QUESO)" />
+                                <HBox spacing="10.0">
+                                    <children>
+                                        <ComboBox prefHeight="40.0" prefWidth="250.0" promptText="Tipo de queso..." styleClass="custom-combo" />
+                                        <TextField prefHeight="40.0" prefWidth="80.0" promptText="Cant." styleClass="custom-text-field" />
+                                    </children>
+                                </HBox>
+                            </children>
+                        </VBox>
+                        <VBox alignment="BOTTOM_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                            <children>
+                                <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" styleClass="add-button" text="+ AÑADIR ITEM" />
+                            </children>
+                        </VBox>
+                    </children>
+                    <VBox.margin>
+                        <Insets bottom="20.0" left="30.0" right="30.0" top="20.0" />
+                    </VBox.margin>
+                </GridPane>
+
+                <TableView prefHeight="300.0" prefWidth="700.0" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn prefWidth="100.0" text="ID Prod." />
+                        <TableColumn prefWidth="250.0" text="Descripción" />
+                        <TableColumn prefWidth="100.0" text="Cantidad" />
+                        <TableColumn prefWidth="120.0" text="Precio Unit." />
+                        <TableColumn prefWidth="120.0" text="Subtotal" />
+                    </columns>
+                    <VBox.margin>
+                        <Insets left="30.0" right="30.0" />
+                    </VBox.margin>
+                </TableView>
+
+                <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+                    <children>
+                        <VBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0">
+                            <children>
+                                <Label styleClass="total-label" text="TOTAL GENERAL" />
+                                <Label styleClass="total-amount" text="RD$ 0.00" />
+                            </children>
+                        </VBox>
+                        <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="120.0" styleClass="discard-button" text="DESCARTAR" />
+                        <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="220.0" styleClass="save-button" text="CONFIRMAR VENTA" />
+                    </children>
+                    <padding>
+                        <Insets right="30.0" />
+                    </padding>
+                </HBox>
+            </children>
+        </VBox>
+    </children>
+</HBox>

@@ -19,9 +19,10 @@ pom.xml.next
 release.properties
 dependency-reduced-pom.xml
 .mvn/timing.properties
-
-# Maven Wrapper
-.mvn/wrapper/maven-wrapper.properties
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+.kotlin
 
 # Java
 *.class
@@ -36,6 +37,28 @@ replay_pid*
 Thumbs.db
 *.swp
 *~
+
+# Eclipse
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+# NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# VS Code
+.vscode/
 
 # Project specific
 reporte_salida.pdf
