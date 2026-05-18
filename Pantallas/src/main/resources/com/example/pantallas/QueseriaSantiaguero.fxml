@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<HBox prefHeight="800.0" prefWidth="1200.0" stylesheets="@Style5.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <VBox prefWidth="280.0" styleClass="sidebar">
+            <children>
+                <VBox alignment="CENTER" spacing="15.0" style="-fx-padding: 40 20;">
+                    <children>
+                        <Label style="-fx-font-size: 50;" text="🧀" />
+                        <Label style="-fx-font-size: 22; -fx-font-weight: 800; -fx-text-fill: white;" text="ARTESANAL" />
+                        <Separator opacity="0.1" prefWidth="200.0" />
+                    </children>
+                </VBox>
+                
+                <VBox spacing="10" style="-fx-padding: 0 20;">
+                    <Button maxWidth="Infinity" styleClass="nav-item-active" text="🛒 Registro de Ventas" />
+                    <Button maxWidth="Infinity" styleClass="nav-item" text="🚚 Gestión de Envíos" />
+                    <Button maxWidth="Infinity" styleClass="nav-item" text="⚙️ Configuración" />
+                </VBox>
+
+                <Region VBox.vgrow="ALWAYS" />
+
+                <VBox style="-fx-padding: 30;">
+                    <Button maxWidth="Infinity" prefHeight="50.0" styleClass="btn-danger" text="🏠 VOLVER AL MENÚ" />
+                </VBox>
+            </children>
+        </VBox>
+
+        <VBox spacing="30.0" styleClass="main-content" HBox.hgrow="ALWAYS">
+            <children>
+                <VBox spacing="5">
+                    <children>
+                        <Label styleClass="title-large" text="Nueva Transacción de Venta" />
+                        <Label styleClass="label-muted" text="Panel de facturación rápida para productos terminados." />
+                    </children>
+                </VBox>
+
+                <VBox spacing="20.0" styleClass="card-premium">
+                    <children>
+                        <GridPane hgap="30.0" vgap="20.0">
+                            <columnConstraints>
+                                <ColumnConstraints hgrow="ALWAYS" />
+                                <ColumnConstraints hgrow="ALWAYS" />
+                            </columnConstraints>
+                            <children>
+                                <VBox spacing="8.0">
+                                    <children>
+                                        <Label styleClass="label-bold" text="CLIENTE" />
+                                        <ComboBox maxWidth="Infinity" prefHeight="45.0" promptText="Seleccionar o buscar cliente..." />
+                                    </children>
+                                </VBox>
+                                <VBox spacing="8.0" GridPane.columnIndex="1">
+                                    <children>
+                                        <Label styleClass="label-bold" text="FECHA DE VENTA" />
+                                        <DatePicker maxWidth="Infinity" prefHeight="45.0" />
+                                    </children>
+                                </VBox>
+                                <VBox spacing="8.0" GridPane.rowIndex="1">
+                                    <children>
+                                        <Label styleClass="label-bold" text="PRODUCTO (QUESO)" />
+                                        <HBox spacing="15.0">
+                                            <children>
+                                                <ComboBox maxWidth="Infinity" prefHeight="45.0" promptText="Tipo de queso..." HBox.hgrow="ALWAYS" />
+                                                <TextField prefHeight="45.0" prefWidth="100.0" promptText="Cant." />
+                                            </children>
+                                        </HBox>
+                                    </children>
+                                </VBox>
+                                <VBox alignment="BOTTOM_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                    <children>
+                                        <Button prefHeight="45.0" prefWidth="200.0" styleClass="btn-primary" text="+ AÑADIR ITEM" />
+                                    </children>
+                                </VBox>
+                            </children>
+                        </GridPane>
+                    </children>
+                </VBox>
+
+                <TableView VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn prefWidth="100.0" text="ID Prod." />
+                        <TableColumn prefWidth="300.0" text="Descripción" />
+                        <TableColumn prefWidth="120.0" text="Cantidad" />
+                        <TableColumn prefWidth="150.0" text="Precio Unit." />
+                        <TableColumn prefWidth="150.0" text="Subtotal" />
+                    </columns>
+                </TableView>
+
+                <HBox alignment="CENTER_RIGHT" spacing="30.0">
+                    <children>
+                        <VBox alignment="CENTER_RIGHT">
+                            <children>
+                                <Label styleClass="label-muted" text="TOTAL GENERAL" />
+                                <Label style="-fx-font-size: 38; -fx-font-weight: 900; -fx-text-fill: -success;" text="RD$ 0.00" />
+                            </children>
+                        </VBox>
+                        <Button prefHeight="60.0" prefWidth="150.0" styleClass="btn-danger" style="-fx-background-color: transparent; -fx-text-fill: -danger;" text="DESCARTAR" />
+                        <Button prefHeight="60.0" prefWidth="250.0" styleClass="btn-primary" text="CONFIRMAR VENTA" />
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </children>
+</HBox>

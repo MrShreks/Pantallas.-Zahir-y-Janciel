@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<HBox prefHeight="750.0" prefWidth="1200.0" stylesheets="@Style5.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pantallas.VentaController">
+    <children>
+        <VBox prefWidth="280.0" styleClass="sidebar">
+            <children>
+                <VBox alignment="CENTER" spacing="15.0" style="-fx-padding: 40 20;">
+                    <children>
+                        <Label style="-fx-font-size: 50;" text="🧀" />
+                        <Label style="-fx-font-size: 22; -fx-font-weight: 800; -fx-text-fill: white;" text="LOGÍSTICA" />
+                        <Separator opacity="0.1" prefWidth="200.0" />
+                    </children>
+                </VBox>
+                <VBox spacing="10" style="-fx-padding: 0 20;">
+                    <Button maxWidth="Infinity" onAction="#mostrarVentas" styleClass="nav-item" text="🛒 Registro de Ventas" />
+                    <Button maxWidth="Infinity" onAction="#mostrarEnvios" styleClass="nav-item-active" text="🚚 Gestión de Envíos" />
+                </VBox>
+                
+                <Region VBox.vgrow="ALWAYS" />
+
+                <VBox style="-fx-padding: 30;">
+                    <Button maxWidth="Infinity" onAction="#irAMenuPrincipal" prefHeight="50.0" styleClass="btn-danger" text="🏠 VOLVER AL MENÚ" />
+                </VBox>
+            </children>
+        </VBox>
+
+        <VBox styleClass="main-content" HBox.hgrow="ALWAYS">
+            <children>
+                <Label styleClass="title-large" text="Control de Entregas y Envíos" />
+
+                <HBox alignment="CENTER_LEFT" spacing="15.0" styleClass="card" style="-fx-margin: 20 0;">
+                    <children>
+                        <TextField prefHeight="45.0" prefWidth="400.0" promptText="Buscar por ID de Orden o Cliente..." />
+                        <ComboBox prefHeight="45.0" prefWidth="180.0" promptText="Estado" />
+                        <Button styleClass="btn-primary" text="FILTRAR" />
+                    </children>
+                </HBox>
+
+                <TableView fx:id="tablaEnvios" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn prefWidth="100" text="ID Orden" />
+                        <TableColumn prefWidth="250" text="Cliente" />
+                        <TableColumn prefWidth="350" text="Dirección" />
+                        <TableColumn prefWidth="150" text="Fecha Límite" />
+                        <TableColumn prefWidth="120" text="Estatus" />
+                    </columns>
+                </TableView>
+
+                <HBox alignment="CENTER_RIGHT" spacing="15.0" styleClass="card" style="-fx-margin: 20 0;">
+                    <children>
+                        <VBox alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
+                            <children>
+                                <Label styleClass="label-bold" text="OPERACIONES LOGÍSTICAS" />
+                                <Label styleClass="label-muted" text="Seleccione una orden para actualizar su estatus en tiempo real" />
+                            </children>
+                        </VBox>
+                        <Button prefHeight="50.0" styleClass="btn-accent" text="GENERAR RUTA" />
+                        <Button prefHeight="50.0" styleClass="btn-primary" text="MARCAR ENTREGADO" />
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </children>
+</HBox>

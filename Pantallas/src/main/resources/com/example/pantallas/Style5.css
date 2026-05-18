@@ -1,0 +1,197 @@
+/* ============================================
+   SUPER PREMIUM CSS - FÁBRICA DE QUESO
+   Diseño de Vanguardia, Elegante y Dinámico
+   ============================================ */
+
+.root {
+    /* Paleta de Colores Primaria */
+    -primary-dark: #061e12;
+    -primary: #0f3d24;
+    -primary-light: #1e7a46;
+    -accent: #c6944a; 
+    -accent-light: #e0b878;
+    -accent-dark: #9a7339;
+    
+    -success: #2ecc71;
+    -danger: #e74c3c;
+    -warning: #f1c40f;
+    -info: #3498db;
+
+    -bg-sidebar: linear-gradient(to bottom, #0f172a, #0a0f1c);
+    -bg-main: #f8fafc;
+    -bg-card: #ffffff;
+    -bg-input: #ffffff;
+
+    -text-primary: #1e293b;
+    -text-secondary: #64748b;
+    -text-light: #ffffff;
+    -text-muted: #94a3b8;
+
+    -border-color: #e2e8f0;
+    -shadow-sm: dropshadow(gaussian, rgba(0, 0, 0, 0.05), 5, 0, 0, 1);
+    -shadow-md: dropshadow(gaussian, rgba(0, 0, 0, 0.08), 10, 0, 0, 4);
+    -shadow-lg: dropshadow(gaussian, rgba(0, 0, 0, 0.12), 20, 0, 0, 8);
+}
+
+* { -fx-font-family: "Segoe UI", "Inter", "Roboto", "System"; }
+
+.root { -fx-background-color: -bg-main; }
+
+.main-content { -fx-background-color: -bg-main; -fx-padding: 30; }
+
+.card {
+    -fx-background-color: white;
+    -fx-background-radius: 20;
+    -fx-padding: 25;
+    -fx-effect: -shadow-md;
+}
+
+.card-premium {
+    -fx-background-color: white;
+    -fx-background-radius: 24;
+    -fx-padding: 30;
+    -fx-effect: -shadow-lg;
+    -fx-border-color: -border-color;
+    -fx-border-width: 1;
+    -fx-border-radius: 24;
+}
+
+Button {
+    -fx-cursor: hand;
+    -fx-background-radius: 12;
+    -fx-font-weight: 700;
+    -fx-font-size: 13px;
+    -fx-padding: 12 24;
+}
+
+.btn-primary {
+    -fx-background-color: linear-gradient(to right, -primary, -primary-light);
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(15, 61, 36, 0.3), 10, 0, 0, 4);
+}
+
+.btn-primary:hover {
+    -fx-background-color: linear-gradient(to right, -primary-light, #2a8a55);
+    -fx-translate-y: -2;
+}
+
+.btn-danger {
+    -fx-background-color: linear-gradient(to right, #e74c3c, #ff7675);
+    -fx-text-fill: white;
+}
+
+TextField, PasswordField, TextArea, ComboBox, DatePicker {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 12;
+    -fx-border-color: #e2e8f0;
+    -fx-border-radius: 12;
+    -fx-border-width: 1.5;
+    -fx-padding: 10 15;
+    -fx-font-size: 14px;
+}
+
+.title-large { -fx-font-size: 32px; -fx-font-weight: 800; -fx-text-fill: -primary-dark; }
+.title-medium { -fx-font-size: 24px; -fx-font-weight: 700; -fx-text-fill: -primary-dark; }
+.label-bold { -fx-font-weight: 700; -fx-text-fill: -text-primary; }
+.label-muted { -fx-text-fill: -text-secondary; -fx-font-size: 13px; }
+
+TableView { -fx-background-color: white; -fx-background-radius: 16; -fx-effect: -shadow-sm; }
+
+.sidebar {
+    -fx-background-color: -bg-sidebar;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 15, 0, 5, 0);
+}
+
+.nav-item {
+    -fx-background-color: transparent;
+    -fx-text-fill: #94a3b8;
+    -fx-background-radius: 12;
+    -fx-padding: 12 20;
+}
+
+.nav-item:hover { -fx-background-color: rgba(255, 255, 255, 0.05); -fx-text-fill: white; -fx-translate-x: 5; }
+
+.nav-item-active {
+    -fx-background-color: -primary;
+    -fx-text-fill: white;
+    -fx-border-color: -accent;
+    -fx-border-width: 0 0 0 4;
+}
+
+/* === LOGIN STYLES === */
+.login-root {
+    -fx-background-color: #0f172a;
+}
+
+.login-card {
+    -fx-background-color: white;
+    -fx-background-radius: 30;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 50, 0, 0, 20);
+    -fx-padding: 0;
+}
+
+.login-form-side {
+    -fx-background-color: white;
+    -fx-background-radius: 30 0 0 30;
+    -fx-padding: 40;
+    -fx-min-width: 450;
+}
+
+.login-welcome-side {
+    -fx-background-color: linear-gradient(to bottom right, -primary-dark, -primary-light);
+    -fx-background-radius: 0 30 30 0;
+    -fx-padding: 40;
+    -fx-min-width: 350;
+    -fx-max-width: 350;
+    -fx-alignment: CENTER;
+}
+
+.welcome-title { -fx-font-size: 30px; -fx-font-weight: 900; -fx-text-fill: white; }
+.welcome-text { -fx-text-fill: rgba(255, 255, 255, 0.8); -fx-font-size: 14px; -fx-text-alignment: CENTER; }
+.login-input-icon { -fx-font-size: 18px; -fx-text-fill: -primary-light; }
+
+/* === BOTONES FALTANTES === */
+.btn-accent {
+    -fx-background-color: linear-gradient(to right, -accent-dark, -accent);
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(198, 148, 74, 0.3), 10, 0, 0, 4);
+}
+
+.btn-accent:hover {
+    -fx-background-color: linear-gradient(to right, -accent, -accent-light);
+    -fx-translate-y: -2;
+}
+
+.btn-danger:hover {
+    -fx-background-color: linear-gradient(to right, #ff7675, #fd9644);
+    -fx-translate-y: -2;
+}
+
+.btn-warning {
+    -fx-background-color: linear-gradient(to right, #f39c12, #f1c40f);
+    -fx-text-fill: #1e293b;
+    -fx-font-weight: 700;
+}
+
+/* === TABLA HEADERS === */
+.table-view .column-header {
+    -fx-background-color: linear-gradient(to bottom, #f1f5f9, #e2e8f0);
+    -fx-border-color: #cbd5e1;
+    -fx-border-width: 0 0 1 0;
+}
+
+.table-view .column-header .label {
+    -fx-font-weight: 700;
+    -fx-font-size: 13px;
+    -fx-text-fill: -primary-dark;
+    -fx-padding: 8 12;
+}
+
+.table-view .table-row-cell:selected {
+    -fx-background-color: rgba(15, 61, 36, 0.1);
+}
+
+.table-view .table-row-cell:selected .text {
+    -fx-fill: -primary-dark;
+}
+

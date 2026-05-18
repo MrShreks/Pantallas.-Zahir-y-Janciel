@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<StackPane styleClass="login-root" stylesheets="@Style5.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pantallas.BienvenidaScreenController">
+    <children>
+        <VBox alignment="CENTER" maxWidth="500" spacing="25" styleClass="login-card">
+            <children>
+                <VBox alignment="CENTER" spacing="10">
+                    <children>
+                        <Label style="-fx-font-size: 80;" text="🧀" />
+                        <Label styleClass="title-medium" text="BIENVENIDO AL SISTEMA" />
+                        <Separator maxWidth="250" opacity="0.3" />
+                    </children>
+                </VBox>
+
+                <VBox alignment="CENTER" spacing="10">
+                    <children>
+                        <Label fx:id="lblUsuario" style="-fx-font-size: 26; -fx-font-weight: 800; -fx-text-fill: -primary;" text="Usuario" />
+                        <Label fx:id="lblRol" styleClass="label-muted" text="CARGO: ADMINISTRADOR" />
+                    </children>
+                </VBox>
+
+                <VBox alignment="CENTER" spacing="15">
+                    <children>
+                        <ProgressBar fx:id="progressBar" prefHeight="10" prefWidth="350" />
+                        <Label fx:id="lblLoading" styleClass="label-muted" text="Sincronizando base de datos..." />
+                    </children>
+                </VBox>
+
+                <Label styleClass="label-muted" text="© 2026 Fábrica de Queso S.R.L." />
+            </children>
+        </VBox>
+    </children>
+</StackPane>

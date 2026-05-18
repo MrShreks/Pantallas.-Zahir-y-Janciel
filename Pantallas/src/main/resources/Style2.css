@@ -1,0 +1,32 @@
+/* Estilo para los botones del menú lateral */
+.menu-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #ecf0f1;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 0 0 0 30;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+}
+
+.menu-button:hover {
+    -fx-background-color: #34495e;
+    -fx-text-fill: #3498db;
+}
+
+/* Estilo para las tarjetas interactivas */
+.card {
+    -fx-background-color: white;
+    -fx-padding: 30;
+    -fx-alignment: CENTER;
+    -fx-pref-width: 180;
+    -fx-pref-height: 160;
+    -fx-background-radius: 15;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);
+}
+
+.card:hover {
+    -fx-background-color: #fdfdfd;
+    -fx-effect: dropshadow(three-pass-box, rgba(41, 128, 185, 0.3), 15, 0, 0, 8);
+    -fx-translate-y: -5;
+}

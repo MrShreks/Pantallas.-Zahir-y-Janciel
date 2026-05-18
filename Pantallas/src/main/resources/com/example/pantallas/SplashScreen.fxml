@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<StackPane styleClass="login-root" stylesheets="@Style5.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pantallas.SplashScreenController">
+    <VBox alignment="CENTER" spacing="25" style="-fx-padding: 60 80;">
+        <VBox alignment="CENTER" spacing="10">
+            <Label fx:id="lblLogo" style="-fx-font-size: 100px;" text="🧀" />
+            <Label styleClass="title-large" style="-fx-text-fill: -accent-light;" text="FÁBRICA DE QUESO" />
+            <Label styleClass="label-muted" style="-fx-font-size: 16px;" text="Sistema de Gestión Integral Premium" />
+        </VBox>
+
+        <Separator maxWidth="300" opacity="0.2" />
+
+        <VBox alignment="CENTER" spacing="15" style="-fx-padding: 20 0 0 0;">
+            <ProgressBar fx:id="progressBar" prefHeight="8" prefWidth="350" />
+            <Label fx:id="lblLoading" styleClass="label-muted" text="Iniciando sistema..." />
+        </VBox>
+
+        <Region prefHeight="30" />
+
+        <Button fx:id="btnComenzar" onAction="#comenzar" styleClass="btn-accent" text="COMENZAR" visible="false" />
+
+        <Label styleClass="label-muted" style="-fx-font-size: 12px;" text="© 2026 Fábrica de Queso S.R.L." />
+    </VBox>
+</StackPane>
