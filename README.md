@@ -31,9 +31,9 @@
 
 ## 1. Resumen Ejecutivo
 
-**Fábrica de Queso RD** es un sistema de gestión empresarial (_ERP_) desarrollado en JavaFX para la **Quesería Santiaguero**, una planta productora de quesos en República Dominicana. La aplicación automatiza y digitaliza la totalidad del ciclo operativo: desde la recepción de leche cruda, pasando por los procesos de producción y maduración, hasta la venta, distribución y generación de reportes gerenciales.
+**Fábrica de Queso** es un sistema de gestión empresarial desarrollado en JavaFX. La aplicación automatiza y digitaliza la totalidad del ciclo operativo: desde la recepción de leche cruda, pasando por los procesos de producción y maduración, hasta la venta, distribución y generación de reportes gerenciales.
 
-El proyecto se encuentra en etapa de desarrollo activo con una arquitectura modular que abarca **6 procesos de negocio**, **17 pantallas FXML**, **más de 50 clases Java** y una base de datos SQL Server con **más de 60 tablas**.
+El proyecto se encuentra en etapa de desarrollo activo con una arquitectura modular que abarca **6 procesos de negocio**, **17 pantallas FXML**, **más de 50 clases Java** y una base de datos SQL Server con **más de 50 tablas**.
 
 ---
 
@@ -41,7 +41,7 @@ El proyecto se encuentra en etapa de desarrollo activo con una arquitectura modu
 
 ### 2.1 Contexto Actual
 
-La Quesería Santiaguero opera actualmente sus procesos de forma manual o con herramientas ofimáticas básicas, lo que genera las siguientes problemáticas:
+Nuestra Fabrica de Queso opera actualmente sus procesos de forma manual o con herramientas ofimáticas básicas, lo que genera las siguientes problemáticas:
 
 | Problema | Impacto |
 |----------|---------|
@@ -77,11 +77,11 @@ La Quesería Santiaguero opera actualmente sus procesos de forma manual o con he
 
 ### 3.3 Valor Diferencial
 
-- ✅ **Interfaz moderna** con JavaFX y BootstrapFX (animaciones, transiciones suaves)
-- ✅ **Punto de venta inteligente** con cálculo automático de ITBIS (18% general / 16% reducido)
-- ✅ **Dashboard en tiempo real** con KPIs del negocio
-- ✅ **Reportes profesional**es con JasperReports (PDF exportable)
-- ✅ **Arquitectura preparada** para migración a microservicios
+- **Interfaz moderna** con JavaFX y BootstrapFX (animaciones, transiciones suaves)
+- **Punto de venta inteligente** con cálculo automático de ITBIS (18% general / 16% reducido)
+- **Dashboard en tiempo real** con KPIs del negocio
+- **Reportes profesional**es con JasperReports (PDF exportable)
+- **Arquitectura preparada** para migración a microservicios
 
 ---
 
