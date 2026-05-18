@@ -1,60 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<HBox prefHeight="700.0" prefWidth="1200.0" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pantallas.ProcesoDeProduccion.ProduccionController">
+<HBox prefHeight="750.0" prefWidth="1300.0" stylesheets="@../Style5.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pantallas.ProcesoDeProduccion.ProduccionController">
     <children>
-        <VBox prefWidth="240.0" styleClass="sidebar">
+        <VBox prefWidth="280.0" styleClass="sidebar">
             <children>
-                <Label style="-fx-padding: 20;" styleClass="logo-text" text="Fabrica de Queso" />
-                <Button fx:id="btnNav1" onAction="#mostrarRecepcion" prefWidth="240" styleClass="nav-button-active" text="1. Recepción Leche" />
-                <Button fx:id="btnNavProv" onAction="#mostrarProveedores" prefWidth="240" styleClass="nav-button" text="2. Gestión Proveedores" />
-                <Button onAction="#mostrarProduccion" prefWidth="240" styleClass="nav-button" text="3. Producción/Cuajado" />
-                <Button fx:id="btnNavSeguimiento" onAction="#mostrarSeguimiento" prefWidth="240" styleClass="nav-button" text="4. Seguimiento Lotes" />
-                <Button fx:id="btnNav3" onAction="#mostrarCalidad" prefWidth="240" styleClass="nav-button" text="5. Control Calidad" />
-                <Button fx:id="btnNav4" onAction="#mostrarInventario" prefWidth="240" styleClass="nav-button" text="6. Inventario Final" />
-                <Separator style="-fx-padding: 10;" />
-                <Button onAction="#irAMenuPrincipal" prefWidth="240" styleClass="nav-button" text="← Menú Principal" />
+                <VBox alignment="CENTER" spacing="15.0" style="-fx-padding: 40 20;">
+                    <children>
+                        <Label style="-fx-font-size: 50;" text="🧀" />
+                        <Label style="-fx-font-size: 22; -fx-font-weight: 800; -fx-text-fill: white;" text="PRODUCCIÓN" />
+                        <Separator opacity="0.1" prefWidth="200.0" />
+                    </children>
+                </VBox>
+                
+                <VBox spacing="10" style="-fx-padding: 0 20;">
+                    <Button fx:id="btnNavRecepcion" maxWidth="Infinity" onAction="#mostrarRecepcion" styleClass="nav-item-active" text="1. Recepción Leche" />
+                    <Button fx:id="btnNavProveedores" maxWidth="Infinity" onAction="#mostrarProveedores" styleClass="nav-item" text="2. Ganaderías" />
+                    <Button fx:id="btnNavProduccion" maxWidth="Infinity" onAction="#mostrarProduccion" styleClass="nav-item" text="3. Cuajado / Lotes" />
+                    <Button fx:id="btnNavSeguimiento" maxWidth="Infinity" onAction="#mostrarSeguimiento" styleClass="nav-item" text="4. Seguimiento" />
+                    <Button fx:id="btnNavCalidad" maxWidth="Infinity" onAction="#mostrarCalidad" styleClass="nav-item" text="5. Control Calidad" />
+                    <Button fx:id="btnNavInventario" maxWidth="Infinity" onAction="#mostrarInventario" styleClass="nav-item" text="6. Stock Final" />
+                </VBox>
+
+                <Region VBox.vgrow="ALWAYS" />
+
+                <VBox style="-fx-padding: 30;">
+                    <Button maxWidth="Infinity" onAction="#irAMenuPrincipal" prefHeight="50.0" styleClass="btn-danger" text="🏠 VOLVER AL MENÚ" />
+                </VBox>
             </children>
         </VBox>
 
-        <StackPane fx:id="contentArea" onMouseClicked="#deseleccionarTablas" HBox.hgrow="ALWAYS">
+        <StackPane fx:id="contentArea" styleClass="main-content" HBox.hgrow="ALWAYS">
             <children>
-                <VBox fx:id="paneRecepcion" styleClass="main-content">
+                <!-- PANEL: RECEPCIÓN DE LECHE -->
+                <VBox fx:id="paneRecepcion" spacing="25.0">
                     <children>
-                        <Label styleClass="header-title" text="Recepción de Leche" />
-                        <GridPane hgap="20.0" style="-fx-padding: 30;" vgap="15.0">
+                        <Label styleClass="title-large" text="Recepción de Leche Fresca" />
+                        
+                        <VBox spacing="20" styleClass="card-premium">
                             <children>
-                                <VBox spacing="5.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                                <GridPane hgap="30" vgap="20">
+                                    <columnConstraints>
+                                        <ColumnConstraints hgrow="ALWAYS" />
+                                        <ColumnConstraints hgrow="ALWAYS" />
+                                    </columnConstraints>
                                     <children>
-                                        <Label styleClass="form-label" text="PROVEEDOR DE LECHE" />
-                                        <HBox spacing="10">
-                                            <ComboBox fx:id="cbProveedor" prefHeight="40.0" prefWidth="300.0" promptText="Seleccionar ganadería..." styleClass="custom-combo" />
-                                            <Button onAction="#mostrarProveedores" prefWidth="40" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold;" text="+" />
-                                        </HBox>
+                                        <VBox spacing="10">
+                                            <Label styleClass="label-bold" text="PROVEEDOR / GANADERÍA" />
+                                            <HBox spacing="10">
+                                                <ComboBox fx:id="cbProveedor" maxWidth="Infinity" prefHeight="45.0" promptText="Seleccionar origen..." HBox.hgrow="ALWAYS" />
+                                                <Button onAction="#mostrarProveedores" prefHeight="45" styleClass="btn-accent" text="+" />
+                                            </HBox>
+                                        </VBox>
+                                        <VBox spacing="10" GridPane.columnIndex="1">
+                                            <Label styleClass="label-bold" text="CANTIDAD RECIBIDA (LITROS)" />
+                                            <TextField fx:id="txtLitrosRecibidos" prefHeight="45.0" style="-fx-font-size: 18; -fx-font-weight: 800;" />
+                                        </VBox>
                                     </children>
-                                </VBox>
-                                <VBox spacing="5.0" GridPane.columnIndex="0" GridPane.rowIndex="1">
-                                    <children>
-                                        <Label styleClass="form-label" text="CANTIDAD RECIBIDA (LITROS)" />
-                                        <TextField fx:id="txtLitrosRecibidos" prefHeight="40.0" prefWidth="200.0" styleClass="custom-text-field" />
-                                    </children>
-                                </VBox>
-                                <HBox fx:id="hbBotonesRecepcion" alignment="BOTTOM_LEFT" spacing="10" visible="true" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                                    <children>
-                                        <Button onAction="#registrarEntrada" prefHeight="45.0" prefWidth="110.0" style="-fx-background-color: #27ae60; -fx-text-fill: white;" text="GUARDAR" />
-                                        <Button fx:id="btnActualizarRec" onAction="#actualizarRegistro" prefHeight="45.0" prefWidth="110.0" style="-fx-background-color: #2980b9; -fx-text-fill: white;" text="ACTUALIZAR" />
-                                        <Button fx:id="btnBorrarRec" onAction="#borrarRegistro" prefHeight="45.0" prefWidth="110.0" style="-fx-background-color: #e74c3c; -fx-text-fill: white;" text="BORRAR" />
-                                        <Button onAction="#limpiarDatos" prefHeight="45.0" prefWidth="110.0" style="-fx-background-color: #95a5a6; -fx-text-fill: white;" text="LIMPIAR" />
-                                    </children>
+                                </GridPane>
+                                
+                                <HBox alignment="CENTER_RIGHT" spacing="15">
+                                    <Button onAction="#limpiarCamposRecepcion" prefWidth="150.0" styleClass="btn-danger" style="-fx-background-color: transparent; -fx-text-fill: -danger;" text="LIMPIAR" />
+                                    <Button onAction="#registrarEntrada" prefWidth="250.0" styleClass="btn-primary" text="REGISTRAR ENTRADA" />
                                 </HBox>
                             </children>
-                        </GridPane>
-                        <TableView fx:id="tablaRecepcion" style="-fx-margin: 0 30 30 30;" VBox.vgrow="ALWAYS">
+                        </VBox>
+                        
+                        <TableView fx:id="tablaRecepcion" VBox.vgrow="ALWAYS">
                             <columns>
                                 <TableColumn fx:id="colID" prefWidth="80" text="ID" />
-                                <TableColumn fx:id="colProv" prefWidth="250" text="Proveedor" />
+                                <TableColumn fx:id="colProv" prefWidth="300" text="Proveedor" />
                                 <TableColumn fx:id="colLitros" prefWidth="150" text="Litros" />
                                 <TableColumn fx:id="colEstado" prefWidth="150" text="Estado" />
                             </columns>
@@ -62,99 +80,125 @@
                     </children>
                 </VBox>
 
-                <VBox fx:id="paneProveedores" managed="false" styleClass="main-content" visible="false">
+                <!-- PANEL: PROVEEDORES -->
+                <VBox fx:id="paneProveedores" managed="false" spacing="25.0" visible="false">
                     <children>
-                        <Label styleClass="header-title" text="Gestión de Proveedores" />
-                        <GridPane hgap="20.0" style="-fx-padding: 30;" vgap="15.0">
+                        <Label styleClass="title-large" text="Gestión de Ganaderías" />
+                        
+                        <HBox alignment="CENTER_LEFT" spacing="20" styleClass="card">
                             <children>
-                                <VBox spacing="5.0">
-                                    <Label text="NOMBRE DEL PROVEEDOR" />
-                                    <TextField fx:id="txtNombreProv" prefHeight="40.0" prefWidth="300.0" />
+                                <VBox spacing="5" HBox.hgrow="ALWAYS">
+                                    <Label styleClass="label-bold" text="Nombre del Proveedor" />
+                                    <TextField fx:id="txtNombreProv" prefHeight="45.0" promptText="Nombre completo..." />
                                 </VBox>
-                                <HBox alignment="BOTTOM_LEFT" spacing="10" GridPane.columnIndex="1">
-                                    <Button onAction="#guardarProveedor" style="-fx-background-color: #27ae60; -fx-text-fill: white;" text="AÑADIR" />
-                                    <Button onAction="#actualizarProveedor" style="-fx-background-color: #2980b9; -fx-text-fill: white;" text="EDITAR" />
-                                    <Button onAction="#borrarProveedor" style="-fx-background-color: #e74c3c; -fx-text-fill: white;" text="ELIMINAR" />
-                                </HBox>
+                                <Button onAction="#guardarProveedor" prefHeight="45.0" styleClass="btn-primary" text="AGREGAR" />
+                                <Button onAction="#eliminarProveedor" prefHeight="45.0" styleClass="btn-danger" text="ELIMINAR" />
                             </children>
-                        </GridPane>
-                        <TableView fx:id="tablaProveedores" style="-fx-margin: 0 30 30 30;">
-                            <columns>
-                                <TableColumn fx:id="colIdProv" prefWidth="100" text="ID" />
-                                <TableColumn fx:id="colNombreProv" prefWidth="400" text="Nombre del Proveedor" />
-                            </columns>
-                        </TableView>
-                    </children>
-                </VBox>
-
-                <VBox fx:id="paneProduccion" managed="false" styleClass="main-content" visible="false">
-                    <children>
-                        <Label styleClass="header-title" text="Panel de Producción / Cuajado" />
-                        <GridPane hgap="20.0" style="-fx-padding: 30;" vgap="15.0">
-                            <children>
-                                <VBox spacing="5.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                                    <Label text="ID DEL LOTE" />
-                                    <ComboBox fx:id="cbLoteProduccion" prefHeight="40.0" prefWidth="250.0" promptText="Seleccionar Lote..." />
-                                </VBox>
-                                <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                                    <Label text="TIPO DE QUESO" />
-                                    <ComboBox fx:id="cbTipoQueso" prefHeight="40.0" prefWidth="250.0" promptText="Seleccionar tipo..." />
-                                </VBox>
-                                <Button onAction="#iniciarLote" prefHeight="45.0" prefWidth="200.0"
-                                        style="-fx-background-color: #e67e22; -fx-text-fill: white; -fx-font-weight: bold;"
-                                        text="INICIAR PROCESO" GridPane.rowIndex="1" />
-                            </children>
-                        </GridPane>
-                    </children>
-                </VBox>
-
-                <VBox fx:id="paneSeguimiento" managed="false" styleClass="main-content" visible="false">
-                    <children>
-                        <Label styleClass="header-title" text="Seguimiento de Producción" />
-                        <HBox spacing="20" style="-fx-padding: 20;">
-                            <ComboBox fx:id="cbCambiarEstado" prefWidth="200.0" promptText="Cambiar Estado a..." />
-                            <Button onAction="#actualizarEstadoProduccion" style="-fx-background-color: #f39c12; -fx-text-fill: white;" text="ACTUALIZAR ESTADO" />
                         </HBox>
-                        <TableView fx:id="tablaSeguimiento" style="-fx-margin: 10 30;" VBox.vgrow="ALWAYS">
+                        
+                        <TableView fx:id="tablaProveedores" VBox.vgrow="ALWAYS">
                             <columns>
-                                <TableColumn fx:id="colSegLote" prefWidth="100" text="Lote" />
-                                <TableColumn fx:id="colSegTipo" prefWidth="200" text="Tipo Queso" />
-                                <TableColumn fx:id="colSegEstado" prefWidth="200" text="Estado Actual" />
+                                <TableColumn fx:id="colIdProv" prefWidth="80" text="ID" />
+                                <TableColumn fx:id="colNombreProv" prefWidth="400" text="Nombre Ganadería" />
                             </columns>
                         </TableView>
                     </children>
                 </VBox>
 
-                <VBox fx:id="paneCalidad" managed="false" styleClass="main-content" visible="false">
+                <!-- PANEL: PRODUCCIÓN / CUAJADO -->
+                <VBox fx:id="paneProduccion" managed="false" spacing="25.0" visible="false">
                     <children>
-                        <Label styleClass="header-title" text="Validación de Calidad" />
-                        <VBox spacing="20.0" style="-fx-padding: 30;">
+                        <Label styleClass="title-large" text="Iniciación de Lote de Producción" />
+                        
+                        <VBox spacing="30" styleClass="card-premium">
                             <children>
-                                <Label text="SELECCIONAR LOTE COMPLETADO" />
-                                <ComboBox fx:id="cbLotesTerminados" prefWidth="300.0" promptText="Seleccionar Lote..." />
-                                <Label text="LIBRAS FINALES OBTENIDAS" />
-                                <TextField fx:id="txtLibrasFinales" promptText="Libras obtenidas" />
-                                <Label text="RESULTADO" />
-                                <ComboBox fx:id="cbResultadoCalidad" prefWidth="300.0" promptText="Resultado de Inspección" />
-                                <Button onAction="#aprobarLote" prefHeight="50.0" prefWidth="300.0" style="-fx-background-color: #2ecc71; -fx-text-fill: white;" text="FINALIZAR Y ENVIAR A INVENTARIO" />
+                                <HBox spacing="30">
+                                    <VBox spacing="10" HBox.hgrow="ALWAYS">
+                                        <Label styleClass="label-bold" text="SELECCIONAR LOTE DE LECHE" />
+                                        <ComboBox fx:id="cbLoteProduccion" maxWidth="Infinity" prefHeight="50.0" promptText="Seleccionar Lote..." />
+                                    </VBox>
+                                    <VBox spacing="10" HBox.hgrow="ALWAYS">
+                                        <Label styleClass="label-bold" text="VARIEDAD DE QUESO" />
+                                        <ComboBox fx:id="cbTipoQueso" maxWidth="Infinity" prefHeight="50.0" promptText="Seleccionar tipo..." />
+                                    </VBox>
+                                </HBox>
+                                
+                                <VBox spacing="15" style="-fx-padding: 20; -fx-background-color: rgba(230, 126, 34, 0.1); -fx-background-radius: 10; -fx-border-color: rgba(230, 126, 34, 0.3); -fx-border-radius: 10;">
+                                    <children>
+                                        <Label style="-fx-font-weight: 800; -fx-text-fill: -accent;" text="⚠️ AVISO DE PRODUCCIÓN" />
+                                        <Label styleClass="label-muted" text="Al iniciar el proceso se descontarán automáticamente los materiales (Leche, Sal, Cuajo) del inventario." />
+                                        <Label style="-fx-font-family: 'Monospaced'; -fx-font-weight: bold;" text="Receta Estándar: 10L Leche + 0.8kg Sal + 0.3L Cuajo" />
+                                    </children>
+                                </VBox>
+                                
+                                <Button maxWidth="Infinity" onAction="#iniciarProduccion" prefHeight="65.0" styleClass="btn-accent" style="-fx-font-size: 20;" text="🚀 INICIAR PROCESO DE CUAJADO" />
                             </children>
                         </VBox>
                     </children>
                 </VBox>
 
-                <VBox fx:id="paneInventario" managed="false" styleClass="main-content" visible="false">
+                <!-- PANEL: SEGUIMIENTO -->
+                <VBox fx:id="paneSeguimiento" managed="false" spacing="25.0" visible="false">
                     <children>
-                        <Label styleClass="header-title" text="Stock Final" />
-                        <TableView fx:id="tablaInventario" style="-fx-margin: 30;" VBox.vgrow="ALWAYS">
+                        <Label styleClass="title-large" text="Monitor de Lotes en Proceso" />
+                        
+                        <HBox alignment="CENTER_LEFT" spacing="15" styleClass="card">
+                            <ComboBox fx:id="cbCambiarEstado" prefWidth="250.0" promptText="Cambiar estado..." />
+                            <Button onAction="#actualizarEstadoLote" styleClass="btn-primary" text="ACTUALIZAR ESTADO" />
+                        </HBox>
+                        
+                        <TableView fx:id="tablaSeguimiento" VBox.vgrow="ALWAYS">
                             <columns>
-                                <TableColumn fx:id="colInvLote" prefWidth="120" text="Lote" />
-                                <TableColumn fx:id="colInvCant" prefWidth="150" text="Libras" />
-                                <TableColumn fx:id="colInvFecha" prefWidth="200" text="Fecha Ingreso" />
+                                <TableColumn fx:id="colSegLote" prefWidth="200" text="ID Lote" />
+                                <TableColumn fx:id="colSegTipo" prefWidth="200" text="Tipo de Queso" />
+                                <TableColumn fx:id="colSegEstado" prefWidth="200" text="Estado Proceso" />
                             </columns>
                         </TableView>
                     </children>
                 </VBox>
 
+                <!-- PANEL: CONTROL DE CALIDAD -->
+                <VBox fx:id="paneCalidad" managed="false" spacing="25.0" visible="false">
+                    <children>
+                        <Label styleClass="title-large" text="Certificación de Calidad" />
+                        
+                        <VBox maxWidth="700" spacing="25" styleClass="card-premium">
+                            <children>
+                                <VBox spacing="10">
+                                    <Label styleClass="label-bold" text="LOTE COMPLETADO" />
+                                    <ComboBox fx:id="cbLotesTerminados" maxWidth="Infinity" prefHeight="50.0" promptText="Seleccionar Lote Finalizado..." />
+                                </VBox>
+                                
+                                <HBox spacing="20">
+                                    <VBox spacing="10" HBox.hgrow="ALWAYS">
+                                        <Label styleClass="label-bold" text="RENDIMIENTO (LIBRAS)" />
+                                        <TextField fx:id="txtLibrasFinales" prefHeight="50.0" style="-fx-font-size: 22; -fx-font-weight: 800; -fx-text-fill: -success;" />
+                                    </VBox>
+                                    <VBox spacing="10" HBox.hgrow="ALWAYS">
+                                        <Label styleClass="label-bold" text="VERDICTO FINAL" />
+                                        <ComboBox fx:id="cbResultadoCalidad" maxWidth="Infinity" prefHeight="50.0" promptText="Seleccionar..." />
+                                    </VBox>
+                                </HBox>
+                                
+                                <Button maxWidth="Infinity" onAction="#aprobarLote" prefHeight="65.0" styleClass="btn-primary" text="✅ APROBAR Y MOVER A STOCK" />
+                            </children>
+                        </VBox>
+                    </children>
+                </VBox>
+
+                <!-- PANEL: INVENTARIO FINAL -->
+                <VBox fx:id="paneInventario" managed="false" spacing="25.0" visible="false">
+                    <children>
+                        <Label styleClass="title-large" text="Producto Terminado" />
+                        <TableView fx:id="tablaInventario" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="colInvLote" prefWidth="200" text="Lote Origen" />
+                                <TableColumn fx:id="colInvCant" prefWidth="200" text="Libras Disponibles" />
+                                <TableColumn fx:id="colInvFecha" prefWidth="200" text="Fecha Entrada" />
+                            </columns>
+                        </TableView>
+                    </children>
+                </VBox>
             </children>
         </StackPane>
     </children>

@@ -1,79 +1,109 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<HBox prefHeight="800.0" prefWidth="1250.0" style="-fx-background-color: #f4f7f6;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pantallas.MenuPrincipal.MenuPrincipalController">
+<HBox prefHeight="800.0" prefWidth="1250.0" stylesheets="@../Style5.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pantallas.MenuPrincipal.MenuPrincipalController">
     <children>
-        <VBox prefWidth="280.0" style="-fx-background-color: #1a2a3a;">
+        <VBox prefWidth="300.0" styleClass="sidebar">
             <children>
-                <VBox alignment="CENTER" spacing="15.0" style="-fx-padding: 40 20 30 20;">
+                <VBox alignment="CENTER" spacing="15.0" style="-fx-padding: 50 20 30 20;">
                     <children>
-                        <Label text="🧀" style="-fx-font-size: 60;" />
-                        <Label text="PANEL PRINCIPAL" textFill="WHITE">
-                            <font>
-                                <Font name="System Bold" size="24.0" />
-                            </font>
-                        </Label>
-                        <Label text="Fábrica de Queso" textFill="#95a5a6">
-                            <font>
-                                <Font size="14.0" />
-                            </font>
-                        </Label>
-                        <Separator opacity="0.2" prefWidth="200.0" />
+                        <Label style="-fx-font-size: 60;" text="🧀" />
+                        <Label style="-fx-font-size: 24; -fx-font-weight: 800; -fx-text-fill: white;" text="QUESERÍA" />
+                        <Label styleClass="label-muted" style="-fx-text-fill: #94a3b8;" text="Panel Administrativo" />
+                        <Separator opacity="0.1" prefWidth="200.0" />
                     </children>
                 </VBox>
 
-
+                <VBox alignment="CENTER" spacing="5" style="-fx-padding: 0 20 40 20;">
+                    <children>
+                        <Label fx:id="lblUsuario" style="-fx-font-weight: 800; -fx-font-size: 18px; -fx-text-fill: -accent-light;" text="Usuario" />
+                        <Label fx:id="lblRol" styleClass="label-muted" style="-fx-text-fill: #64748b;" text="Rol" />
+                    </children>
+                </VBox>
+                
+                <VBox spacing="10" style="-fx-padding: 0 20;">
+                    <Button maxWidth="Infinity" onAction="#abrirDashboard" styleClass="nav-item" text="🏠 Dashboard" />
+                    <Button maxWidth="Infinity" styleClass="nav-item" text="📊 Reportes" />
+                    <Button maxWidth="Infinity" styleClass="nav-item" text="⚙️Ajustes" />
+                </VBox>
 
                 <Region VBox.vgrow="ALWAYS" />
 
-                <VBox style="-fx-padding: 20;">
+                <VBox style="-fx-padding: 30;">
                     <children>
-                        <Button maxWidth="Infinity" onAction="#salir" prefHeight="45.0" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="SALIR DEL SISTEMA" />
+                        <Button maxWidth="Infinity" onAction="#salir" prefHeight="50.0" styleClass="btn-danger" text="CERRAR SESIÓN" />
                     </children>
                 </VBox>
             </children>
         </VBox>
 
-        <VBox HBox.hgrow="ALWAYS" spacing="40.0" style="-fx-padding: 60 80;">
+        <VBox spacing="40.0" styleClass="main-content" HBox.hgrow="ALWAYS">
             <children>
                 <VBox spacing="10.0">
                     <children>
-                        <Label text="Bienvenido al Sistema de Gestión" textFill="#2c3e50">
-                            <font>
-                                <Font name="System Bold" size="36.0" />
-                            </font>
-                        </Label>
-                        <Label text="Seleccione un módulo para comenzar a trabajar" textFill="#7f8c8d">
-                            <font>
-                                <Font size="18.0" />
-                            </font>
-                        </Label>
+                        <Label styleClass="title-large" text="Módulos del Sistema" />
+                        <Label styleClass="label-muted" text="Gestione todos los procesos de la fábrica desde un solo lugar." />
                     </children>
                 </VBox>
 
-                <TilePane alignment="CENTER" hgap="30.0" prefColumns="3" vgap="30.0">
+                <TilePane fx:id="modulosGrid" alignment="CENTER" hgap="30.0" prefColumns="3" vgap="30.0">
                     <children>
-                        <Button onAction="#abrirCompras" prefHeight="180.0" prefWidth="220.0" style="-fx-background-color: white; -fx-background-radius: 20; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5); -fx-cursor: hand;" text="COMPRAS" textAlignment="CENTER">
-                            <font><Font name="System Bold" size="18.0" /></font>
+                        <Button fx:id="btnCompras" onAction="#abrirCompras" prefHeight="200.0" prefWidth="260.0" styleClass="card-premium" textAlignment="CENTER">
+                            <graphic>
+                                <VBox alignment="CENTER" spacing="15">
+                                    <Label style="-fx-font-size: 50px;" text="📦" />
+                                    <Label styleClass="title-medium" style="-fx-font-size: 18;" text="COMPRAS" />
+                                    <Label styleClass="label-muted" text="Suministros y Ganado" />
+                                </VBox>
+                            </graphic>
                         </Button>
-                        <Button onAction="#abrirVentas" prefHeight="180.0" prefWidth="220.0" style="-fx-background-color: white; -fx-background-radius: 20; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5); -fx-cursor: hand;" text="VENTAS" textAlignment="CENTER">
-                            <font><Font name="System Bold" size="18.0" /></font>
+                        <Button fx:id="btnVentas" onAction="#abrirVentas" prefHeight="200.0" prefWidth="260.0" styleClass="card-premium" textAlignment="CENTER">
+                            <graphic>
+                                <VBox alignment="CENTER" spacing="15">
+                                    <Label style="-fx-font-size: 50px;" text="💰" />
+                                    <Label styleClass="title-medium" style="-fx-font-size: 18;" text="VENTAS" />
+                                    <Label styleClass="label-muted" text="Facturación y Clientes" />
+                                </VBox>
+                            </graphic>
                         </Button>
-                        <Button onAction="#abrirInventario" prefHeight="180.0" prefWidth="220.0" style="-fx-background-color: white; -fx-background-radius: 20; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5); -fx-cursor: hand;" text="INVENTARIO" textAlignment="CENTER">
-                            <font><Font name="System Bold" size="18.0" /></font>
+                        <Button fx:id="btnInventario" onAction="#abrirInventario" prefHeight="200.0" prefWidth="260.0" styleClass="card-premium" textAlignment="CENTER">
+                            <graphic>
+                                <VBox alignment="CENTER" spacing="15">
+                                    <Label style="-fx-font-size: 50px;" text="📋" />
+                                    <Label styleClass="title-medium" style="-fx-font-size: 18;" text="INVENTARIO" />
+                                    <Label styleClass="label-muted" text="Stock y Almacén" />
+                                </VBox>
+                            </graphic>
                         </Button>
-                        <Button onAction="#abrirProduccion" prefHeight="180.0" prefWidth="220.0" style="-fx-background-color: white; -fx-background-radius: 20; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5); -fx-cursor: hand;" text="PRODUCCIÓN" textAlignment="CENTER">
-                            <font><Font name="System Bold" size="18.0" /></font>
+                        <Button fx:id="btnProduccion" onAction="#abrirProduccion" prefHeight="200.0" prefWidth="260.0" styleClass="card-premium" textAlignment="CENTER">
+                            <graphic>
+                                <VBox alignment="CENTER" spacing="15">
+                                    <Label style="-fx-font-size: 50px;" text="🏭" />
+                                    <Label styleClass="title-medium" style="-fx-font-size: 18;" text="PRODUCCIÓN" />
+                                    <Label styleClass="label-muted" text="Lotes y Calidad" />
+                                </VBox>
+                            </graphic>
                         </Button>
-                        <Button onAction="#abrirDistribucion" prefHeight="180.0" prefWidth="220.0" style="-fx-background-color: white; -fx-background-radius: 20; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5); -fx-cursor: hand;" text="DISTRIBUCIÓN" textAlignment="CENTER">
-                            <font><Font name="System Bold" size="18.0" /></font>
+                        <Button fx:id="btnDistribucion" onAction="#abrirDistribucion" prefHeight="200.0" prefWidth="260.0" styleClass="card-premium" textAlignment="CENTER">
+                            <graphic>
+                                <VBox alignment="CENTER" spacing="15">
+                                    <Label style="-fx-font-size: 50px;" text="🚚" />
+                                    <Label styleClass="title-medium" style="-fx-font-size: 18;" text="DISTRIBUCIÓN" />
+                                    <Label styleClass="label-muted" text="Logística y Envíos" />
+                                </VBox>
+                            </graphic>
                         </Button>
-                        <Button onAction="#abrirMantenimiento" prefHeight="180.0" prefWidth="220.0" style="-fx-background-color: white; -fx-background-radius: 20; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5); -fx-cursor: hand;" text="MANTENIMIENTO" textAlignment="CENTER">
-                            <font><Font name="System Bold" size="18.0" /></font>
+                        <Button fx:id="btnMantenimiento" onAction="#abrirMantenimiento" prefHeight="200.0" prefWidth="260.0" styleClass="card-premium" textAlignment="CENTER">
+                            <graphic>
+                                <VBox alignment="CENTER" spacing="15">
+                                    <Label style="-fx-font-size: 50px;" text="🔧" />
+                                    <Label styleClass="title-medium" style="-fx-font-size: 18;" text="MANTENIMIENTO" />
+                                    <Label styleClass="label-muted" text="Equipos y Servicios" />
+                                </VBox>
+                            </graphic>
                         </Button>
                     </children>
                 </TilePane>

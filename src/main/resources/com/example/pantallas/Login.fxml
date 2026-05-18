@@ -4,67 +4,81 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="500.0" prefWidth="400.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pantallas.LoginController">
+<StackPane prefHeight="750.0" prefWidth="1100.0" styleClass="login-root" stylesheets="@Style5.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pantallas.LoginController">
     <children>
-        <VBox alignment="CENTER" layoutX="40.0" layoutY="30.0" spacing="20.0" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="30.0">
+        <GridPane fx:id="mainLoginCard" maxHeight="550.0" maxWidth="850.0" prefHeight="550.0" prefWidth="850.0" styleClass="login-card">
+            <columnConstraints>
+                <ColumnConstraints hgrow="ALWAYS" minWidth="450.0" prefWidth="450.0" />
+                <ColumnConstraints hgrow="NEVER" minWidth="350.0" prefWidth="350.0" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints vgrow="ALWAYS" />
+            </rowConstraints>
             <children>
-                <VBox alignment="CENTER" spacing="5.0">
-                    <children>
-                        <Label text="🧀 Fábrica de Queso" textFill="#2c3e50">
-                            <font>
-                                <Font name="System Bold" size="28.0" />
-                            </font>
-                        </Label>
-                        <Label text="Bienvenido de nuevo" textFill="#7f8c8d">
-                            <font>
-                                <Font size="14.0" />
-                            </font>
-                        </Label>
-                    </children>
-                </VBox>
-
-                <VBox spacing="15.0">
+                <!-- LADO IZQUIERDO: FORMULARIO -->
+                <VBox alignment="CENTER" spacing="30.0" styleClass="login-form-side" GridPane.columnIndex="0">
                     <children>
                         <VBox spacing="5.0">
                             <children>
-                                <Label text="Usuario" style="-fx-font-weight: bold;" />
-                                <TextField fx:id="txtUsuario" prefHeight="40.0" promptText="Nombre de usuario o correo" style="-fx-background-radius: 8; -fx-border-color: #dcdde1; -fx-border-radius: 8;" />
+                                <Label styleClass="title-medium" text="¡Hola!" />
+                                <Label styleClass="label-muted" text="Inicia sesión con tu cuenta corporativa" />
                             </children>
                         </VBox>
 
-                        <VBox spacing="5.0">
+                        <VBox spacing="15.0">
                             <children>
-                                <Label text="Contraseña" style="-fx-font-weight: bold;" />
-                                <PasswordField fx:id="txtClave" prefHeight="40.0" promptText="••••••••" style="-fx-background-radius: 8; -fx-border-color: #dcdde1; -fx-border-radius: 8;" />
+                                <VBox spacing="8.0">
+                                    <children>
+                                        <HBox alignment="CENTER_LEFT" spacing="10">
+                                            <Label styleClass="login-input-icon" text="👤" />
+                                            <Label styleClass="label-bold" text="USUARIO" />
+                                        </HBox>
+                                        <TextField fx:id="txtUsuario" prefHeight="45.0" promptText="Nombre de usuario" />
+                                    </children>
+                                </VBox>
+
+                                <VBox spacing="8.0">
+                                    <children>
+                                        <HBox alignment="CENTER_LEFT" spacing="10">
+                                            <Label styleClass="login-input-icon" text="🔒" />
+                                            <Label styleClass="label-bold" text="CONTRASEÑA" />
+                                        </HBox>
+                                        <PasswordField fx:id="txtClave" prefHeight="45.0" promptText="••••••••" />
+                                    </children>
+                                </VBox>
                             </children>
                         </VBox>
-                    </children>
-                </VBox>
 
-                <HBox alignment="CENTER_RIGHT">
-                    <children>
-                        <Hyperlink onAction="#olvideContrasenia" text="¿Olvidaste tu contraseña?" style="-fx-text-fill: #3498db; -fx-font-size: 12px;" />
-                    </children>
-                </HBox>
-
-                <Button mnemonicParsing="false" onAction="#ingresar" prefHeight="45.0" prefWidth="Infinity" style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 8; -fx-cursor: hand;" text="INICIAR SESIÓN" />
-
-                <VBox alignment="CENTER" spacing="10.0">
-                    <children>
-                        <HBox alignment="CENTER" spacing="5.0">
+                        <HBox alignment="CENTER_LEFT">
                             <children>
-                                <Label text="¿No tienes una cuenta?" />
-                                <Hyperlink onAction="#crearCuenta" text="Regístrate aquí" style="-fx-text-fill: #e67e22; -fx-font-weight: bold;" />
+                                <CheckBox text="Recordarme" style="-fx-font-size: 12;" />
+                                <Region HBox.hgrow="ALWAYS" />
+                                <Hyperlink onAction="#olvideContrasenia" style="-fx-text-fill: -primary-light; -fx-font-size: 12px;" text="¿Olvidaste tu clave?" />
                             </children>
                         </HBox>
-                        <Label text="© 2026 Fabrica de Queso" textFill="#bdc3c7">
-                            <font>
-                                <Font size="10.0" />
-                            </font>
-                        </Label>
+
+                        <Button mnemonicParsing="false" onAction="#ingresar" prefHeight="50.0" prefWidth="Infinity" styleClass="btn-primary" text="INICIAR SESIÓN" />
+
+                        <HBox alignment="CENTER" spacing="5.0">
+                            <children>
+                                <Label style="-fx-font-size: 12;" text="¿No tienes cuenta?" />
+                                <Hyperlink onAction="#crearCuenta" style="-fx-text-fill: -accent-dark; -fx-font-weight: bold; -fx-font-size: 12;" text="Solicitar acceso" />
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+
+                <!-- LADO DERECHO: BIENVENIDA -->
+                <VBox alignment="CENTER" spacing="25.0" styleClass="login-welcome-side" GridPane.columnIndex="1">
+                    <children>
+                        <Label style="-fx-font-size: 90;" text="🧀" />
+                        <Label styleClass="welcome-title" text="¡Bienvenido!" textAlignment="CENTER" wrapText="true" />
+                        <Label styleClass="welcome-text" text="Sistema de Gestión Integral para la Calidad y Producción de Quesería Premium." textAlignment="CENTER" wrapText="true" />
+                        <Separator opacity="0.3" prefWidth="180.0" />
+                        <Label style="-fx-text-fill: white; -fx-opacity: 0.8; -fx-font-size: 13;" text="v2.0 Professional Edition" />
                     </children>
                 </VBox>
             </children>
-        </VBox>
+        </GridPane>
     </children>
-</AnchorPane>
+</StackPane>
