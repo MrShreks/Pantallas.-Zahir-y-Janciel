@@ -24,7 +24,10 @@ public class VentaController {
     @FXML private TableView<ItemQueso> tablaVentas;
     @FXML private TextField txtLibras, txtPrecioUnitario, txtImporteTotal, txtEfectivoRecibido, txtNewNombre, txtNewRnc, txtNewTel;
     @FXML private Label lblTotal, lblMontoCobro, lblDevuelta;
-    @FXML private ComboBox<String> cbProducto, cbCliente, comboMetodoPago, cbCambiarEstado;
+    @FXML private ComboBox<String> cbProducto, cbCliente, comboMetodoPago;
+
+    @FXML
+    private ComboBox<String> cbCambiarEstado; // Separado explícitamente para corregir el NullPointerException
 
     @FXML private ToggleGroup tgUnidadMedida;
     @FXML private RadioButton rbLibras, rbKilos;
@@ -107,12 +110,12 @@ public class VentaController {
         viewVentas.setVisible(false); viewVentas.setManaged(false);
         viewCobro.setVisible(false); viewCobro.setManaged(false);
         viewNuevoCliente.setVisible(false); viewNuevoCliente.setManaged(false);
-        
+
         if (pane != null) {
             pane.setVisible(true);
             pane.setManaged(true);
         }
-        
+
         if (btn != null) {
             btn.getStyleClass().remove("nav-item");
             if (!btn.getStyleClass().contains("nav-item-active")) btn.getStyleClass().add("nav-item-active");
@@ -151,8 +154,8 @@ public class VentaController {
 
     @FXML private void añadirItem() {
         if (validarCampoVacio(cbProducto.getValue(), "Producto") ||
-            validarCampoVacio(txtLibras.getText(), "Cantidad") ||
-            validarCampoVacio(txtPrecioUnitario.getText(), "Precio")) {
+                validarCampoVacio(txtLibras.getText(), "Cantidad") ||
+                validarCampoVacio(txtPrecioUnitario.getText(), "Precio")) {
             return;
         }
 
@@ -275,7 +278,7 @@ public class VentaController {
     public static class ItemQueso {
         private String descripcion, unidad;
         private double libras, precioUnitario, subtotal;
-        
+
         public ItemQueso(String d, double l, double p, String u) {
             this.descripcion = d;
             this.libras = l;
@@ -283,7 +286,7 @@ public class VentaController {
             this.unidad = u;
             this.subtotal = l * p;
         }
-        
+
         public String getDescripcion() { return descripcion; }
         public double getLibras() { return libras; }
         public String getUnidad() { return unidad; }
