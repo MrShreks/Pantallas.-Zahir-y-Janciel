@@ -3,6 +3,10 @@ package com.example.pantallas.controllers;
 import com.example.pantallas.SessionManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+<<<<<<< HEAD
+=======
+import javafx.scene.Parent;
+>>>>>>> bb658e7 (Primer commit)
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -77,15 +81,22 @@ public class MenuPrincipalController {
 
     private void navegarA(Object eventSource, String fxmlPath, String titulo) {
         try {
+<<<<<<< HEAD
             Stage stage = (Stage) ((Node) eventSource).getScene().getWindow();
 
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxmlPath));
 
             if (fxmlLoader.getLocation() == null) {
+=======
+            Parent root = FXMLLoader.load(getClass().getResource(fxmlPath));
+
+            if (root == null) {
+>>>>>>> bb658e7 (Primer commit)
                 com.example.pantallas.utils.LoggerUtil.error("NO SE ENCONTRÓ EL ARCHIVO: " + fxmlPath);
                 return;
             }
 
+<<<<<<< HEAD
             boolean wasMaximized = stage.isMaximized();
             Scene scene = new Scene(fxmlLoader.load());
             stage.setTitle(titulo);
@@ -96,6 +107,17 @@ public class MenuPrincipalController {
         } catch (IOException e) {
             com.example.pantallas.utils.LoggerUtil.error("Error cargando la pantalla: " + titulo);
             com.example.pantallas.utils.LoggerUtil.error("Excepci�n detectada", e);
+=======
+            Stage stage = (Stage) ((Node) eventSource).getScene().getWindow();
+            Scene scene = stage.getScene();
+            scene.setRoot(root);
+            stage.setTitle(titulo);
+            stage.setResizable(true);
+            stage.setMaximized(true);
+        } catch (IOException e) {
+            com.example.pantallas.utils.LoggerUtil.error("Error cargando la pantalla: " + titulo);
+            com.example.pantallas.utils.LoggerUtil.error("Excepción detectada", e);
+>>>>>>> bb658e7 (Primer commit)
         }
     }
 
@@ -138,6 +160,7 @@ public class MenuPrincipalController {
     private void salir(ActionEvent event) {
         SessionManager.cerrarSesion();
         try {
+<<<<<<< HEAD
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/pantallas/Login.fxml"));
             Scene scene = new Scene(fxmlLoader.load(), 420, 520);
 
@@ -145,6 +168,16 @@ public class MenuPrincipalController {
             stage.setTitle("Inicio de Sesión - Fábrica de Queso");
             stage.setScene(scene);
             stage.centerOnScreen();
+=======
+            Parent root = FXMLLoader.load(getClass().getResource("/com/example/pantallas/Login.fxml"));
+
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            Scene scene = stage.getScene();
+            scene.setRoot(root);
+            stage.setTitle("Inicio de Sesión - Fábrica de Queso");
+            stage.setResizable(true);
+            stage.setMaximized(true);
+>>>>>>> bb658e7 (Primer commit)
         } catch (IOException e) {
             com.example.pantallas.utils.LoggerUtil.error("Error al volver al login: " + e.getMessage());
         }

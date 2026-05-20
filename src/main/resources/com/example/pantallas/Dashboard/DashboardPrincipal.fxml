@@ -3,7 +3,11 @@
 <?import javafx.scene.control.*?>
 <?import javafx.geometry.Insets?>
 
+<<<<<<< HEAD
 <ScrollPane fitToHeight="true" fitToWidth="true" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pantallas.Dashboard.DashboardController" stylesheets="@../Style5.css" style="-fx-background-color: -bg-main;">
+=======
+<ScrollPane fitToHeight="true" fitToWidth="true" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pantallas.controllers.DashboardController" stylesheets="@../Style5.css" style="-fx-background-color: -bg-main;">
+>>>>>>> bb658e7 (Primer commit)
     <content>
         <VBox styleClass="main-content" spacing="25" alignment="TOP_CENTER" style="-fx-padding: 30;">
             <HBox spacing="16" alignment="CENTER_LEFT" styleClass="card" maxWidth="Infinity">

@@ -13,6 +13,7 @@ module com.example.pantallas {
     opens com.example.pantallas to javafx.fxml;
     opens com.example.pantallas.controllers to javafx.fxml;
     opens com.example.pantallas.models to javafx.base;
+<<<<<<< HEAD
     opens com.example.pantallas.ProcesoDeProduccion to javafx.fxml;
     opens com.example.pantallas.ProcesoDeCompras to javafx.fxml;
     opens com.example.pantallas.ProcesoDeInventario to javafx.fxml;
@@ -21,6 +22,8 @@ module com.example.pantallas {
     opens com.example.pantallas.ProcesoDeVenta to javafx.fxml;
     opens com.example.pantallas.MenuPrincipal to javafx.fxml;
     opens com.example.pantallas.Dashboard to javafx.fxml;
+=======
+>>>>>>> bb658e7 (Primer commit)
 
     exports com.example.pantallas;
     exports com.example.pantallas.controllers;
@@ -30,6 +33,7 @@ module com.example.pantallas {
     exports com.example.pantallas.config;
     exports com.example.pantallas.services;
     exports com.example.pantallas.repositories;
+<<<<<<< HEAD
     
     exports com.example.pantallas.ProcesoDeProduccion;
     exports com.example.pantallas.ProcesoDeCompras;
@@ -39,4 +43,6 @@ module com.example.pantallas {
     exports com.example.pantallas.ProcesoDeVenta;
     exports com.example.pantallas.MenuPrincipal;
     exports com.example.pantallas.Dashboard;
+=======
+>>>>>>> bb658e7 (Primer commit)
 }

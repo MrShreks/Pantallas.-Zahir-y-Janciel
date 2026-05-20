@@ -3,7 +3,11 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<<<<<<< HEAD
 <HBox prefHeight="800.0" prefWidth="1200.0" stylesheets="@Style5.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
+=======
+<HBox stylesheets="@Style5.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
+>>>>>>> bb658e7 (Primer commit)
     <children>
         <VBox prefWidth="280.0" styleClass="sidebar">
             <children>

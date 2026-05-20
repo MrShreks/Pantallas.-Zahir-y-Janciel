@@ -18,8 +18,13 @@ import java.io.IOException;
 
 public class DistribucionController {
 
+<<<<<<< HEAD
     @FXML private VBox paneDespacho, paneEntrega, paneLogistica, paneVehiculos, paneInsumos;
     @FXML private Button btnNavDespacho, btnNavEntrega, btnNavLogistica, btnNavVehiculos, btnNavInsumos;
+=======
+    @FXML private VBox paneDespacho, paneEntrega, paneLogistica, paneVehiculos;
+    @FXML private Button btnNavDespacho, btnNavEntrega, btnNavLogistica, btnNavVehiculos;
+>>>>>>> bb658e7 (Primer commit)
 
     @FXML private TableView<Envio> tablaEnvios;
     @FXML private ComboBox<String> cbCambiarEstadoEnvio;
@@ -42,6 +47,7 @@ public class DistribucionController {
     @FXML private TableView<Vehiculo> tablaVehiculos;
     @FXML private TableColumn<Vehiculo, String> colPlaca, colChofer, colEstadoVehiculo, colMarca, colModelo;
 
+<<<<<<< HEAD
     // Proveedores (CRUD completo)
     @FXML private TextField txtProvNombre, txtProvTelefono, txtProvRnc, txtProvDireccion;
     @FXML private TableView<Proveedor> tablaProveedores;
@@ -57,6 +63,10 @@ public class DistribucionController {
     private int idDespachoSeleccionado = -1;
     private String placaSeleccionada = "";
     private int idProveedorSeleccionado = -1;
+=======
+    private int idDespachoSeleccionado = -1;
+    private String placaSeleccionada = "";
+>>>>>>> bb658e7 (Primer commit)
 
     private final String URL = "jdbc:sqlserver://localhost:1433;databaseName=fabricadequeso;trustServerCertificate=true;encrypt=false;";
         
@@ -90,6 +100,7 @@ public class DistribucionController {
             }
         });
 
+<<<<<<< HEAD
         // Listener para selecci√≥n de proveedores (edici√≥n)
         tablaProveedores.getSelectionModel().selectedItemProperty().addListener((obs, oldV, newV) -> {
             if (newV != null) {
@@ -100,6 +111,9 @@ public class DistribucionController {
                 if (txtProvDireccion != null) txtProvDireccion.setText(newV.getDireccion() != null ? newV.getDireccion() : "");
             }
         });
+=======
+
+>>>>>>> bb658e7 (Primer commit)
     }
 
     private void configurarTablas() {
@@ -114,6 +128,7 @@ public class DistribucionController {
         colModelo.setCellValueFactory(new PropertyValueFactory<>("modelo"));
         colEstadoVehiculo.setCellValueFactory(new PropertyValueFactory<>("estado"));
 
+<<<<<<< HEAD
         // Proveedores ‚Äî columnas expandidas
         if (colProvId != null) colProvId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colProvNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
@@ -124,6 +139,8 @@ public class DistribucionController {
         colQuesoNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
         colQuesoPrecio.setCellValueFactory(new PropertyValueFactory<>("precio"));
 
+=======
+>>>>>>> bb658e7 (Primer commit)
         TableColumn colID = new TableColumn("ID"); colID.setCellValueFactory(new PropertyValueFactory<>("id"));
         TableColumn colCli = new TableColumn("Cliente"); colCli.setCellValueFactory(new PropertyValueFactory<>("cliente")); colCli.setPrefWidth(200);
         TableColumn colEst = new TableColumn("Estatus"); colEst.setCellValueFactory(new PropertyValueFactory<>("estatus"));
@@ -211,6 +228,7 @@ public class DistribucionController {
             txtNovedades.clear();
             cargarDatosTablas();
             cargarCombos();
+<<<<<<< HEAD
         } catch (SQLException e) { com.example.pantallas.utils.LoggerUtil.error("ExcepciÛn detectada", e); }
     }
 
@@ -297,6 +315,14 @@ public class DistribucionController {
         ObservableList<Despacho> dList = FXCollections.observableArrayList();
         ObservableList<Proveedor> pList = FXCollections.observableArrayList();
         ObservableList<TipoQueso> qList = FXCollections.observableArrayList();
+=======
+        } catch (SQLException e) { com.example.pantallas.utils.LoggerUtil.error("Excepci√≥n detectada", e); }
+    }
+
+    private void cargarDatosTablas() {
+        ObservableList<Vehiculo> vList = FXCollections.observableArrayList();
+        ObservableList<Despacho> dList = FXCollections.observableArrayList();
+>>>>>>> bb658e7 (Primer commit)
 
         try (Connection con = com.example.pantallas.config.ConnectionManager.getConnection()) {
             ResultSet rsV = con.createStatement().executeQuery("SELECT * FROM tbl_vehiculos");
@@ -307,6 +333,7 @@ public class DistribucionController {
             while (rsD.next()) dList.add(new Despacho(rsD.getInt("id_despacho"), rsD.getString("id_pedido"), rsD.getString("placa_vehiculo"), rsD.getString("estado")));
             tablaDespachos.setItems(dList);
 
+<<<<<<< HEAD
             // Proveedores desde tabla unificada tbl_proveedores
             ResultSet rsP = con.createStatement().executeQuery("SELECT provider_id, nombre, rnc, telefono, direccion FROM tbl_proveedores WHERE activo = 1 ORDER BY nombre");
             while (rsP.next()) pList.add(new Proveedor(rsP.getInt("provider_id"), rsP.getString("nombre"),
@@ -317,12 +344,18 @@ public class DistribucionController {
             while (rsQ.next()) qList.add(new TipoQueso(rsQ.getString("nombre_queso"), rsQ.getDouble("precio_unidad")));
             tablaQuesos.setItems(qList);
 
+=======
+>>>>>>> bb658e7 (Primer commit)
             ResultSet rsE = con.createStatement().executeQuery("SELECT id_envio, cliente, estatus, monto_total FROM tbl_envios WHERE estatus != 'Entregado' ORDER BY id_envio DESC");
             listaEnvios.clear();
             while (rsE.next()) {
                 listaEnvios.add(new Envio(rsE.getInt(1), rsE.getString(2), rsE.getString(3), rsE.getDouble(4)));
             }
+<<<<<<< HEAD
         } catch (SQLException e) { com.example.pantallas.utils.LoggerUtil.error("ExcepciÛn detectada", e); }
+=======
+        } catch (SQLException e) { com.example.pantallas.utils.LoggerUtil.error("Excepci√≥n detectada", e); }
+>>>>>>> bb658e7 (Primer commit)
     }
 
     private void cargarCombos() {
@@ -339,7 +372,11 @@ public class DistribucionController {
             ResultSet rsDA = con.createStatement().executeQuery("SELECT id_despacho, placa_vehiculo FROM tbl_despachos WHERE estado = 'En Camino'");
             while (rsDA.next()) cbDespachosActivos.getItems().add("Despacho #" + rsDA.getInt("id_despacho") + " (" + rsDA.getString("placa_vehiculo") + ")");
 
+<<<<<<< HEAD
         } catch (SQLException e) { com.example.pantallas.utils.LoggerUtil.error("ExcepciÛn detectada", e); }
+=======
+        } catch (SQLException e) { com.example.pantallas.utils.LoggerUtil.error("Excepci√≥n detectada", e); }
+>>>>>>> bb658e7 (Primer commit)
     }
 
     private void ejecutarSQL(String sql, Object... params) {
@@ -347,14 +384,24 @@ public class DistribucionController {
              PreparedStatement ps = con.prepareStatement(sql)) {
             for (int i = 0; i < params.length; i++) ps.setObject(i + 1, params[i]);
             ps.executeUpdate();
+<<<<<<< HEAD
         } catch (SQLException e) { com.example.pantallas.utils.LoggerUtil.error("ExcepciÛn detectada", e); }
+=======
+        } catch (SQLException e) { com.example.pantallas.utils.LoggerUtil.error("Excepci√≥n detectada", e); }
+>>>>>>> bb658e7 (Primer commit)
     }
 
     // FIX: Incluye paneLogistica en la lista de panes a ocultar
     private void ocultarTodo() {
+<<<<<<< HEAD
         VBox[] panes = {paneDespacho, paneEntrega, paneLogistica, paneVehiculos, paneInsumos};
         for (VBox p : panes) { if(p != null) { p.setVisible(false); p.setManaged(false); } }
         Button[] btns = {btnNavDespacho, btnNavEntrega, btnNavLogistica, btnNavVehiculos, btnNavInsumos};
+=======
+        VBox[] panes = {paneDespacho, paneEntrega, paneLogistica, paneVehiculos};
+        for (VBox p : panes) { if(p != null) { p.setVisible(false); p.setManaged(false); } }
+        Button[] btns = {btnNavDespacho, btnNavEntrega, btnNavLogistica, btnNavVehiculos};
+>>>>>>> bb658e7 (Primer commit)
         for (Button b : btns) {
             if (b != null) b.getStyleClass().remove("nav-item-active");
         }
@@ -364,7 +411,10 @@ public class DistribucionController {
     @FXML private void mostrarEntrega() { alternarVista(paneEntrega, btnNavEntrega); }
     @FXML private void mostrarLogistica() { alternarVista(paneLogistica, btnNavLogistica); }
     @FXML private void mostrarVehiculos() { alternarVista(paneVehiculos, btnNavVehiculos); }
+<<<<<<< HEAD
     @FXML private void mostrarInsumos() { alternarVista(paneInsumos, btnNavInsumos); }
+=======
+>>>>>>> bb658e7 (Primer commit)
 
     @FXML private void marcarEntregado() {
         Envio sel = tablaEnvios.getSelectionModel().getSelectedItem();
@@ -402,7 +452,11 @@ public class DistribucionController {
             pane.setManaged(true);
         }
         if (btn != null) {
+<<<<<<< HEAD
             Button[] btns = {btnNavDespacho, btnNavEntrega, btnNavLogistica, btnNavVehiculos, btnNavInsumos};
+=======
+            Button[] btns = {btnNavDespacho, btnNavEntrega, btnNavLogistica, btnNavVehiculos};
+>>>>>>> bb658e7 (Primer commit)
             for (Button b : btns) {
                 if (b != null) {
                     b.getStyleClass().remove("nav-item-active");
@@ -428,7 +482,11 @@ public class DistribucionController {
             stage.show();
         } catch (IOException e) {
             mostrarError("Error", "No se pudo cargar el Men√∫ Principal", e.getMessage());
+<<<<<<< HEAD
             com.example.pantallas.utils.LoggerUtil.error("ExcepciÛn detectada", e);
+=======
+            com.example.pantallas.utils.LoggerUtil.error("Excepci√≥n detectada", e);
+>>>>>>> bb658e7 (Primer commit)
         }
     }
 
@@ -460,6 +518,7 @@ public class DistribucionController {
         public String getEstado() { return estado; }
     }
 
+<<<<<<< HEAD
     public static class Proveedor {
         private int id;
         private String nombre, rnc, telefono, direccion;
@@ -473,6 +532,8 @@ public class DistribucionController {
         public String getDireccion() { return direccion; }
     }
 
+=======
+>>>>>>> bb658e7 (Primer commit)
     public static class Envio {
         private int id;
         private String cliente, estatus;
@@ -486,12 +547,15 @@ public class DistribucionController {
         public double getMonto() { return monto; }
     }
 
+<<<<<<< HEAD
     public static class TipoQueso {
         private String nombre; private double precio;
         public TipoQueso(String n, double p) { this.nombre = n; this.precio = p; }
         public String getNombre() { return nombre; }
         public double getPrecio() { return precio; }
     }
+=======
+>>>>>>> bb658e7 (Primer commit)
 }
 
 

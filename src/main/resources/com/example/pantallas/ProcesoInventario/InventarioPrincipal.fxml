@@ -5,7 +5,11 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
+<<<<<<< HEAD
 <HBox prefHeight="750.0" prefWidth="1300.0" stylesheets="@../Style5.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pantallas.ProcesoDeInventario.InventarioController">
+=======
+<HBox stylesheets="@../Style5.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pantallas.controllers.InventarioController">
+>>>>>>> bb658e7 (Primer commit)
     <fx:define>
         <ToggleGroup fx:id="tgTipoMovimiento" />
     </fx:define>
@@ -21,10 +25,16 @@
                 </VBox>
                 
                 <VBox spacing="10" style="-fx-padding: 0 20;">
+<<<<<<< HEAD
                     <Button fx:id="btnStock" maxWidth="Infinity" onAction="#mostrarStock" styleClass="nav-item-active" text="1. Stock Actual" />
                     <Button fx:id="btnMovimientos" maxWidth="Infinity" onAction="#mostrarMovimientos" styleClass="nav-item" text="2. Historial Kardex" />
                     <Button fx:id="btnAjustes" maxWidth="Infinity" onAction="#mostrarAjustes" styleClass="nav-item" text="3. Ajustes de Stock" />
                     <Button fx:id="btnReportes" maxWidth="Infinity" onAction="#mostrarReportes" styleClass="nav-item" text="4. Reportes" />
+=======
+                    <Button fx:id="btnStock" maxWidth="Infinity" onAction="#mostrarStock" styleClass="nav-item-active" text="1. Stock General" />
+                    <Button fx:id="btnMovimientos" maxWidth="Infinity" onAction="#mostrarMovimientos" styleClass="nav-item" text="2. Historial Kardex" />
+                    <Button fx:id="btnAjustes" maxWidth="Infinity" onAction="#mostrarAjustes" styleClass="nav-item" text="3. Ajustes de Stock" />
+>>>>>>> bb658e7 (Primer commit)
                 </VBox>
 
                 <Region VBox.vgrow="ALWAYS" />
@@ -51,10 +61,21 @@
                                 <items>
                                     <FXCollections fx:factory="observableArrayList">
                                         <String fx:value="Todas" />
+<<<<<<< HEAD
                                         <String fx:value="Quesos Frescos" />
                                         <String fx:value="Quesos Madurados" />
                                         <String fx:value="Materia Prima" />
                                         <String fx:value="Insumos" />
+=======
+                                        <String fx:value="Insumos" />
+                                        <String fx:value="Lácteos" />
+                                        <String fx:value="Vehículos" />
+                                        <String fx:value="Maquinarias" />
+                                        <String fx:value="Quesos Frescos" />
+                                        <String fx:value="Quesos Madurados" />
+                                        <String fx:value="Empaques" />
+                                        <String fx:value="Materia Prima" />
+>>>>>>> bb658e7 (Primer commit)
                                     </FXCollections>
                                 </items>
                             </ComboBox>
@@ -79,11 +100,20 @@
                         
                         <TableView fx:id="tablaKardex" VBox.vgrow="ALWAYS">
                             <columns>
+<<<<<<< HEAD
                                 <TableColumn fx:id="colKFecha" prefWidth="180" text="Fecha" />
                                 <TableColumn fx:id="colKProducto" prefWidth="250" text="Producto" />
                                 <TableColumn fx:id="colKTipo" prefWidth="120" text="Tipo Mov." />
                                 <TableColumn fx:id="colKCant" prefWidth="120" text="Cantidad" />
                                 <TableColumn fx:id="colKUnidad" prefWidth="120" text="Unidad" />
+=======
+                                <TableColumn fx:id="colKFecha" prefWidth="160" text="Fecha" />
+                                <TableColumn fx:id="colKProducto" prefWidth="200" text="Producto" />
+                                <TableColumn fx:id="colKTipo" prefWidth="100" text="Tipo Mov." />
+                                <TableColumn fx:id="colKCant" prefWidth="100" text="Cantidad" />
+                                <TableColumn fx:id="colKUnidad" prefWidth="100" text="Unidad" />
+                                <TableColumn fx:id="colKJustificacion" prefWidth="200" text="Justificación" />
+>>>>>>> bb658e7 (Primer commit)
                             </columns>
                         </TableView>
                         
@@ -137,6 +167,14 @@
                                     </GridPane>
                                 </HBox>
                                 
+<<<<<<< HEAD
+=======
+                                <VBox spacing="10">
+                                    <Label styleClass="label-bold" text="JUSTIFICACIÓN (OBLIGATORIO PARA SALIDAS)" />
+                                    <TextArea fx:id="txtJustificacion" prefRowCount="3" promptText="Indique la razón del ajuste (ej: producto vencido, dañado, merma...)"/>
+                                </VBox>
+
+>>>>>>> bb658e7 (Primer commit)
                                 <HBox alignment="CENTER_RIGHT" spacing="15">
                                     <Button onAction="#limpiarCampos" styleClass="btn-danger" style="-fx-background-color: transparent; -fx-text-fill: -danger;" text="LIMPIAR" />
                                     <Button onAction="#borrarProducto" styleClass="btn-danger" text="ELIMINAR" />
@@ -147,6 +185,7 @@
                         </VBox>
                     </children>
                 </VBox>
+<<<<<<< HEAD
 
                 <!-- VISTA: REPORTES -->
                 <VBox fx:id="viewReportes" managed="false" spacing="25.0" visible="false">
@@ -171,6 +210,8 @@
                         </HBox>
                     </children>
                 </VBox>
+=======
+>>>>>>> bb658e7 (Primer commit)
             </children>
         </StackPane>
     </children>

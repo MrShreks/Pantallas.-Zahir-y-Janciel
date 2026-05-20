@@ -8,6 +8,10 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+<<<<<<< HEAD
+=======
+import javafx.scene.Parent;
+>>>>>>> bb658e7 (Primer commit)
 import javafx.scene.Scene;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -35,16 +39,29 @@ public class LoginController {
             return;
         }
 
+<<<<<<< HEAD
         if (authService.login(usuario, clave)) {
             LoggerUtil.info("Acceso concedido para: " + usuario);
             navegarAMenuPrincipal(event);
         } else {
             AlertManager.showError("Error de Acceso", "Usuario o contraseña incorrectos.");
+=======
+        String resultado = authService.login(usuario, clave);
+        if (resultado.equals("OK")) {
+            LoggerUtil.info("Acceso concedido para: " + usuario);
+            navegarAMenuPrincipal(event);
+        } else {
+            if (resultado.contains("Error")) {
+                LoggerUtil.error("Error en login: " + resultado);
+            }
+            AlertManager.showError("Error de Acceso", resultado);
+>>>>>>> bb658e7 (Primer commit)
         }
     }
 
     private void navegarAMenuPrincipal(ActionEvent event) {
         try {
+<<<<<<< HEAD
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/pantallas/BienvenidaScreen.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             boolean wasMaximized = stage.isMaximized();
@@ -55,6 +72,15 @@ public class LoginController {
             stage.setMaximized(wasMaximized);
             if (!wasMaximized) stage.centerOnScreen();
             stage.show();
+=======
+            Parent root = FXMLLoader.load(getClass().getResource("/com/example/pantallas/BienvenidaScreen.fxml"));
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            Scene scene = stage.getScene();
+            scene.setRoot(root);
+            stage.setTitle("Bienvenido - Fábrica de Queso");
+            stage.setResizable(true);
+            stage.setMaximized(true);
+>>>>>>> bb658e7 (Primer commit)
         } catch (IOException e) {
             LoggerUtil.error("Error al cargar bienvenida", e);
         }

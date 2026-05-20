@@ -18,7 +18,11 @@ public class EjemploReporte {
             com.example.pantallas.utils.LoggerUtil.info("Reporte generado: " + salidaPdf);
 
         } catch (Exception e) {
+<<<<<<< HEAD
             com.example.pantallas.utils.LoggerUtil.error("Excepción detectada", e);
+=======
+            com.example.pantallas.utils.LoggerUtil.error("ExcepciÃ³n detectada", e);
+>>>>>>> bb658e7 (Primer commit)
         }
     }
 }

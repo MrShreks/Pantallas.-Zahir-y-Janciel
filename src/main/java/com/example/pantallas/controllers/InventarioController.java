@@ -25,15 +25,25 @@ import java.util.Map;
 public class InventarioController {
 
     @FXML public StackPane contentArea;
+<<<<<<< HEAD
     @FXML private VBox viewStock, viewMovimientos, viewAjustes, viewReportes;
     @FXML private Button btnStock, btnMovimientos, btnAjustes, btnReportes;
+=======
+    @FXML private VBox viewStock, viewMovimientos, viewAjustes;
+    @FXML private Button btnStock, btnMovimientos, btnAjustes;
+    @FXML private TextArea txtJustificacion;
+>>>>>>> bb658e7 (Primer commit)
 
     @FXML private TableView<Producto> tablaStock;
     @FXML private TableColumn<Producto, String> colNombre, colCategoria, colUnidad;
     @FXML private TableColumn<Producto, Double> colCantidad, colCantMinima;
 
     @FXML private TableView<Movimiento> tablaKardex;
+<<<<<<< HEAD
     @FXML private TableColumn<Movimiento, String> colKFecha, colKProducto, colKTipo, colKUnidad;
+=======
+    @FXML private TableColumn<Movimiento, String> colKFecha, colKProducto, colKTipo, colKUnidad, colKJustificacion;
+>>>>>>> bb658e7 (Primer commit)
     @FXML private TableColumn<Movimiento, Double> colKCant;
 
     @FXML private TextField txtBusqueda;
@@ -84,6 +94,10 @@ public class InventarioController {
         colKTipo.setCellValueFactory(new PropertyValueFactory<>("tipo"));
         colKCant.setCellValueFactory(new PropertyValueFactory<>("cantidad"));
         colKUnidad.setCellValueFactory(new PropertyValueFactory<>("unidad"));
+<<<<<<< HEAD
+=======
+        colKJustificacion.setCellValueFactory(new PropertyValueFactory<>("justificacion"));
+>>>>>>> bb658e7 (Primer commit)
         tablaKardex.setItems(listaMovimientos);
     }
 
@@ -107,7 +121,11 @@ public class InventarioController {
         listaProductos.clear();
         String query = "SELECT nombre_producto, categoria, cantidad_stock, cantidad_minima, unidad_medida FROM tbl_inventario_productos ORDER BY nombre_producto";
         
+<<<<<<< HEAD
         try (Connection con = com.example.pantallas.config.ConnectionManager.getConnection(), USER, PASS);
+=======
+        try (Connection con = com.example.pantallas.config.ConnectionManager.getConnection();
+>>>>>>> bb658e7 (Primer commit)
              Statement st = con.createStatement();
              ResultSet rs = st.executeQuery(query)) {
 
@@ -132,18 +150,34 @@ public class InventarioController {
             cargarKardex();
             
         } catch (Exception e) {
+<<<<<<< HEAD
             com.example.pantallas.utils.LoggerUtil.error("Excepci�n detectada", e);
+=======
+            com.example.pantallas.utils.LoggerUtil.error("Excepci�n detectada", e);
+>>>>>>> bb658e7 (Primer commit)
             cargarDatosDemo();
         }
     }
 
     private void cargarDatosDemo() {
         listaProductos.addAll(
+<<<<<<< HEAD
             new Producto("Queso Crema Lote A1", "Quesos Frescos", 120.5, 20.0, "Libras (Lbs)"),
             new Producto("Queso Mozzarella Lote B2", "Quesos Madurados", 85.0, 15.0, "Kilos (Kg)"),
             new Producto("Leche Cruda", "Materia Prima (Leche/Cuajo)", 500.0, 100.0, "Litros (L)"),
             new Producto("Detergente Industrial", "Insumos de Limpieza", 10.0, 5.0, "Botella/10oz"),
             new Producto("Bolsas Termoencogibles", "Empaques y Etiquetas", 1000.0, 200.0, "Unidades (Und)")
+=======
+            new Producto("Queso Crema Lote A1", "Lácteos", 120.5, 20.0, "Libras (Lbs)"),
+            new Producto("Queso Mozzarella Lote B2", "Lácteos", 85.0, 15.0, "Kilos (Kg)"),
+            new Producto("Leche Cruda", "Lácteos", 500.0, 100.0, "Litros (L)"),
+            new Producto("Cuajo Líquido", "Insumos", 30.0, 10.0, "Litros (L)"),
+            new Producto("Sal Industrial", "Insumos", 200.0, 50.0, "Kilos (Kg)"),
+            new Producto("Detergente Industrial", "Insumos", 10.0, 5.0, "Botella/10oz"),
+            new Producto("Fundas para Queso", "Empaques", 1000.0, 200.0, "Unidades (Und)"),
+            new Producto("Vehículo Reparto 001", "Vehículos", 1.0, 1.0, "Unidades (Und)"),
+            new Producto("Prensa Neumática", "Maquinarias", 2.0, 1.0, "Unidades (Und)")
+>>>>>>> bb658e7 (Primer commit)
         );
         tablaStock.setItems(listaProductos);
         cargarKardex();
@@ -151,27 +185,48 @@ public class InventarioController {
 
     private void cargarKardex() {
         listaMovimientos.clear();
+<<<<<<< HEAD
         String query = "SELECT producto, tipo, cantidad, unidad, fecha_movimiento FROM tbl_movimientos_inventario ORDER BY fecha_movimiento DESC";
         
         try (Connection con = com.example.pantallas.config.ConnectionManager.getConnection(), USER, PASS);
+=======
+        String query = "SELECT producto, tipo, cantidad, unidad, fecha_movimiento, justificacion FROM tbl_movimientos_inventario ORDER BY fecha_movimiento DESC";
+        
+        try (Connection con = com.example.pantallas.config.ConnectionManager.getConnection();
+>>>>>>> bb658e7 (Primer commit)
              Statement st = con.createStatement();
              ResultSet rs = st.executeQuery(query)) {
 
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
             while (rs.next()) {
+<<<<<<< HEAD
+=======
+                String just = "";
+                try { just = rs.getString("justificacion"); } catch (Exception e) { just = ""; }
+                if (just == null) just = "";
+>>>>>>> bb658e7 (Primer commit)
                 listaMovimientos.add(new Movimiento(
                     rs.getString("fecha_movimiento"),
                     rs.getString("producto"),
                     rs.getString("tipo"),
                     rs.getDouble("cantidad"),
+<<<<<<< HEAD
                     rs.getString("unidad")
+=======
+                    rs.getString("unidad"),
+                    just
+>>>>>>> bb658e7 (Primer commit)
                 ));
             }
             tablaKardex.setItems(listaMovimientos);
             
         } catch (Exception e) {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+<<<<<<< HEAD
             listaMovimientos.add(new Movimiento(LocalDateTime.now().format(dtf), "Leche Cruda", "ENTRADA", 500.0, "Litros (L)"));
+=======
+            listaMovimientos.add(new Movimiento(LocalDateTime.now().format(dtf), "Leche Cruda", "ENTRADA", 500.0, "Litros (L)", ""));
+>>>>>>> bb658e7 (Primer commit)
             tablaKardex.setItems(listaMovimientos);
         }
     }
@@ -210,10 +265,24 @@ public class InventarioController {
         }
 
         String tipo = rbEntrada.isSelected() ? "ENTRADA" : "SALIDA";
+<<<<<<< HEAD
 
         if (tipo.equals("SALIDA") && cantidad > seleccionado.getStock()) {
             mostrarAlerta("Stock Insuficiente", "No hay suficiente inventario. Stock actual: " + seleccionado.getStock());
             return;
+=======
+        String justificacion = txtJustificacion.getText();
+
+        if (tipo.equals("SALIDA")) {
+            if (justificacion == null || justificacion.trim().isEmpty()) {
+                mostrarAlerta("Justificación Requerida", "Debe ingresar la razón o justificación para realizar una salida/ajuste de stock.");
+                return;
+            }
+            if (cantidad > seleccionado.getStock()) {
+                mostrarAlerta("Stock Insuficiente", "No hay suficiente inventario. Stock actual: " + seleccionado.getStock());
+                return;
+            }
+>>>>>>> bb658e7 (Primer commit)
         }
 
         String fecha = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
@@ -224,6 +293,7 @@ public class InventarioController {
             seleccionado.setStock(seleccionado.getStock() - cantidad);
         }
 
+<<<<<<< HEAD
         listaMovimientos.add(0, new Movimiento(fecha, seleccionado.getNombre(), tipo, cantidad, seleccionado.getUnidad()));
         guardarMovimientoDB(seleccionado.getNombre(), tipo, cantidad, seleccionado.getUnidad());
         
@@ -235,14 +305,50 @@ public class InventarioController {
         String sql = "INSERT INTO tbl_movimientos_inventario (producto, tipo, cantidad, unidad, fecha_movimiento) VALUES (?, ?, ?, ?, GETDATE())";
         
         try (Connection con = com.example.pantallas.config.ConnectionManager.getConnection(), USER, PASS);
+=======
+        listaMovimientos.add(0, new Movimiento(fecha, seleccionado.getNombre(), tipo, cantidad, seleccionado.getUnidad(), justificacion));
+        guardarMovimientoDB(seleccionado.getNombre(), tipo, cantidad, seleccionado.getUnidad(), justificacion);
+        
+        tablaStock.refresh();
+        txtJustificacion.clear();
+        mostrarAlerta("Movimiento Registrado", "Se ha registrado: " + tipo + " de " + cantidad + " " + seleccionado.getUnidad());
+    }
+
+    private void guardarMovimientoDB(String producto, String tipo, double cantidad, String unidad, String justificacion) {
+        String sql = "INSERT INTO tbl_movimientos_inventario (producto, tipo, cantidad, unidad, fecha_movimiento, justificacion) VALUES (?, ?, ?, ?, GETDATE(), ?)";
+        
+        try (Connection con = com.example.pantallas.config.ConnectionManager.getConnection();
+>>>>>>> bb658e7 (Primer commit)
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, producto);
             ps.setString(2, tipo);
             ps.setDouble(3, cantidad);
             ps.setString(4, unidad);
+<<<<<<< HEAD
             ps.executeUpdate();
         } catch (Exception e) {
             // Silent fail for demo mode
+=======
+            ps.setString(5, justificacion);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            // Reintentar con el INSERT original (sin justificacion)
+            String fallbackSql = "INSERT INTO tbl_movimientos_inventario (producto, tipo, cantidad, unidad, fecha_movimiento) VALUES (?, ?, ?, ?, GETDATE())";
+            try (Connection con2 = com.example.pantallas.config.ConnectionManager.getConnection();
+                 PreparedStatement ps2 = con2.prepareStatement(fallbackSql)) {
+                ps2.setString(1, producto);
+                ps2.setString(2, tipo);
+                ps2.setDouble(3, cantidad);
+                ps2.setString(4, unidad);
+                ps2.executeUpdate();
+                // Intentar agregar columna justificacion a la tabla
+                try (Statement st = con2.createStatement()) {
+                    st.execute("ALTER TABLE tbl_movimientos_inventario ADD justificacion VARCHAR(500)");
+                } catch (Exception ex) { }
+            } catch (Exception ex2) {
+                // Silent fail for demo mode
+            }
+>>>>>>> bb658e7 (Primer commit)
         }
     }
 
@@ -279,7 +385,11 @@ public class InventarioController {
     private void guardarActualizacionProducto(Producto producto) {
         String sql = "UPDATE tbl_inventario_productos SET cantidad_stock = ?, cantidad_minima = ?, unidad_medida = ? WHERE nombre_producto = ?";
         
+<<<<<<< HEAD
         try (Connection con = com.example.pantallas.config.ConnectionManager.getConnection(), USER, PASS);
+=======
+        try (Connection con = com.example.pantallas.config.ConnectionManager.getConnection();
+>>>>>>> bb658e7 (Primer commit)
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setDouble(1, producto.getStock());
             ps.setDouble(2, producto.getStockMinimo());
@@ -324,6 +434,10 @@ public class InventarioController {
     private void limpiarCampos() {
         txtCantidadAjuste.clear();
         txtCantidadMinima.clear();
+<<<<<<< HEAD
+=======
+        txtJustificacion.clear();
+>>>>>>> bb658e7 (Primer commit)
         lblUnidadProducto.setText("");
         cbItemAjuste.getSelectionModel().clearSelection();
     }
@@ -331,13 +445,19 @@ public class InventarioController {
     @FXML private void mostrarStock() { alternarVistas(viewStock, btnStock); }
     @FXML private void mostrarMovimientos() { alternarVistas(viewMovimientos, btnMovimientos); }
     @FXML private void mostrarAjustes() { alternarVistas(viewAjustes, btnAjustes); }
+<<<<<<< HEAD
     @FXML private void mostrarReportes() { alternarVistas(viewReportes, btnReportes); }
+=======
+>>>>>>> bb658e7 (Primer commit)
 
     private void alternarVistas(VBox vista, Button btn) {
         viewStock.setVisible(false); viewStock.setManaged(false);
         viewMovimientos.setVisible(false); viewMovimientos.setManaged(false);
         viewAjustes.setVisible(false); viewAjustes.setManaged(false);
+<<<<<<< HEAD
         viewReportes.setVisible(false); viewReportes.setManaged(false);
+=======
+>>>>>>> bb658e7 (Primer commit)
         
         if (vista != null) {
             vista.setVisible(true);
@@ -345,7 +465,11 @@ public class InventarioController {
         }
         
         if (btn != null) {
+<<<<<<< HEAD
             Button[] btns = {btnStock, btnMovimientos, btnAjustes, btnReportes};
+=======
+            Button[] btns = {btnStock, btnMovimientos, btnAjustes};
+>>>>>>> bb658e7 (Primer commit)
             for (Button b : btns) {
                 if (b != null) {
                     b.getStyleClass().remove("nav-item-active");
@@ -370,7 +494,11 @@ public class InventarioController {
             if (!wasMaximized) stage.centerOnScreen();
             stage.show();
         } catch (Exception e) {
+<<<<<<< HEAD
             com.example.pantallas.utils.LoggerUtil.error("Excepci�n detectada", e);
+=======
+            com.example.pantallas.utils.LoggerUtil.error("Excepci�n detectada", e);
+>>>>>>> bb658e7 (Primer commit)
             mostrarAlerta("Error de Navegación", "No se pudo cargar el Menú Principal.");
         }
     }
@@ -445,15 +573,26 @@ public class InventarioController {
     }
 
     public static class Movimiento {
+<<<<<<< HEAD
         private String fecha, producto, tipo, unidad;
         private double cantidad;
 
         public Movimiento(String fecha, String producto, String tipo, double cantidad, String unidad) {
+=======
+        private String fecha, producto, tipo, unidad, justificacion;
+        private double cantidad;
+
+        public Movimiento(String fecha, String producto, String tipo, double cantidad, String unidad, String justificacion) {
+>>>>>>> bb658e7 (Primer commit)
             this.fecha = fecha;
             this.producto = producto;
             this.tipo = tipo;
             this.cantidad = cantidad;
             this.unidad = unidad;
+<<<<<<< HEAD
+=======
+            this.justificacion = justificacion;
+>>>>>>> bb658e7 (Primer commit)
         }
 
         public String getFecha() { return fecha; }
@@ -461,6 +600,10 @@ public class InventarioController {
         public String getTipo() { return tipo; }
         public double getCantidad() { return cantidad; }
         public String getUnidad() { return unidad; }
+<<<<<<< HEAD
+=======
+        public String getJustificacion() { return justificacion; }
+>>>>>>> bb658e7 (Primer commit)
     }
 }
 

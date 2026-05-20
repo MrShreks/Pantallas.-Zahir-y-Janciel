@@ -125,7 +125,11 @@ public class MantenimientoController {
             ps.executeUpdate();
             cargarTodo(); // Recargar para ver los cambios reflejados
         } catch (SQLException e) {
+<<<<<<< HEAD
             com.example.pantallas.utils.LoggerUtil.error("Excepci髇 detectada", e);
+=======
+            com.example.pantallas.utils.LoggerUtil.error("Excepci贸n detectada", e);
+>>>>>>> bb658e7 (Primer commit)
         }
     }
 
@@ -150,7 +154,11 @@ public class MantenimientoController {
         try (Connection con = com.example.pantallas.config.ConnectionManager.getConnection();
              ResultSet rs = con.createStatement().executeQuery("SELECT nombre FROM tbl_maquinaria")) {
             while (rs.next()) cbEquipos.getItems().add(rs.getString("nombre"));
+<<<<<<< HEAD
         } catch (SQLException e) { com.example.pantallas.utils.LoggerUtil.error("Excepci髇 detectada", e); }
+=======
+        } catch (SQLException e) { com.example.pantallas.utils.LoggerUtil.error("Excepci贸n detectada", e); }
+>>>>>>> bb658e7 (Primer commit)
     }
 
     @FXML
@@ -200,7 +208,11 @@ public class MantenimientoController {
             if (!wasMaximized) stage.centerOnScreen();
             stage.show();
         } catch (IOException e) {
+<<<<<<< HEAD
             com.example.pantallas.utils.LoggerUtil.error("Excepci髇 detectada", e);
+=======
+            com.example.pantallas.utils.LoggerUtil.error("Excepci贸n detectada", e);
+>>>>>>> bb658e7 (Primer commit)
         }
     }
 
@@ -244,7 +256,11 @@ public class MantenimientoController {
             ps.executeUpdate();
             cargarTodo();
             limpiarCampos();
+<<<<<<< HEAD
         } catch (SQLException e) { com.example.pantallas.utils.LoggerUtil.error("Excepci髇 detectada", e); }
+=======
+        } catch (SQLException e) { com.example.pantallas.utils.LoggerUtil.error("Excepci贸n detectada", e); }
+>>>>>>> bb658e7 (Primer commit)
     }
 
     @FXML
@@ -256,7 +272,11 @@ public class MantenimientoController {
             ps.executeUpdate();
             cargarTodo();
             limpiarCampos();
+<<<<<<< HEAD
         } catch (SQLException e) { com.example.pantallas.utils.LoggerUtil.error("Excepci髇 detectada", e); }
+=======
+        } catch (SQLException e) { com.example.pantallas.utils.LoggerUtil.error("Excepci贸n detectada", e); }
+>>>>>>> bb658e7 (Primer commit)
     }
 
     @FXML
@@ -280,7 +300,11 @@ public class MantenimientoController {
             ps.executeUpdate();
             cargarTodo();
             irAHistorial();
+<<<<<<< HEAD
         } catch (SQLException e) { com.example.pantallas.utils.LoggerUtil.error("Excepci髇 detectada", e); }
+=======
+        } catch (SQLException e) { com.example.pantallas.utils.LoggerUtil.error("Excepci贸n detectada", e); }
+>>>>>>> bb658e7 (Primer commit)
     }
 
     private void ejecutarUpdate(String sql, String... params) {
@@ -288,7 +312,11 @@ public class MantenimientoController {
              PreparedStatement ps = con.prepareStatement(sql)) {
             for (int i = 0; i < params.length; i++) ps.setString(i + 1, params[i]);
             ps.executeUpdate();
+<<<<<<< HEAD
         } catch (SQLException e) { com.example.pantallas.utils.LoggerUtil.error("Excepci髇 detectada", e); }
+=======
+        } catch (SQLException e) { com.example.pantallas.utils.LoggerUtil.error("Excepci贸n detectada", e); }
+>>>>>>> bb658e7 (Primer commit)
     }
 
     private void cargarTodo() {
@@ -311,7 +339,11 @@ public class MantenimientoController {
                         rs2.getString("equipo_nombre"), rs2.getString("tipo"), rs2.getString("estado")));
             }
             tablaHistorial.setItems(mant);
+<<<<<<< HEAD
         } catch (SQLException e) { com.example.pantallas.utils.LoggerUtil.error("Excepci髇 detectada", e); }
+=======
+        } catch (SQLException e) { com.example.pantallas.utils.LoggerUtil.error("Excepci贸n detectada", e); }
+>>>>>>> bb658e7 (Primer commit)
     }
 
     // --- CLASES MODELO ---

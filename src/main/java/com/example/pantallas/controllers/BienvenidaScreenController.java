@@ -1,10 +1,18 @@
 package com.example.pantallas.controllers;
 
+<<<<<<< HEAD
+=======
+import com.example.pantallas.SessionManager;
+>>>>>>> bb658e7 (Primer commit)
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+<<<<<<< HEAD
+=======
+import javafx.scene.Parent;
+>>>>>>> bb658e7 (Primer commit)
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
@@ -25,7 +33,13 @@ public class BienvenidaScreenController {
         String rol = SessionManager.getRol();
 
         lblUsuario.setText(usuario != null ? usuario : "Usuario");
+<<<<<<< HEAD
         lblRol.setText("Rol: " + (rol != null ? rol : "—"));
+=======
+        lblRol.setText("CARGO: " + (rol != null ? rol : "—"));
+
+        progressBar.setStyle("-fx-accent: #e0b878;");
+>>>>>>> bb658e7 (Primer commit)
 
         Timeline timeline = new Timeline(
             new KeyFrame(Duration.ZERO, new KeyValue(progressBar.progressProperty(), 0)),
@@ -39,6 +53,7 @@ public class BienvenidaScreenController {
 
     private void irAlMenu() {
         try {
+<<<<<<< HEAD
             Stage stage = (Stage) progressBar.getScene().getWindow();
 
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/pantallas/MenuPrincipal/MenuPrincipal.fxml"));
@@ -52,6 +67,18 @@ public class BienvenidaScreenController {
         } catch (IOException e) {
             com.example.pantallas.utils.LoggerUtil.error("Error al cargar el menú: " + e.getMessage());
             com.example.pantallas.utils.LoggerUtil.error("Excepci�n detectada", e);
+=======
+            Parent root = FXMLLoader.load(getClass().getResource("/com/example/pantallas/MenuPrincipal/MenuPrincipal.fxml"));
+            Stage stage = (Stage) progressBar.getScene().getWindow();
+            Scene scene = stage.getScene();
+            scene.setRoot(root);
+            stage.setTitle("Panel Principal - Fábrica de Queso");
+            stage.setResizable(true);
+            stage.setMaximized(true);
+        } catch (IOException e) {
+            com.example.pantallas.utils.LoggerUtil.error("Error al cargar el menú: " + e.getMessage());
+            com.example.pantallas.utils.LoggerUtil.error("Excepción detectada", e);
+>>>>>>> bb658e7 (Primer commit)
         }
     }
 }

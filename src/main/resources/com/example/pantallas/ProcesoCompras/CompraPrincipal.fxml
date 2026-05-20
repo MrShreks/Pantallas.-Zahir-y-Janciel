@@ -5,7 +5,11 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
+<<<<<<< HEAD
 <HBox prefHeight="750.0" prefWidth="1300.0" stylesheets="@../Style5.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pantallas.ProcesoDeCompras.CompraController">
+=======
+<HBox stylesheets="@../Style5.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pantallas.controllers.CompraController">
+>>>>>>> bb658e7 (Primer commit)
     <children>
         <VBox prefWidth="280.0" styleClass="sidebar">
             <children>
@@ -21,6 +25,10 @@
                     <Button fx:id="btnNavOrden" maxWidth="Infinity" onAction="#mostrarNuevaOrden" styleClass="nav-item-active" text="🛒 Generar Orden" />
                     <Button fx:id="btnNavRecepcion" maxWidth="Infinity" onAction="#mostrarRecepcion" styleClass="nav-item" text="📦 Recepción de Insumos" />
                     <Button fx:id="btnNavHistorial" maxWidth="Infinity" onAction="#mostrarHistorial" styleClass="nav-item" text="📋 Historial y Estados" />
+<<<<<<< HEAD
+=======
+                    <Button fx:id="btnNavProveedores" maxWidth="Infinity" onAction="#mostrarProveedores" styleClass="nav-item" text="👥 Gestión de Proveedores" />
+>>>>>>> bb658e7 (Primer commit)
                 </VBox>
 
                 <Region VBox.vgrow="ALWAYS" />
@@ -58,7 +66,11 @@
                                         <HBox spacing="10" GridPane.columnIndex="3">
                                             <children>
                                                 <TextField fx:id="txtCantidad" HBox.hgrow="ALWAYS" />
+<<<<<<< HEAD
                                                 <ComboBox fx:id="cbUnidad" prefWidth="100.0" />
+=======
+                                                <ComboBox fx:id="cbUnidad" minWidth="120.0" />
+>>>>>>> bb658e7 (Primer commit)
                                             </children>
                                         </HBox>
 
@@ -82,17 +94,31 @@
                     </children>
                 </VBox>
 
+<<<<<<< HEAD
                 <!-- PANEL: RECEPCIÓN -->
+=======
+                <!-- PANEL: RECEPCIÓN (con filtro, checkboxes dinámicos e historial de calidad) -->
+>>>>>>> bb658e7 (Primer commit)
                 <VBox fx:id="paneRecepcion" managed="false" spacing="25.0" visible="false">
                     <children>
                         <Label styleClass="title-large" text="Recepción de Insumos" />
                         
                         <VBox spacing="20" styleClass="card-premium">
                             <children>
+<<<<<<< HEAD
+=======
+                                <!-- Barra de búsqueda para filtrar por cliente/suplidor -->
+                                <VBox spacing="10">
+                                    <Label styleClass="label-bold" text="Filtrar por cliente / suplidor" />
+                                    <TextField fx:id="txtFiltroRecepcion" maxWidth="400" prefHeight="45" promptText="Escriba el nombre del cliente o suplidor..." />
+                                </VBox>
+
+>>>>>>> bb658e7 (Primer commit)
                                 <VBox spacing="10">
                                     <Label styleClass="label-bold" text="Seleccionar Orden Pendiente" />
                                     <ComboBox fx:id="cbOrdenesPendientes" maxWidth="Infinity" promptText="ID - Suplidor (Insumo)" />
                                 </VBox>
+<<<<<<< HEAD
                                 
                                 <VBox spacing="10">
                                     <Label styleClass="label-bold" text="Cantidad Real Recibida" />
@@ -102,6 +128,33 @@
                                 <VBox spacing="10">
                                     <Label styleClass="label-bold" text="Notas de Recepción" />
                                     <TextArea fx:id="txtNotasRecepcion" prefHeight="100" promptText="Estado de los productos, lote, etc..." />
+=======
+
+                                <!-- Checkboxes de verificación de entrega -->
+                                <VBox spacing="8">
+                                    <Label styleClass="label-bold" text="Verificación de Recepción" />
+                                    <CheckBox fx:id="chkCantidadCorrecta" style="-fx-font-size: 14;" text="Se entregó la cantidad correcta" />
+                                    <CheckBox fx:id="chkCantidadIncorrecta" style="-fx-font-size: 14;" text="No se entregó la cantidad acordada" />
+                                </VBox>
+
+                                <!-- Campos dinámicos para cantidad real (se muestran cuando se marca "no se entregó") -->
+                                <HBox fx:id="hboxCantidadReal" managed="false" spacing="15" visible="false">
+                                    <children>
+                                        <VBox spacing="8" HBox.hgrow="ALWAYS">
+                                            <Label styleClass="label-bold" text="Cantidad Real Recibida" />
+                                            <TextField fx:id="txtCantidadReal" maxWidth="250" prefHeight="50" style="-fx-font-size: 18;" />
+                                        </VBox>
+                                        <VBox spacing="8" HBox.hgrow="ALWAYS">
+                                            <Label styleClass="label-bold" text="Unidad" />
+                                            <ComboBox fx:id="cbUnidadReal" maxWidth="250" prefHeight="50" />
+                                        </VBox>
+                                    </children>
+                                </HBox>
+
+                                <VBox spacing="10">
+                                    <Label styleClass="label-bold" text="Observaciones de Calidad" />
+                                    <TextArea fx:id="txtNotasRecepcion" prefHeight="100" promptText="Estado de los productos, lote, observaciones de calidad..." />
+>>>>>>> bb658e7 (Primer commit)
                                 </VBox>
                                 
                                 <HBox alignment="CENTER_RIGHT">
@@ -109,6 +162,15 @@
                                 </HBox>
                             </children>
                         </VBox>
+<<<<<<< HEAD
+=======
+
+                        <!-- Historial de Calidad / Observaciones detalladas -->
+                        <VBox spacing="15">
+                            <Label styleClass="title-medium" text="Historial de Observaciones de Calidad" />
+                            <TableView fx:id="tablaHistorialCalidad" prefHeight="250" VBox.vgrow="ALWAYS" />
+                        </VBox>
+>>>>>>> bb658e7 (Primer commit)
                     </children>
                 </VBox>
 
@@ -129,6 +191,64 @@
                         <TableView fx:id="tablaHistorial" VBox.vgrow="ALWAYS" />
                     </children>
                 </VBox>
+<<<<<<< HEAD
+=======
+
+                <!-- PANEL: GESTIÓN DE PROVEEDORES (Rediseñado con estética premium igual a Compras) -->
+                <VBox fx:id="paneProveedores" managed="false" spacing="25.0" visible="false">
+                    <children>
+                        <Label styleClass="title-large" text="Gestión de Proveedores" />
+                        
+                        <VBox spacing="20" styleClass="card-premium">
+                            <children>
+                                <Label styleClass="title-medium" text="👥 Datos del Proveedor" />
+                                
+                                <GridPane hgap="25" vgap="15">
+                                    <columnConstraints>
+                                        <ColumnConstraints hgrow="ALWAYS" />
+                                        <ColumnConstraints hgrow="ALWAYS" />
+                                    </columnConstraints>
+                                    <children>
+                                        <VBox spacing="8">
+                                            <Label styleClass="label-bold" text="Nombre / Razón Social *" />
+                                            <TextField fx:id="txtProvNombre" prefHeight="45" promptText="Ej: Lácteos del Yaque" />
+                                        </VBox>
+                                        <VBox spacing="8" GridPane.columnIndex="1">
+                                            <Label styleClass="label-bold" text="RNC" />
+                                            <TextField fx:id="txtProvRnc" prefHeight="45" promptText="001-0000000-0" />
+                                        </VBox>
+                                        <VBox spacing="8" GridPane.rowIndex="1">
+                                            <Label styleClass="label-bold" text="Teléfono Contacto *" />
+                                            <TextField fx:id="txtProvTelefono" prefHeight="45" promptText="809-000-0000" />
+                                        </VBox>
+                                        <VBox spacing="8" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                            <Label styleClass="label-bold" text="Dirección *" />
+                                            <TextField fx:id="txtProvDireccion" prefHeight="45" promptText="Av. Principal #123..." />
+                                        </VBox>
+                                    </children>
+                                </GridPane>
+                                
+                                <HBox alignment="CENTER_RIGHT" spacing="15">
+                                    <Button onAction="#limpiarProveedor" prefWidth="120" styleClass="btn-danger" style="-fx-background-color: transparent; -fx-text-fill: -danger;" text="LIMPIAR" />
+                                    <Button onAction="#borrarProveedor" prefWidth="120" styleClass="btn-danger" text="ELIMINAR" />
+                                    <Button onAction="#actualizarProveedor" prefWidth="150" styleClass="btn-accent" text="ACTUALIZAR" />
+                                    <Button onAction="#agregarProveedor" prefWidth="180" styleClass="btn-primary" text="GUARDAR" />
+                                </HBox>
+                                
+                                <TableView fx:id="tablaProveedores" prefHeight="280">
+                                    <columns>
+                                        <TableColumn fx:id="colProvId" prefWidth="60" text="#" />
+                                        <TableColumn fx:id="colProvNombre" prefWidth="200" text="Nombre" />
+                                        <TableColumn fx:id="colProvRnc" prefWidth="130" text="RNC" />
+                                        <TableColumn fx:id="colProvTel" prefWidth="130" text="Teléfono" />
+                                        <TableColumn fx:id="colProvDir" prefWidth="200" text="Dirección" />
+                                    </columns>
+                                </TableView>
+                            </children>
+                        </VBox>
+                    </children>
+                </VBox>
+>>>>>>> bb658e7 (Primer commit)
             </children>
         </StackPane>
     </children>

@@ -5,7 +5,11 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 
+<<<<<<< HEAD
 <StackPane styleClass="login-root" stylesheets="@Style5.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pantallas.SplashScreenController">
+=======
+<StackPane styleClass="login-root" stylesheets="@Style5.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pantallas.controllers.SplashScreenController">
+>>>>>>> bb658e7 (Primer commit)
     <VBox alignment="CENTER" spacing="25" style="-fx-padding: 60 80;">
         <VBox alignment="CENTER" spacing="10">
             <Label fx:id="lblLogo" style="-fx-font-size: 100px;" text="🧀" />

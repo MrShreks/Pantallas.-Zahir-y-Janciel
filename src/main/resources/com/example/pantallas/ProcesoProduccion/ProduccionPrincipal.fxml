@@ -4,7 +4,11 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
+<<<<<<< HEAD
 <HBox prefHeight="750.0" prefWidth="1300.0" stylesheets="@../Style5.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pantallas.ProcesoDeProduccion.ProduccionController">
+=======
+<HBox stylesheets="@../Style5.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pantallas.controllers.ProduccionController">
+>>>>>>> bb658e7 (Primer commit)
     <children>
         <VBox prefWidth="280.0" styleClass="sidebar">
             <children>
@@ -52,7 +56,11 @@
                                             <Label styleClass="label-bold" text="PROVEEDOR / GANADERÍA" />
                                             <HBox spacing="10">
                                                 <ComboBox fx:id="cbProveedor" maxWidth="Infinity" prefHeight="45.0" promptText="Seleccionar origen..." HBox.hgrow="ALWAYS" />
+<<<<<<< HEAD
                                                 <Button onAction="#mostrarProveedores" prefHeight="45" styleClass="btn-accent" text="+" />
+=======
+                                                <Button onAction="#irAProveedoresCompras" prefHeight="45" styleClass="btn-accent" text="+" />
+>>>>>>> bb658e7 (Primer commit)
                                             </HBox>
                                         </VBox>
                                         <VBox spacing="10" GridPane.columnIndex="1">

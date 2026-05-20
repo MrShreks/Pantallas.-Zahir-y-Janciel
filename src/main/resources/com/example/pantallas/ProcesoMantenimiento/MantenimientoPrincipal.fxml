@@ -4,7 +4,11 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
+<<<<<<< HEAD
 <HBox prefHeight="750.0" prefWidth="1300.0" stylesheets="@../Style5.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pantallas.ProcesoDeMantenimiento.MantenimientoController">
+=======
+<HBox stylesheets="@../Style5.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pantallas.controllers.MantenimientoController">
+>>>>>>> bb658e7 (Primer commit)
     <children>
         <VBox prefWidth="280.0" styleClass="sidebar">
             <children>

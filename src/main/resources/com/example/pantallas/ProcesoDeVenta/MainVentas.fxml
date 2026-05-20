@@ -4,7 +4,11 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
+<<<<<<< HEAD
 <HBox fx:id="rootPane" prefHeight="750.0" prefWidth="1300.0" stylesheets="@../Style5.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pantallas.ProcesoDeVenta.VentaController">
+=======
+<HBox fx:id="rootPane" stylesheets="@../Style5.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pantallas.controllers.VentaController">
+>>>>>>> bb658e7 (Primer commit)
     <fx:define>
         <ToggleGroup fx:id="tgUnidadMedida" />
     </fx:define>
@@ -82,7 +86,18 @@
                             </children>
                         </VBox>
                         
+<<<<<<< HEAD
                         <TableView fx:id="tablaVentas" VBox.vgrow="ALWAYS" />
+=======
+                        <TableView fx:id="tablaVentas" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="colDesc" prefWidth="250" text="Producto" />
+                                <TableColumn fx:id="colLbs" prefWidth="100" text="Cantidad" />
+                                <TableColumn fx:id="colPre" prefWidth="120" text="Precio Unit." />
+                                <TableColumn fx:id="colSub" prefWidth="120" text="Subtotal" />
+                            </columns>
+                        </TableView>
+>>>>>>> bb658e7 (Primer commit)
                         
                         <HBox alignment="CENTER_RIGHT" spacing="30.0">
                             <VBox alignment="CENTER_RIGHT">

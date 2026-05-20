@@ -4,7 +4,11 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
+<<<<<<< HEAD
 <HBox prefHeight="800.0" prefWidth="1250.0" stylesheets="@../Style5.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pantallas.MenuPrincipal.MenuPrincipalController">
+=======
+<HBox stylesheets="@../Style5.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pantallas.controllers.MenuPrincipalController">
+>>>>>>> bb658e7 (Primer commit)
     <children>
         <VBox prefWidth="300.0" styleClass="sidebar">
             <children>
@@ -26,7 +30,10 @@
                 
                 <VBox spacing="10" style="-fx-padding: 0 20;">
                     <Button maxWidth="Infinity" onAction="#abrirDashboard" styleClass="nav-item" text="🏠 Dashboard" />
+<<<<<<< HEAD
                     <Button maxWidth="Infinity" styleClass="nav-item" text="📊 Reportes" />
+=======
+>>>>>>> bb658e7 (Primer commit)
                     <Button maxWidth="Infinity" styleClass="nav-item" text="⚙️Ajustes" />
                 </VBox>
 

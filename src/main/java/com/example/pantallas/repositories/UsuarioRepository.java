@@ -13,6 +13,7 @@ import java.util.Optional;
 public class UsuarioRepository {
 
     public Optional<Usuario> findByUsername(String username) {
+<<<<<<< HEAD
         String query = "SELECT id_usuario, usuario, clave, rol FROM tbl_usuarios WHERE usuario = ?";
         try (Connection conn = ConnectionManager.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
@@ -34,4 +35,41 @@ public class UsuarioRepository {
         }
         return Optional.empty();
     }
+=======
+        String[] queries = {
+            "SELECT id_usuario, usuario, clave, rol FROM tbl_usuarios WHERE usuario = ?",
+            "SELECT id_usuario, nombre_usuario AS usuario, contrasena AS clave, '' AS rol FROM Usuarios WHERE nombre_usuario = ?"
+        };
+        for (String query : queries) {
+            try (Connection conn = ConnectionManager.getConnection();
+                 PreparedStatement pstmt = conn.prepareStatement(query)) {
+                pstmt.setString(1, username);
+                try (ResultSet rs = pstmt.executeQuery()) {
+                    if (rs.next()) {
+                        Usuario u = new Usuario(
+                            rs.getInt("id_usuario"),
+                            rs.getString("usuario"),
+                            rs.getString("clave"),
+                            rs.getString("rol")
+                        );
+                        LoggerUtil.info("Usuario encontrado en tabla: " + query.substring(query.indexOf("FROM") + 5, query.indexOf("WHERE")).trim());
+                        return Optional.of(u);
+                    }
+                }
+            } catch (SQLException e) {
+                LoggerUtil.warning("Fallo consulta (" + query.substring(0, 60) + "...): " + e.getMessage());
+            }
+        }
+        return Optional.empty();
+    }
+
+    public String testConnection() {
+        try {
+            ConnectionManager.getConnection().close();
+            return "OK";
+        } catch (Exception e) {
+            return "Error de conexión: " + e.getMessage();
+        }
+    }
+>>>>>>> bb658e7 (Primer commit)
 }

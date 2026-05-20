@@ -51,7 +51,11 @@ public final class ServicioVentas {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) return rs.getDouble("precio_libra");
         } catch (SQLException e) {
+<<<<<<< HEAD
             com.example.pantallas.utils.LoggerUtil.error("Excepción detectada", e);
+=======
+            com.example.pantallas.utils.LoggerUtil.error("ExcepciÃ³n detectada", e);
+>>>>>>> bb658e7 (Primer commit)
         }
         return 0.0;
     }

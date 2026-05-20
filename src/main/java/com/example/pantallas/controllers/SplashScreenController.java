@@ -9,6 +9,10 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+<<<<<<< HEAD
+=======
+import javafx.scene.Parent;
+>>>>>>> bb658e7 (Primer commit)
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -60,6 +64,7 @@ public class SplashScreenController {
     @FXML
     private void comenzar(ActionEvent event) {
         try {
+<<<<<<< HEAD
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/pantallas/Login.fxml"));
             Scene scene = new Scene(fxmlLoader.load());
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -71,6 +76,18 @@ public class SplashScreenController {
         } catch (IOException e) {
             com.example.pantallas.utils.LoggerUtil.error("Error al cargar Login: " + e.getMessage());
             com.example.pantallas.utils.LoggerUtil.error("Excepci�n detectada", e);
+=======
+            Parent root = FXMLLoader.load(getClass().getResource("/com/example/pantallas/Login.fxml"));
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            Scene scene = stage.getScene();
+            scene.setRoot(root);
+            stage.setTitle("Inicio de Sesión - Fábrica de Queso");
+            stage.setResizable(true);
+            stage.setMaximized(true);
+        } catch (IOException e) {
+            com.example.pantallas.utils.LoggerUtil.error("Error al cargar Login: " + e.getMessage());
+            com.example.pantallas.utils.LoggerUtil.error("Excepción detectada", e);
+>>>>>>> bb658e7 (Primer commit)
         }
     }
 }

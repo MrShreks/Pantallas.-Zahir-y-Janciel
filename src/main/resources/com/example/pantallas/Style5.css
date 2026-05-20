@@ -5,9 +5,15 @@
 
 .root {
     /* Paleta de Colores Primaria */
+<<<<<<< HEAD
     -primary-dark: #061e12;
     -primary: #0f3d24;
     -primary-light: #1e7a46;
+=======
+    -primary-dark: #5c3d1a;
+    -primary: #b8860b;
+    -primary-light: #daa520;
+>>>>>>> bb658e7 (Primer commit)
     -accent: #c6944a; 
     -accent-light: #e0b878;
     -accent-dark: #9a7339;
@@ -118,6 +124,48 @@ TableView { -fx-background-color: white; -fx-background-radius: 16; -fx-effect: 
     -fx-border-width: 0 0 0 4;
 }
 
+<<<<<<< HEAD
+=======
+/* === WELCOME FULLSCREEN STYLES === */
+.welcome-root {
+    -fx-background-color: linear-gradient(to bottom right, #0f172a, #1a2a4a, #0f172a);
+}
+
+.welcome-content {
+    -fx-padding: 60;
+    -fx-max-width: 700;
+    -fx-alignment: CENTER;
+}
+
+.welcome-title-label {
+    -fx-font-size: 36px;
+    -fx-font-weight: 800;
+    -fx-text-fill: #e0b878;
+    -fx-text-alignment: CENTER;
+}
+
+.welcome-user-label {
+    -fx-font-size: 28px;
+    -fx-font-weight: 800;
+    -fx-text-fill: white;
+}
+
+.welcome-role-label {
+    -fx-font-size: 16px;
+    -fx-text-fill: rgba(255, 255, 255, 0.6);
+}
+
+.welcome-loading-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: rgba(255, 255, 255, 0.7);
+}
+
+.welcome-footer-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: rgba(255, 255, 255, 0.3);
+}
+
+>>>>>>> bb658e7 (Primer commit)
 /* === LOGIN STYLES === */
 .login-root {
     -fx-background-color: #0f172a;

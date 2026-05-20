@@ -1,15 +1,28 @@
 package com.example.pantallas;
 
+<<<<<<< HEAD
 import com.example.pantallas.base.FabricaBase;
+=======
+import com.example.pantallas.services.FabricaBase;
+>>>>>>> bb658e7 (Primer commit)
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperCompileManager;
+<<<<<<< HEAD
+=======
+import net.sf.jasperreports.engine.JRDataSource;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+>>>>>>> bb658e7 (Primer commit)
 import net.sf.jasperreports.engine.export.JRPdfExporter;
 import net.sf.jasperreports.export.SimpleExporterInput;
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 import java.io.InputStream;
 import java.sql.Connection;
+<<<<<<< HEAD
+=======
+import java.util.Collection;
+>>>>>>> bb658e7 (Primer commit)
 import java.util.Map;
 
 public class ReporteHelper {
@@ -33,4 +46,15 @@ public class ReporteHelper {
         JasperPrint print = generarReporte(archivoJrxml, parametros);
         exportarAPdf(print, rutaSalida);
     }
+<<<<<<< HEAD
+=======
+
+    public static void generarReporteConDatos(String archivoJrxml, Map<String, Object> parametros, Collection<?> datos, String rutaSalida) throws Exception {
+        InputStream reporteStream = ReporteHelper.class.getResourceAsStream("/reportes/" + archivoJrxml);
+        JasperReport reporte = JasperCompileManager.compileReport(reporteStream);
+        JRDataSource dataSource = new JRBeanCollectionDataSource(datos);
+        JasperPrint print = JasperFillManager.fillReport(reporte, parametros, dataSource);
+        exportarAPdf(print, rutaSalida);
+    }
+>>>>>>> bb658e7 (Primer commit)
 }

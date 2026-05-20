@@ -9,6 +9,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+<<<<<<< HEAD
+=======
+import javafx.scene.layout.HBox;
+>>>>>>> bb658e7 (Primer commit)
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -20,6 +24,7 @@ import java.util.Map;
 
 public class CompraController {
 
+<<<<<<< HEAD
     // Proveedores panel ELIMINADO — ahora vive en Distribución
     @FXML private VBox paneNuevaOrden, paneRecepcion, paneHistorial;
     @FXML private ComboBox<String> cbSuplidor, cbInsumo, cbOrdenesPendientes, cbNuevoEstado, cbUnidad;
@@ -29,20 +34,66 @@ public class CompraController {
     @FXML private TableView<OrdenCompra> tablaOrdenesPendientes, tablaHistorial;
     @FXML private Label lblPrecioUnitario;
     @FXML private Button btnNavOrden, btnNavRecepcion, btnNavHistorial;
+=======
+    @FXML private VBox paneNuevaOrden, paneRecepcion, paneHistorial, paneProveedores;
+    @FXML private ComboBox<String> cbSuplidor, cbInsumo, cbOrdenesPendientes, cbNuevoEstado, cbUnidad, cbUnidadReal;
+    @FXML private TextField txtCantidad, txtFiltroRecepcion, txtCantidadReal;
+    @FXML private DatePicker dpFechaEntrega;
+    @FXML private TextArea txtNotasRecepcion;
+    @FXML private TableView<OrdenCompra> tablaOrdenesPendientes, tablaHistorial;
+    @FXML private TableView<ObservacionCalidad> tablaHistorialCalidad;
+    @FXML private Label lblPrecioUnitario;
+    @FXML private Button btnNavOrden, btnNavRecepcion, btnNavHistorial, btnNavProveedores;
+    @FXML private CheckBox chkCantidadCorrecta, chkCantidadIncorrecta;
+    @FXML private HBox hboxCantidadReal;
+
+    // Proveedores fields
+    @FXML private TextField txtProvNombre, txtProvTelefono, txtProvRnc, txtProvDireccion;
+    @FXML private TableView<Proveedor> tablaProveedores;
+    @FXML private TableColumn<Proveedor, Integer> colProvId;
+    @FXML private TableColumn<Proveedor, String> colProvNombre, colProvTel, colProvRnc, colProvDir;
+
+    private int idProveedorSeleccionado = -1;
+>>>>>>> bb658e7 (Primer commit)
 
     private final String URL = "jdbc:sqlserver://localhost:1433;databaseName=fabricadequeso;trustServerCertificate=true;encrypt=false;";
         
     private final ObservableList<OrdenCompra> listaOrdenes = FXCollections.observableArrayList();
     private final ObservableList<String> listaPendientes = FXCollections.observableArrayList();
+<<<<<<< HEAD
     private Map<String, ProductoInfo> productosActuales = new HashMap<>();
     private double precioUnitarioActual = 0.0;
+=======
+    private final ObservableList<String> listaPendientesFiltradas = FXCollections.observableArrayList();
+    private final ObservableList<Proveedor> listaProveedores = FXCollections.observableArrayList();
+    private final ObservableList<Proveedor> listaProveedoresFallback = FXCollections.observableArrayList();
+    private final ObservableList<ObservacionCalidad> listaObservaciones = FXCollections.observableArrayList();
+    private Map<String, ProductoInfo> productosActuales = new HashMap<>();
+    private double precioUnitarioActual = 0.0;
+    private String unidadBaseActual = "";
+
+    // Factores de conversión entre unidades (base = Unidades)
+    private static final Map<String, Double> FACTORES_CONVERSION = new HashMap<>();
+    static {
+        FACTORES_CONVERSION.put("Unidades", 1.0);
+        FACTORES_CONVERSION.put("Paquetes", 1.0);
+        FACTORES_CONVERSION.put("Litros", 1.0);
+        FACTORES_CONVERSION.put("Galones", 3.785);
+        FACTORES_CONVERSION.put("Kilos", 1.0);
+        FACTORES_CONVERSION.put("Libras", 0.4536);
+        FACTORES_CONVERSION.put("Rollos", 1.0);
+    }
+>>>>>>> bb658e7 (Primer commit)
 
     private static class ProductoInfo {
         double precio; String unidad;
         ProductoInfo(double precio, String unidad) { this.precio = precio; this.unidad = unidad; }
     }
 
+<<<<<<< HEAD
     // Fallback hardcoded para seed inicial
+=======
+>>>>>>> bb658e7 (Primer commit)
     private static final Map<String, Map<String, ProductoInfo>> PRODUCTOS_FALLBACK = new HashMap<>();
     static {
         Map<String, ProductoInfo> lacteos = new HashMap<>();
@@ -79,12 +130,24 @@ public class CompraController {
     @FXML
     public void initialize() {
         FabricaBase.asegurarEsquemaProveedores();
+<<<<<<< HEAD
         asegurarTablaProductos();
+=======
+        asegurarTablaOrdenesCompra();
+        asegurarProveedoresIniciales();
+        asegurarTablaProductos();
+        asegurarTablaHistorialCalidad();
+>>>>>>> bb658e7 (Primer commit)
         FabricaBase.seedFactoresConversion();
         configurarTablas();
         cargarCombos();
         dpFechaEntrega.setValue(LocalDate.now().plusDays(3));
         cargarOrdenesHistorial();
+<<<<<<< HEAD
+=======
+        cargarProveedores();
+        cargarHistorialCalidad();
+>>>>>>> bb658e7 (Primer commit)
 
         cbSuplidor.valueProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) { cargarProductosPorSuplidor(newVal); limpiarCamposProducto(); }
@@ -93,6 +156,147 @@ public class CompraController {
             if (newVal != null) onInsumoSeleccionado();
         });
         txtCantidad.textProperty().addListener((obs, oldVal, newVal) -> calcularTotal());
+<<<<<<< HEAD
+=======
+
+        // Listener para cambio de unidad -> recalcular precio automáticamente
+        cbUnidad.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null && precioUnitarioActual > 0 && !unidadBaseActual.isEmpty()) {
+                convertirPrecioPorUnidad(newVal);
+            }
+        });
+
+        // Listener para filtro de recepción por cliente/suplidor
+        txtFiltroRecepcion.textProperty().addListener((obs, oldVal, newVal) -> filtrarOrdenesPendientes());
+
+        // Checkboxes mutuamente excluyentes para entrega
+        chkCantidadCorrecta.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
+            if (isSelected) {
+                chkCantidadIncorrecta.setSelected(false);
+                hboxCantidadReal.setVisible(false);
+                hboxCantidadReal.setManaged(false);
+            }
+        });
+        chkCantidadIncorrecta.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
+            if (isSelected) {
+                chkCantidadCorrecta.setSelected(false);
+                hboxCantidadReal.setVisible(true);
+                hboxCantidadReal.setManaged(true);
+            } else {
+                hboxCantidadReal.setVisible(false);
+                hboxCantidadReal.setManaged(false);
+            }
+        });
+
+        // Listener para selección de proveedores (edición) — usa dbId para operaciones SQL
+        tablaProveedores.getSelectionModel().selectedItemProperty().addListener((obs, oldV, newV) -> {
+            if (newV != null) {
+                idProveedorSeleccionado = newV.getDbId();
+                txtProvNombre.setText(newV.getNombre());
+                txtProvTelefono.setText(newV.getTelefono());
+                if (txtProvRnc != null) txtProvRnc.setText(newV.getRnc() != null ? newV.getRnc() : "");
+                if (txtProvDireccion != null) txtProvDireccion.setText(newV.getDireccion() != null ? newV.getDireccion() : "");
+            }
+        });
+    }
+
+    private void asegurarProveedoresIniciales() {
+        String sqlCount = "SELECT COUNT(*) FROM tbl_proveedores";
+        try (Connection con = com.example.pantallas.config.ConnectionManager.getConnection();
+             Statement st = con.createStatement();
+             ResultSet rs = st.executeQuery(sqlCount)) {
+            if (rs.next() && rs.getInt(1) == 0) {
+                String[][] iniciales = {
+                    {"Lácteos del Yaque", "001-0000001-1", "809-555-0101", "Av. Principal, Santo Domingo"},
+                    {"Insumos RD", "001-0000002-2", "809-555-0102", "Calle Secundaria, Santiago"},
+                    {"Empaques Cibao", "001-0000003-3", "809-555-0103", "Zona Industrial, La Vega"},
+                    {"Ganadería del Norte", "001-0000004-4", "809-555-0104", "Carretera Duarte, Puerto Plata"}
+                };
+                try (PreparedStatement ps = con.prepareStatement(
+                        "INSERT INTO tbl_proveedores (nombre, rnc, telefono, direccion) VALUES (?, ?, ?, ?)")) {
+                    for (String[] p : iniciales) {
+                        ps.setString(1, p[0]); ps.setString(2, p[1]);
+                        ps.setString(3, p[2]); ps.setString(4, p[3]);
+                        ps.addBatch();
+                    }
+                    ps.executeBatch();
+                }
+            }
+        } catch (Exception e) {
+            com.example.pantallas.utils.LoggerUtil.info("No se pudo sembrar proveedores iniciales: " + e.getMessage());
+        }
+    }
+
+    private void asegurarTablaOrdenesCompra() {
+        String sql = "IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='tbl_ordenes_compra' AND xtype='U') "
+                + "CREATE TABLE tbl_ordenes_compra ("
+                + "id_orden INT IDENTITY PRIMARY KEY, "
+                + "suplidor VARCHAR(200), "
+                + "insumo VARCHAR(200), "
+                + "cantidad DECIMAL(10,2), "
+                + "precio_unitario DECIMAL(10,2), "
+                + "fecha_pedido DATETIME DEFAULT GETDATE(), "
+                + "fecha_entrega_esperada DATE, "
+                + "fecha_recepcion DATETIME, "
+                + "estado VARCHAR(50) DEFAULT 'Pendiente', "
+                + "notas TEXT, "
+                + "cantidad_recibida DECIMAL(10,2))";
+        try (Connection con = com.example.pantallas.config.ConnectionManager.getConnection();
+             Statement st = con.createStatement()) {
+            st.execute(sql);
+            // Seed orders if table was just created (empty)
+            ResultSet rs = st.executeQuery("SELECT COUNT(*) FROM tbl_ordenes_compra");
+            if (rs.next() && rs.getInt(1) == 0) {
+                try (PreparedStatement ps = con.prepareStatement(
+                        "INSERT INTO tbl_ordenes_compra (suplidor, insumo, cantidad, precio_unitario, fecha_entrega_esperada, estado) VALUES (?, ?, ?, ?, DATEADD(day,3,GETDATE()), 'Pendiente')")) {
+                    ps.setString(1, "Lácteos del Yaque"); ps.setString(2, "Crema de Leche (Litros)");
+                    ps.setDouble(3, 20); ps.setDouble(4, 180.00); ps.addBatch();
+                    ps.setString(1, "Insumos RD"); ps.setString(2, "Sal Industrial (Kilos)");
+                    ps.setDouble(3, 50); ps.setDouble(4, 45.00); ps.addBatch();
+                    ps.setString(1, "Empaques Cibao"); ps.setString(2, "Fundas al Vacío (Rollos)");
+                    ps.setDouble(3, 10); ps.setDouble(4, 450.00); ps.addBatch();
+                    ps.executeBatch();
+                }
+            }
+        } catch (Exception e) {
+            com.example.pantallas.utils.LoggerUtil.info("No se pudo crear/seed tbl_ordenes_compra: " + e.getMessage());
+        }
+    }
+
+    private void asegurarTablaHistorialCalidad() {
+        String sqlCreate = "IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='tbl_historial_calidad' AND xtype='U') "
+                + "CREATE TABLE tbl_historial_calidad ("
+                + "id INT IDENTITY PRIMARY KEY, "
+                + "id_orden INT, "
+                + "suplidor VARCHAR(200), "
+                + "insumo VARCHAR(200), "
+                + "cantidad_esperada DECIMAL(10,2), "
+                + "cantidad_recibida DECIMAL(10,2), "
+                + "unidad VARCHAR(50), "
+                + "entrega_correcta BIT, "
+                + "observaciones TEXT, "
+                + "fecha_recepcion DATETIME DEFAULT GETDATE())";
+        try (Connection con = com.example.pantallas.config.ConnectionManager.getConnection();
+             Statement st = con.createStatement()) {
+            st.execute(sqlCreate);
+        } catch (Exception e) {
+            com.example.pantallas.utils.LoggerUtil.info("No se pudo crear tbl_historial_calidad: " + e.getMessage());
+        }
+    }
+
+    private void convertirPrecioPorUnidad(String nuevaUnidad) {
+        if (unidadBaseActual.equalsIgnoreCase(nuevaUnidad)) {
+            calcularTotal();
+            return;
+        }
+        double factorBase = FACTORES_CONVERSION.getOrDefault(unidadBaseActual, 1.0);
+        double factorNueva = FACTORES_CONVERSION.getOrDefault(nuevaUnidad, 1.0);
+        if (factorBase > 0 && factorNueva > 0) {
+            double nuevoPrecio = precioUnitarioActual * (factorBase / factorNueva);
+            precioUnitarioActual = nuevoPrecio;
+        }
+        calcularTotal();
+>>>>>>> bb658e7 (Primer commit)
     }
 
     private void limpiarCamposProducto() {
@@ -100,6 +304,10 @@ public class CompraController {
         txtCantidad.clear();
         lblPrecioUnitario.setText("RD$ 0.00");
         precioUnitarioActual = 0.0;
+<<<<<<< HEAD
+=======
+        unidadBaseActual = "";
+>>>>>>> bb658e7 (Primer commit)
     }
 
     private void asegurarTablaProductos() {
@@ -137,16 +345,24 @@ public class CompraController {
     }
 
     private Integer getIdSuplidor(Connection con, String nombre) {
+<<<<<<< HEAD
         // Intentar primero desde tbl_proveedores (nueva), luego legacy tbl_suplidores
+=======
+>>>>>>> bb658e7 (Primer commit)
         try (PreparedStatement ps = con.prepareStatement("SELECT provider_id FROM tbl_proveedores WHERE nombre = ?")) {
             ps.setString(1, nombre);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) return rs.getInt("provider_id");
+<<<<<<< HEAD
         } catch (Exception e) { /* fallback below */ }
+=======
+        } catch (Exception e) { }
+>>>>>>> bb658e7 (Primer commit)
         try (PreparedStatement ps = con.prepareStatement("SELECT id_suplidor FROM tbl_suplidores WHERE nombre = ?")) {
             ps.setString(1, nombre);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) return rs.getInt("id_suplidor");
+<<<<<<< HEAD
         } catch (Exception e) { /* ignore */ }
         return null;
     }
@@ -160,6 +376,17 @@ public class CompraController {
         boolean cargado = false;
 
         // Intentar desde tbl_factores_conversion (normalizado)
+=======
+        } catch (Exception e) { }
+        return null;
+    }
+
+    private void cargarProductosPorSuplidor(String suplidorNombre) {
+        productosActuales.clear();
+        ObservableList<String> items = FXCollections.observableArrayList();
+        boolean cargado = false;
+
+>>>>>>> bb658e7 (Primer commit)
         String sqlFactores = "SELECT fc.producto, fc.precio_unitario, fc.unidad "
                 + "FROM tbl_factores_conversion fc "
                 + "JOIN tbl_proveedores p ON fc.id_proveedor = p.provider_id "
@@ -171,12 +398,20 @@ public class CompraController {
             while (rs.next()) {
                 String prod = rs.getString("producto");
                 productosActuales.put(prod, new ProductoInfo(rs.getDouble("precio_unitario"), rs.getString("unidad")));
+<<<<<<< HEAD
                 cbInsumo.getItems().add(prod);
             }
             if (!productosActuales.isEmpty()) cargado = true;
         } catch (Exception e) { com.example.pantallas.utils.LoggerUtil.info("Error cargando factores_conversion: " + e.getMessage()); }
 
         // Fallback: tbl_suplidor_productos legacy
+=======
+                items.add(prod);
+            }
+            if (!productosActuales.isEmpty()) cargado = true;
+        } catch (Exception e) { }
+
+>>>>>>> bb658e7 (Primer commit)
         if (!cargado) {
             String sqlLegacy = "SELECT sp.producto, sp.precio_unitario, sp.unidad "
                     + "FROM tbl_suplidor_productos sp "
@@ -190,6 +425,7 @@ public class CompraController {
                 while (rs.next()) {
                     String prod = rs.getString("producto");
                     productosActuales.put(prod, new ProductoInfo(rs.getDouble("precio_unitario"), rs.getString("unidad")));
+<<<<<<< HEAD
                     cbInsumo.getItems().add(prod);
                 }
                 if (!productosActuales.isEmpty()) cargado = true;
@@ -215,12 +451,48 @@ public class CompraController {
     @FXML private void mostrarNuevaOrden() { alternarVista(paneNuevaOrden, btnNavOrden); }
     @FXML private void mostrarRecepcion() { alternarVista(paneRecepcion, btnNavRecepcion); cargarOrdenesPendientes(); }
     @FXML private void mostrarHistorial() { alternarVista(paneHistorial, btnNavHistorial); }
+=======
+                    items.add(prod);
+                }
+                if (!productosActuales.isEmpty()) cargado = true;
+            } catch (Exception e) { }
+        }
+
+        if (PRODUCTOS_FALLBACK.containsKey(suplidorNombre)) {
+            Map<String, ProductoInfo> fallback = PRODUCTOS_FALLBACK.get(suplidorNombre);
+            for (Map.Entry<String, ProductoInfo> entry : fallback.entrySet()) {
+                if (!productosActuales.containsKey(entry.getKey())) {
+                    productosActuales.put(entry.getKey(), entry.getValue());
+                    items.add(entry.getKey());
+                }
+            }
+        }
+
+        cbInsumo.setItems(items);
+    }
+
+    private void resetVistas() {
+        VBox[] panes = {paneNuevaOrden, paneRecepcion, paneHistorial, paneProveedores};
+        for (VBox p : panes) {
+            if (p != null) { p.setVisible(false); p.setManaged(false); }
+        }
+    }
+
+    @FXML private void mostrarNuevaOrden() { alternarVista(paneNuevaOrden, btnNavOrden); }
+    @FXML private void mostrarRecepcion() { alternarVista(paneRecepcion, btnNavRecepcion); cargarOrdenesPendientes(); cargarHistorialCalidad(); }
+    @FXML private void mostrarHistorial() { alternarVista(paneHistorial, btnNavHistorial); }
+    @FXML private void mostrarProveedores() { alternarVista(paneProveedores, btnNavProveedores); cargarProveedores(); }
+>>>>>>> bb658e7 (Primer commit)
 
     private void alternarVista(VBox pane, Button btn) {
         resetVistas();
         if (pane != null) { pane.setVisible(true); pane.setManaged(true); }
         if (btn != null) {
+<<<<<<< HEAD
             Button[] btns = {btnNavOrden, btnNavRecepcion, btnNavHistorial};
+=======
+            Button[] btns = {btnNavOrden, btnNavRecepcion, btnNavHistorial, btnNavProveedores};
+>>>>>>> bb658e7 (Primer commit)
             for (Button b : btns) {
                 if (b != null) {
                     b.getStyleClass().remove("nav-item-active");
@@ -244,7 +516,11 @@ public class CompraController {
             if (!wasMaximized) stage.centerOnScreen();
             stage.show();
         } catch (Exception e) {
+<<<<<<< HEAD
             com.example.pantallas.utils.LoggerUtil.error("Excepci�n detectada", e);
+=======
+            com.example.pantallas.utils.LoggerUtil.error("Excepción detectada", e);
+>>>>>>> bb658e7 (Primer commit)
             mostrarAlerta("Error de Navegación", "No se pudo cargar el Menú Principal.");
         }
     }
@@ -254,6 +530,10 @@ public class CompraController {
         if (insumo != null && productosActuales.containsKey(insumo)) {
             ProductoInfo info = productosActuales.get(insumo);
             precioUnitarioActual = info.precio;
+<<<<<<< HEAD
+=======
+            unidadBaseActual = info.unidad;
+>>>>>>> bb658e7 (Primer commit)
             cbUnidad.setValue(info.unidad);
             calcularTotal();
         }
@@ -287,20 +567,68 @@ public class CompraController {
             ps.executeUpdate();
             cargarOrdenesHistorial(); limpiarDatosOrden();
             mostrarAlerta("Éxito", "Orden de compra generada correctamente.\nTotal: " + lblPrecioUnitario.getText());
+<<<<<<< HEAD
         } catch (Exception e) { com.example.pantallas.utils.LoggerUtil.error("Excepci�n detectada", e); mostrarAlerta("Error de Base de Datos", "No se pudo generar la orden."); }
+=======
+        } catch (Exception e) { com.example.pantallas.utils.LoggerUtil.error("Excepción detectada", e); mostrarAlerta("Error de Base de Datos", "No se pudo generar la orden."); }
+>>>>>>> bb658e7 (Primer commit)
     }
 
     @FXML private void confirmarRecepcion() {
         String seleccion = cbOrdenesPendientes.getValue();
         if (seleccion == null) { mostrarAlerta("Selección Requerida", "Debe seleccionar una orden pendiente."); return; }
+<<<<<<< HEAD
         if (txtCantidadRecibida.getText().isEmpty() || txtNotasRecepcion.getText().isEmpty()) {
             mostrarAlerta("Campos Vacíos", "Debe ingresar: Cantidad Real Recibida y Observaciones de Calidad."); return;
         }
+=======
+
+        // Validar checkboxes
+        boolean entregaCorrecta = chkCantidadCorrecta.isSelected();
+        boolean entregaIncorrecta = chkCantidadIncorrecta.isSelected();
+        if (!entregaCorrecta && !entregaIncorrecta) {
+            mostrarAlerta("Verificación Requerida", "Debe indicar si la cantidad entregada es correcta o no.");
+            return;
+        }
+
+        double cantidadRecibida;
+        String unidadRecibida = "";
+        if (entregaIncorrecta) {
+            if (txtCantidadReal.getText().isEmpty()) {
+                mostrarAlerta("Campo Requerido", "Debe ingresar la cantidad real recibida.");
+                return;
+            }
+            if (cbUnidadReal.getValue() == null) {
+                mostrarAlerta("Campo Requerido", "Debe seleccionar la unidad de la cantidad real recibida.");
+                return;
+            }
+            cantidadRecibida = parsearNumero(txtCantidadReal.getText());
+            unidadRecibida = cbUnidadReal.getValue();
+        } else {
+            // Si es correcta, tomar la cantidad de la orden
+            String[] partes = seleccion.split(" - ");
+            try {
+                int tempId = Integer.parseInt(partes[0]);
+                cantidadRecibida = obtenerCantidadOrden(tempId);
+                unidadRecibida = obtenerUnidadOrden(tempId);
+            } catch (Exception e) {
+                cantidadRecibida = 0;
+            }
+            if (cantidadRecibida == 0) { mostrarAlerta("Error", "No se pudo determinar la cantidad de la orden."); return; }
+        }
+
+        if (txtNotasRecepcion.getText().isEmpty()) {
+            mostrarAlerta("Campo Requerido", "Debe ingresar las observaciones de calidad.");
+            return;
+        }
+
+>>>>>>> bb658e7 (Primer commit)
         int idOrden = Integer.parseInt(seleccion.split(" - ")[0]);
         String sql = "UPDATE tbl_ordenes_compra SET estado = 'Recibido', notas = ?, cantidad_recibida = ?, fecha_recepcion = GETDATE() WHERE id_orden = ?";
         try (Connection con = com.example.pantallas.config.ConnectionManager.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, txtNotasRecepcion.getText());
+<<<<<<< HEAD
             ps.setDouble(2, parsearNumero(txtCantidadRecibida.getText()));
             ps.setInt(3, idOrden);
             ps.executeUpdate();
@@ -313,6 +641,77 @@ public class CompraController {
 
     private void guardarMovimientoInventario(int idOrden) {
         String sqlSelect = "SELECT insumo, cantidad_recibida FROM tbl_ordenes_compra WHERE id_orden = ?";
+=======
+            ps.setDouble(2, cantidadRecibida);
+            ps.setInt(3, idOrden);
+            ps.executeUpdate();
+            guardarObservacionCalidad(con, idOrden, entregaCorrecta, cantidadRecibida, unidadRecibida);
+            guardarMovimientoInventario(idOrden, cantidadRecibida, unidadRecibida);
+            cargarOrdenesHistorial();
+            cargarHistorialCalidad();
+            cbOrdenesPendientes.getItems().clear();
+            txtFiltroRecepcion.clear();
+            txtCantidadReal.clear();
+            txtNotasRecepcion.clear();
+            chkCantidadCorrecta.setSelected(false);
+            chkCantidadIncorrecta.setSelected(false);
+            hboxCantidadReal.setVisible(false);
+            hboxCantidadReal.setManaged(false);
+            mostrarAlerta("Almacén", "Mercancía ingresada al sistema.");
+        } catch (Exception e) { com.example.pantallas.utils.LoggerUtil.error("Excepción detectada", e); mostrarAlerta("Error de Base de Datos", "No se pudo registrar la recepción."); }
+    }
+
+    private double obtenerCantidadOrden(int idOrden) {
+        String sql = "SELECT cantidad FROM tbl_ordenes_compra WHERE id_orden = ?";
+        try (Connection con = com.example.pantallas.config.ConnectionManager.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, idOrden);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) return rs.getDouble("cantidad");
+        } catch (Exception e) { }
+        return 0;
+    }
+
+    private String obtenerUnidadOrden(int idOrden) {
+        String sql = "SELECT insumo FROM tbl_ordenes_compra WHERE id_orden = ?";
+        try (Connection con = com.example.pantallas.config.ConnectionManager.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, idOrden);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                String insumo = rs.getString("insumo");
+                int idx = insumo.lastIndexOf("(");
+                if (idx > 0) return insumo.substring(idx + 1, insumo.length() - 1);
+            }
+        } catch (Exception e) { }
+        return "Unidades";
+    }
+
+    private void guardarObservacionCalidad(Connection con, int idOrden, boolean entregaCorrecta, double cantidadRecibida, String unidad) {
+        String sqlSelect = "SELECT suplidor, insumo, cantidad FROM tbl_ordenes_compra WHERE id_orden = ?";
+        String sqlInsert = "INSERT INTO tbl_historial_calidad (id_orden, suplidor, insumo, cantidad_esperada, cantidad_recibida, unidad, entrega_correcta, observaciones, fecha_recepcion) VALUES (?, ?, ?, ?, ?, ?, ?, ?, GETDATE())";
+        try (PreparedStatement psSel = con.prepareStatement(sqlSelect)) {
+            psSel.setInt(1, idOrden);
+            ResultSet rs = psSel.executeQuery();
+            if (rs.next()) {
+                try (PreparedStatement psIns = con.prepareStatement(sqlInsert)) {
+                    psIns.setInt(1, idOrden);
+                    psIns.setString(2, rs.getString("suplidor"));
+                    psIns.setString(3, rs.getString("insumo"));
+                    psIns.setDouble(4, rs.getDouble("cantidad"));
+                    psIns.setDouble(5, cantidadRecibida);
+                    psIns.setString(6, unidad);
+                    psIns.setBoolean(7, entregaCorrecta);
+                    psIns.setString(8, txtNotasRecepcion.getText());
+                    psIns.executeUpdate();
+                }
+            }
+        } catch (Exception e) { com.example.pantallas.utils.LoggerUtil.error("Excepción detectada", e); }
+    }
+
+    private void guardarMovimientoInventario(int idOrden, double cantidadRecibida, String unidad) {
+        String sqlSelect = "SELECT insumo FROM tbl_ordenes_compra WHERE id_orden = ?";
+>>>>>>> bb658e7 (Primer commit)
         String sqlInsert = "INSERT INTO tbl_movimientos_inventario (producto, tipo, cantidad, unidad, fecha_movimiento) VALUES (?, 'ENTRADA', ?, ?, GETDATE())";
         try (Connection con = com.example.pantallas.config.ConnectionManager.getConnection();
              PreparedStatement psSel = con.prepareStatement(sqlSelect)) {
@@ -320,6 +719,7 @@ public class CompraController {
             ResultSet rs = psSel.executeQuery();
             if (rs.next()) {
                 String insumo = rs.getString("insumo");
+<<<<<<< HEAD
                 double cantidad = rs.getDouble("cantidad_recibida");
                 String unidad = cbUnidad.getValue() != null ? cbUnidad.getValue() : "Unidades";
                 try (PreparedStatement psIns = con.prepareStatement(sqlInsert)) {
@@ -328,6 +728,16 @@ public class CompraController {
                 }
             }
         } catch (Exception e) { com.example.pantallas.utils.LoggerUtil.error("Excepci�n detectada", e); }
+=======
+                try (PreparedStatement psIns = con.prepareStatement(sqlInsert)) {
+                    psIns.setString(1, insumo);
+                    psIns.setDouble(2, cantidadRecibida);
+                    psIns.setString(3, unidad.isEmpty() ? "Unidades" : unidad);
+                    psIns.executeUpdate();
+                }
+            }
+        } catch (Exception e) { com.example.pantallas.utils.LoggerUtil.error("Excepción detectada", e); }
+>>>>>>> bb658e7 (Primer commit)
     }
 
     @FXML private void actualizarEstadoMasivo() {
@@ -339,7 +749,11 @@ public class CompraController {
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, cbNuevoEstado.getValue()); ps.setInt(2, seleccionada.getId());
             ps.executeUpdate(); cargarOrdenesHistorial(); mostrarAlerta("Éxito", "Estado actualizado.");
+<<<<<<< HEAD
         } catch (Exception e) { com.example.pantallas.utils.LoggerUtil.error("Excepci�n detectada", e); }
+=======
+        } catch (Exception e) { com.example.pantallas.utils.LoggerUtil.error("Excepción detectada", e); }
+>>>>>>> bb658e7 (Primer commit)
     }
 
     private void cargarOrdenesHistorial() {
@@ -353,7 +767,29 @@ public class CompraController {
             }
             tablaHistorial.setItems(listaOrdenes);
             tablaOrdenesPendientes.setItems(listaOrdenes);
+<<<<<<< HEAD
         } catch (SQLException e) { com.example.pantallas.utils.LoggerUtil.error("Excepci�n detectada", e); }
+=======
+        } catch (SQLException e) { com.example.pantallas.utils.LoggerUtil.error("Excepción detectada", e); }
+    }
+
+    private void filtrarOrdenesPendientes() {
+        String filtro = txtFiltroRecepcion.getText().toLowerCase().trim();
+        listaPendientesFiltradas.clear();
+        if (filtro.isEmpty()) {
+            listaPendientesFiltradas.addAll(listaPendientes);
+        } else {
+            for (String item : listaPendientes) {
+                if (item.toLowerCase().contains(filtro)) {
+                    listaPendientesFiltradas.add(item);
+                }
+            }
+        }
+        cbOrdenesPendientes.setItems(listaPendientesFiltradas);
+        if (!listaPendientesFiltradas.isEmpty()) {
+            cbOrdenesPendientes.getSelectionModel().selectFirst();
+        }
+>>>>>>> bb658e7 (Primer commit)
     }
 
     private void cargarOrdenesPendientes() {
@@ -364,11 +800,46 @@ public class CompraController {
             while (rs.next()) {
                 listaPendientes.add(rs.getInt("id_orden") + " - " + rs.getString("suplidor") + " (" + rs.getString("insumo") + ")");
             }
+<<<<<<< HEAD
             cbOrdenesPendientes.setItems(listaPendientes);
         } catch (SQLException e) { com.example.pantallas.utils.LoggerUtil.error("Excepci�n detectada", e); }
     }
 
     private void configurarTablas() {
+=======
+            listaPendientesFiltradas.addAll(listaPendientes);
+            cbOrdenesPendientes.setItems(listaPendientesFiltradas);
+        } catch (SQLException e) { com.example.pantallas.utils.LoggerUtil.error("Excepción detectada", e); }
+    }
+
+    private void cargarHistorialCalidad() {
+        listaObservaciones.clear();
+        String sql = "SELECT id, id_orden, suplidor, insumo, cantidad_esperada, cantidad_recibida, unidad, entrega_correcta, observaciones, fecha_recepcion "
+                + "FROM tbl_historial_calidad ORDER BY fecha_recepcion DESC";
+        try (Connection con = com.example.pantallas.config.ConnectionManager.getConnection();
+             Statement st = con.createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
+            while (rs.next()) {
+                listaObservaciones.add(new ObservacionCalidad(
+                        rs.getInt("id"),
+                        rs.getInt("id_orden"),
+                        rs.getString("suplidor"),
+                        rs.getString("insumo"),
+                        rs.getDouble("cantidad_esperada"),
+                        rs.getDouble("cantidad_recibida"),
+                        rs.getString("unidad"),
+                        rs.getBoolean("entrega_correcta"),
+                        rs.getString("observaciones"),
+                        rs.getString("fecha_recepcion")
+                ));
+            }
+            tablaHistorialCalidad.setItems(listaObservaciones);
+        } catch (SQLException e) { com.example.pantallas.utils.LoggerUtil.error("Excepción detectada", e); }
+    }
+
+    private void configurarTablas() {
+        // Tablas de órdenes
+>>>>>>> bb658e7 (Primer commit)
         TableColumn<OrdenCompra, Integer> colId = new TableColumn<>("ID");
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));
         TableColumn<OrdenCompra, String> colSup = new TableColumn<>("Suplidor");
@@ -384,6 +855,7 @@ public class CompraController {
 
         tablaHistorial.getColumns().setAll(colId, colSup, colIns, colCant, colPre, colEst);
         tablaOrdenesPendientes.getColumns().setAll(colId, colSup, colIns, colCant);
+<<<<<<< HEAD
     }
 
     private void cargarCombos() {
@@ -405,12 +877,73 @@ public class CompraController {
         }
         cbNuevoEstado.setItems(FXCollections.observableArrayList("Pendiente", "Recibido", "Cancelado", "En Tránsito"));
         cbUnidad.setItems(FXCollections.observableArrayList("Paquetes", "Unidades", "Litros", "Galones", "Kilos", "Libras", "Rollos"));
+=======
+
+        // Tabla de historial de calidad
+        TableColumn<ObservacionCalidad, Integer> colOcId = new TableColumn<>("ID");
+        colOcId.setCellValueFactory(new PropertyValueFactory<>("idOrden"));
+        TableColumn<ObservacionCalidad, String> colOcSup = new TableColumn<>("Suplidor");
+        colOcSup.setCellValueFactory(new PropertyValueFactory<>("suplidor"));
+        TableColumn<ObservacionCalidad, String> colOcIns = new TableColumn<>("Insumo");
+        colOcIns.setCellValueFactory(new PropertyValueFactory<>("insumo"));
+        TableColumn<ObservacionCalidad, Double> colOcEsp = new TableColumn<>("Esperado");
+        colOcEsp.setCellValueFactory(new PropertyValueFactory<>("cantidadEsperada"));
+        TableColumn<ObservacionCalidad, Double> colOcRec = new TableColumn<>("Recibido");
+        colOcRec.setCellValueFactory(new PropertyValueFactory<>("cantidadRecibida"));
+        TableColumn<ObservacionCalidad, String> colOcEst = new TableColumn<>("Entrega");
+        colOcEst.setCellValueFactory(new PropertyValueFactory<>("entregaTexto"));
+        TableColumn<ObservacionCalidad, String> colOcObs = new TableColumn<>("Observaciones");
+        colOcObs.setCellValueFactory(new PropertyValueFactory<>("observaciones"));
+        TableColumn<ObservacionCalidad, String> colOcFec = new TableColumn<>("Fecha");
+        colOcFec.setCellValueFactory(new PropertyValueFactory<>("fecha"));
+
+        tablaHistorialCalidad.getColumns().setAll(colOcId, colOcSup, colOcIns, colOcEsp, colOcRec, colOcEst, colOcObs, colOcFec);
+
+        // Tabla de proveedores
+        colProvId.setCellValueFactory(new PropertyValueFactory<>("id"));
+        colProvNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
+        colProvRnc.setCellValueFactory(new PropertyValueFactory<>("rnc"));
+        colProvTel.setCellValueFactory(new PropertyValueFactory<>("telefono"));
+        colProvDir.setCellValueFactory(new PropertyValueFactory<>("direccion"));
+    }
+
+    private void cargarCombos() {
+        ObservableList<String> suplidores = FXCollections.observableArrayList();
+        try (Connection con = com.example.pantallas.config.ConnectionManager.getConnection();
+             Statement st = con.createStatement();
+             ResultSet rs = st.executeQuery("SELECT nombre FROM tbl_proveedores WHERE activo = 1 ORDER BY nombre")) {
+            while (rs.next()) suplidores.add(rs.getString("nombre"));
+        } catch (Exception e) { }
+        if (suplidores.isEmpty()) {
+            try (Connection con = com.example.pantallas.config.ConnectionManager.getConnection();
+                 Statement st = con.createStatement();
+                 ResultSet rs = st.executeQuery("SELECT nombre FROM tbl_suplidores")) {
+                while (rs.next()) suplidores.add(rs.getString("nombre"));
+            } catch (Exception e2) { }
+        }
+        // Merge con fallback en memoria
+        for (Proveedor p : listaProveedoresFallback) {
+            if (!suplidores.contains(p.getNombre())) suplidores.add(p.getNombre());
+        }
+        // Hardcoded fallback names (siempre disponibles)
+        for (String nombre : new String[]{"Lácteos del Yaque", "Insumos RD", "Empaques Cibao", "Ganadería del Norte"}) {
+            if (!suplidores.contains(nombre)) suplidores.add(nombre);
+        }
+        cbSuplidor.setItems(suplidores);
+        cbNuevoEstado.setItems(FXCollections.observableArrayList("Pendiente", "Recibido", "Cancelado", "En Tránsito"));
+        cbUnidad.setItems(FXCollections.observableArrayList("Paquetes", "Unidades", "Litros", "Galones", "Kilos", "Libras", "Rollos"));
+        cbUnidadReal.setItems(FXCollections.observableArrayList("Paquetes", "Unidades", "Litros", "Galones", "Kilos", "Libras", "Rollos"));
+>>>>>>> bb658e7 (Primer commit)
     }
 
     @FXML private void limpiarDatosOrden() {
         txtCantidad.clear(); lblPrecioUnitario.setText("RD$ 0.00");
         cbSuplidor.getSelectionModel().clearSelection(); cbInsumo.getSelectionModel().clearSelection();
         cbUnidad.getSelectionModel().clearSelection(); dpFechaEntrega.setValue(LocalDate.now().plusDays(3));
+<<<<<<< HEAD
+=======
+        precioUnitarioActual = 0.0; unidadBaseActual = "";
+>>>>>>> bb658e7 (Primer commit)
     }
 
     @FXML private void borrarRegistroHistorial() {
@@ -425,10 +958,171 @@ public class CompraController {
                  PreparedStatement ps = con.prepareStatement("DELETE FROM tbl_ordenes_compra WHERE id_orden = ?")) {
                 ps.setInt(1, seleccionada.getId()); ps.executeUpdate();
                 cargarOrdenesHistorial(); mostrarAlerta("Eliminado", "Registro borrado correctamente.");
+<<<<<<< HEAD
             } catch (Exception e) { com.example.pantallas.utils.LoggerUtil.error("Excepci�n detectada", e); }
         }
     }
 
+=======
+            } catch (Exception e) { com.example.pantallas.utils.LoggerUtil.error("Excepción detectada", e); }
+        }
+    }
+
+    // ========== CRUD PROVEEDORES ==========
+
+    private void cargarProveedores() {
+        listaProveedores.clear();
+        boolean dbOk = false;
+        try (Connection con = com.example.pantallas.config.ConnectionManager.getConnection();
+             Statement st = con.createStatement();
+             ResultSet rs = st.executeQuery("SELECT provider_id, nombre, rnc, telefono, direccion FROM tbl_proveedores WHERE activo = 1 ORDER BY provider_id")) {
+            int seq = 1;
+            while (rs.next()) {
+                int dbId = rs.getInt("provider_id");
+                listaProveedores.add(new Proveedor(seq++, dbId,
+                    rs.getString("nombre") != null ? rs.getString("nombre") : "",
+                    rs.getString("rnc") != null ? rs.getString("rnc") : "",
+                    rs.getString("telefono") != null ? rs.getString("telefono") : "",
+                    rs.getString("direccion") != null ? rs.getString("direccion") : ""));
+            }
+            if (!listaProveedores.isEmpty()) {
+                listaProveedoresFallback.setAll(listaProveedores);
+                tablaProveedores.setItems(listaProveedores);
+                dbOk = true;
+            }
+        } catch (SQLException e) { com.example.pantallas.utils.LoggerUtil.error("Excepción detectada", e); }
+        if (!dbOk) {
+            // Fallback: usar lista en memoria
+            if (listaProveedoresFallback.isEmpty()) {
+                listaProveedoresFallback.addAll(
+                    new Proveedor(1, 1, "Lácteos del Yaque", "001-0000001-1", "809-555-0101", "Av. Principal, Santo Domingo"),
+                    new Proveedor(2, 2, "Insumos RD", "001-0000002-2", "809-555-0102", "Calle Secundaria, Santiago"),
+                    new Proveedor(3, 3, "Empaques Cibao", "001-0000003-3", "809-555-0103", "Zona Industrial, La Vega"),
+                    new Proveedor(4, 4, "Ganadería del Norte", "001-0000004-4", "809-555-0104", "Carretera Duarte, Puerto Plata"));
+            }
+            tablaProveedores.setItems(listaProveedoresFallback);
+        }
+    }
+
+    @FXML private void agregarProveedor() {
+        if (txtProvNombre.getText() == null || txtProvNombre.getText().trim().isEmpty()) {
+            mostrarAlerta("Campo Obligatorio", "Debe ingresar el nombre del proveedor.");
+            return;
+        }
+        if (txtProvTelefono.getText() == null || txtProvTelefono.getText().trim().isEmpty()) {
+            mostrarAlerta("Campo Obligatorio", "El número telefónico es obligatorio para registrar un proveedor.");
+            return;
+        }
+        if (txtProvDireccion.getText() == null || txtProvDireccion.getText().trim().isEmpty()) {
+            mostrarAlerta("Campo Obligatorio", "La dirección es obligatoria para registrar un proveedor.");
+            return;
+        }
+        String nombre = txtProvNombre.getText().trim();
+        String rnc = (txtProvRnc != null && txtProvRnc.getText() != null) ? txtProvRnc.getText().trim() : "";
+        String telefono = txtProvTelefono.getText().trim();
+        String direccion = txtProvDireccion.getText().trim();
+        // Intentar guardar en BD
+        boolean dbOk = ejecutarSQLBool("INSERT INTO tbl_proveedores (nombre, rnc, telefono, direccion) VALUES (?, ?, ?, ?)",
+                nombre, rnc, telefono, direccion);
+        // Agregar a fallback en memoria
+        int nextId = listaProveedoresFallback.isEmpty() ? 1 :
+            listaProveedoresFallback.stream().mapToInt(Proveedor::getId).max().orElse(0) + 1;
+        int nextDbId = listaProveedoresFallback.isEmpty() ? 1 :
+            listaProveedoresFallback.stream().mapToInt(Proveedor::getDbId).max().orElse(0) + 1;
+        listaProveedoresFallback.add(new Proveedor(nextId, nextDbId, nombre, rnc, telefono, direccion));
+        mostrarAlerta("Éxito", "Proveedor registrado correctamente.");
+        limpiarProveedor();
+    }
+
+    private boolean ejecutarSQLBool(String sql, Object... params) {
+        try (Connection con = com.example.pantallas.config.ConnectionManager.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            for (int i = 0; i < params.length; i++) ps.setObject(i + 1, params[i]);
+            ps.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            com.example.pantallas.utils.LoggerUtil.error("Excepción detectada", e);
+            return false;
+        }
+    }
+
+    @FXML private void actualizarProveedor() {
+        if (idProveedorSeleccionado == -1) {
+            mostrarAlerta("Selección Requerida", "Debe seleccionar un proveedor de la tabla para actualizar.");
+            return;
+        }
+        if (txtProvNombre.getText() == null || txtProvNombre.getText().trim().isEmpty()) {
+            mostrarAlerta("Campo Obligatorio", "Debe ingresar el nombre del proveedor.");
+            return;
+        }
+        if (txtProvTelefono.getText() == null || txtProvTelefono.getText().trim().isEmpty()) {
+            mostrarAlerta("Campo Obligatorio", "El número telefónico es obligatorio.");
+            return;
+        }
+        if (txtProvDireccion.getText() == null || txtProvDireccion.getText().trim().isEmpty()) {
+            mostrarAlerta("Campo Obligatorio", "La dirección es obligatoria.");
+            return;
+        }
+        String nombre = txtProvNombre.getText().trim();
+        String rnc = (txtProvRnc != null && txtProvRnc.getText() != null) ? txtProvRnc.getText().trim() : "";
+        String telefono = txtProvTelefono.getText().trim();
+        String direccion = txtProvDireccion.getText().trim();
+        // Actualizar en BD usando dbId
+        ejecutarSQL("UPDATE tbl_proveedores SET nombre = ?, rnc = ?, telefono = ?, direccion = ? WHERE provider_id = ?",
+                nombre, rnc, telefono, direccion, idProveedorSeleccionado);
+        // Actualizar en fallback en memoria (buscar por dbId)
+        Proveedor seleccionado = tablaProveedores.getSelectionModel().getSelectedItem();
+        int displayId = (seleccionado != null) ? seleccionado.getId() : idProveedorSeleccionado;
+        for (int i = 0; i < listaProveedoresFallback.size(); i++) {
+            if (listaProveedoresFallback.get(i).getDbId() == idProveedorSeleccionado) {
+                listaProveedoresFallback.set(i, new Proveedor(displayId, idProveedorSeleccionado, nombre, rnc, telefono, direccion));
+                break;
+            }
+        }
+        mostrarAlerta("Éxito", "Proveedor actualizado correctamente.");
+        limpiarProveedor();
+    }
+
+    @FXML private void borrarProveedor() {
+        Proveedor p = tablaProveedores.getSelectionModel().getSelectedItem();
+        if (p == null) {
+            mostrarAlerta("Selección Requerida", "Debe seleccionar un proveedor de la tabla para eliminar.");
+            return;
+        }
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Confirmar Eliminación");
+        confirm.setHeaderText(null);
+        confirm.setContentText("¿Está seguro que desea eliminar este proveedor?");
+        confirm.initModality(Modality.APPLICATION_MODAL);
+        if (confirm.showAndWait().get() == ButtonType.OK) {
+            ejecutarSQL("DELETE FROM tbl_proveedores WHERE provider_id = ?", idProveedorSeleccionado);
+            listaProveedoresFallback.removeIf(prov -> prov.getDbId() == idProveedorSeleccionado);
+            mostrarAlerta("Eliminado", "Proveedor eliminado correctamente.");
+            limpiarProveedor();
+        }
+    }
+
+    @FXML private void limpiarProveedor() {
+        txtProvNombre.clear();
+        txtProvTelefono.clear();
+        if (txtProvRnc != null) txtProvRnc.clear();
+        if (txtProvDireccion != null) txtProvDireccion.clear();
+        idProveedorSeleccionado = -1;
+        tablaProveedores.getSelectionModel().clearSelection();
+        cargarProveedores();
+        // Refrescar combos de suplidores después de cambios en proveedores
+        cargarCombos();
+    }
+
+    private void ejecutarSQL(String sql, Object... params) {
+        try (Connection con = com.example.pantallas.config.ConnectionManager.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            for (int i = 0; i < params.length; i++) ps.setObject(i + 1, params[i]);
+            ps.executeUpdate();
+        } catch (SQLException e) { com.example.pantallas.utils.LoggerUtil.error("Excepción detectada", e); mostrarAlerta("Error de Base de Datos", e.getMessage()); }
+    }
+
+>>>>>>> bb658e7 (Primer commit)
     private double parsearNumero(String texto) {
         try { return Double.parseDouble(texto.replaceAll("[^0-9.]", "")); } catch (Exception e) { return 0.0; }
     }
@@ -438,6 +1132,11 @@ public class CompraController {
         a.setTitle(titulo); a.setHeaderText(null); a.setContentText(mensaje); a.showAndWait();
     }
 
+<<<<<<< HEAD
+=======
+    // ========== CLASES MODELO ==========
+
+>>>>>>> bb658e7 (Primer commit)
     public static class OrdenCompra {
         private int id; private String suplidor, insumo, estado; private double cantidad, precioUnitario;
         public OrdenCompra(int id, String sup, String ins, double cant, String est, double precio) {
@@ -450,8 +1149,54 @@ public class CompraController {
         public String getEstado() { return estado; }
         public double getPrecioUnitario() { return precioUnitario; }
     }
+<<<<<<< HEAD
 }
 
 
 
 
+=======
+
+    public static class Proveedor {
+        private int id, dbId;
+        private String nombre, rnc, telefono, direccion;
+        public Proveedor(int id, String n, String rnc, String t, String d) {
+            this.id = id; this.dbId = id; this.nombre = n; this.rnc = rnc; this.telefono = t; this.direccion = d;
+        }
+        public Proveedor(int id, int dbId, String n, String rnc, String t, String d) {
+            this.id = id; this.dbId = dbId; this.nombre = n; this.rnc = rnc; this.telefono = t; this.direccion = d;
+        }
+        public int getId() { return id; }
+        public int getDbId() { return dbId; }
+        public String getNombre() { return nombre; }
+        public String getRnc() { return rnc; }
+        public String getTelefono() { return telefono; }
+        public String getDireccion() { return direccion; }
+    }
+
+    public static class ObservacionCalidad {
+        private int id, idOrden;
+        private String suplidor, insumo, unidad, observaciones, fecha;
+        private double cantidadEsperada, cantidadRecibida;
+        private boolean entregaCorrecta;
+
+        public ObservacionCalidad(int id, int idOrden, String sup, String ins, double esp, double rec, String und, boolean correcta, String obs, String fec) {
+            this.id = id; this.idOrden = idOrden; this.suplidor = sup; this.insumo = ins;
+            this.cantidadEsperada = esp; this.cantidadRecibida = rec; this.unidad = und;
+            this.entregaCorrecta = correcta; this.observaciones = obs; this.fecha = fec;
+        }
+
+        public int getId() { return id; }
+        public int getIdOrden() { return idOrden; }
+        public String getSuplidor() { return suplidor; }
+        public String getInsumo() { return insumo; }
+        public double getCantidadEsperada() { return cantidadEsperada; }
+        public double getCantidadRecibida() { return cantidadRecibida; }
+        public String getUnidad() { return unidad; }
+        public boolean isEntregaCorrecta() { return entregaCorrecta; }
+        public String getEntregaTexto() { return entregaCorrecta ? "Correcta" : "Incumplida"; }
+        public String getObservaciones() { return observaciones; }
+        public String getFecha() { return fecha; }
+    }
+}
+>>>>>>> bb658e7 (Primer commit)

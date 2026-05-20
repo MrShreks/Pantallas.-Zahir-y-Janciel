@@ -4,7 +4,11 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
+<<<<<<< HEAD
 <StackPane prefHeight="750.0" prefWidth="1100.0" styleClass="login-root" stylesheets="@Style5.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pantallas.LoginController">
+=======
+<StackPane styleClass="login-root" stylesheets="@Style5.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pantallas.controllers.LoginController">
+>>>>>>> bb658e7 (Primer commit)
     <children>
         <GridPane fx:id="mainLoginCard" maxHeight="550.0" maxWidth="850.0" prefHeight="550.0" prefWidth="850.0" styleClass="login-card">
             <columnConstraints>

@@ -5,7 +5,11 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
+<<<<<<< HEAD
 <HBox prefHeight="750.0" prefWidth="1300.0" stylesheets="@../Style5.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pantallas.ProcesoDeDistribucion.DistribucionController">
+=======
+<HBox stylesheets="@../Style5.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pantallas.controllers.DistribucionController">
+>>>>>>> bb658e7 (Primer commit)
     <children>
         <VBox prefWidth="280.0" styleClass="sidebar">
             <children>
@@ -22,7 +26,10 @@
                     <Button fx:id="btnNavEntrega" maxWidth="Infinity" onAction="#mostrarEntrega" styleClass="nav-item" text="2. Confirmar Entrega" />
                     <Button fx:id="btnNavLogistica" maxWidth="Infinity" onAction="#mostrarLogistica" styleClass="nav-item" text="🚚 Control de Envíos" />
                     <Button fx:id="btnNavVehiculos" maxWidth="Infinity" onAction="#mostrarVehiculos" styleClass="nav-item" text="3. Vehículos" />
+<<<<<<< HEAD
                     <Button fx:id="btnNavInsumos" maxWidth="Infinity" onAction="#mostrarInsumos" styleClass="nav-item" text="4. Proveedores / Quesos" />
+=======
+>>>>>>> bb658e7 (Primer commit)
                 </VBox>
 
                 <Region VBox.vgrow="ALWAYS" />
@@ -165,6 +172,7 @@
                     </children>
                 </VBox>
 
+<<<<<<< HEAD
                 <!-- PANEL: PROVEEDORES Y QUESOS (Rediseñado con estética premium) -->
                 <VBox fx:id="paneInsumos" managed="false" spacing="25.0" visible="false">
                     <children>
@@ -245,6 +253,9 @@
                         </HBox>
                     </children>
                 </VBox>
+=======
+
+>>>>>>> bb658e7 (Primer commit)
             </children>
         </StackPane>
     </children>

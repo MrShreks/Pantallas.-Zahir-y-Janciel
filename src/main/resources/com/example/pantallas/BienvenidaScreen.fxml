@@ -5,6 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 
+<<<<<<< HEAD
 <StackPane styleClass="login-root" stylesheets="@Style5.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pantallas.BienvenidaScreenController">
     <children>
         <VBox alignment="CENTER" maxWidth="500" spacing="25" styleClass="login-card">
@@ -14,24 +15,49 @@
                         <Label style="-fx-font-size: 80;" text="🧀" />
                         <Label styleClass="title-medium" text="BIENVENIDO AL SISTEMA" />
                         <Separator maxWidth="250" opacity="0.3" />
+=======
+<StackPane styleClass="welcome-root" stylesheets="@Style5.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pantallas.controllers.BienvenidaScreenController">
+    <children>
+        <VBox alignment="CENTER" spacing="30" styleClass="welcome-content">
+            <children>
+                <VBox alignment="CENTER" spacing="15">
+                    <children>
+                        <Label style="-fx-font-size: 120;" text="🧀" />
+                        <Label styleClass="welcome-title-label" text="BIENVENIDO AL SISTEMA" />
+                        <Separator maxWidth="400" opacity="0.15" />
+>>>>>>> bb658e7 (Primer commit)
                     </children>
                 </VBox>
 
                 <VBox alignment="CENTER" spacing="10">
                     <children>
+<<<<<<< HEAD
                         <Label fx:id="lblUsuario" style="-fx-font-size: 26; -fx-font-weight: 800; -fx-text-fill: -primary;" text="Usuario" />
                         <Label fx:id="lblRol" styleClass="label-muted" text="CARGO: ADMINISTRADOR" />
+=======
+                        <Label fx:id="lblUsuario" styleClass="welcome-user-label" text="Usuario" />
+                        <Label fx:id="lblRol" styleClass="welcome-role-label" text="CARGO: ADMINISTRADOR" />
+>>>>>>> bb658e7 (Primer commit)
                     </children>
                 </VBox>
 
                 <VBox alignment="CENTER" spacing="15">
                     <children>
+<<<<<<< HEAD
                         <ProgressBar fx:id="progressBar" prefHeight="10" prefWidth="350" />
                         <Label fx:id="lblLoading" styleClass="label-muted" text="Sincronizando base de datos..." />
                     </children>
                 </VBox>
 
                 <Label styleClass="label-muted" text="© 2026 Fábrica de Queso S.R.L." />
+=======
+                        <ProgressBar fx:id="progressBar" prefHeight="10" prefWidth="400" />
+                        <Label fx:id="lblLoading" styleClass="welcome-loading-label" text="Sincronizando base de datos..." />
+                    </children>
+                </VBox>
+
+                <Label styleClass="welcome-footer-label" text="© 2026 Fábrica de Queso S.R.L." />
+>>>>>>> bb658e7 (Primer commit)
             </children>
         </VBox>
     </children>

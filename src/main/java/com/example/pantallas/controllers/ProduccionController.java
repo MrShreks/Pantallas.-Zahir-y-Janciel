@@ -116,6 +116,10 @@ public class ProduccionController {
         cbProveedor.getItems().clear();
         
         String sql = "SELECT id_suplidor, nombre FROM tbl_suplidores ORDER BY nombre";
+<<<<<<< HEAD
+=======
+        String sqlProv = "SELECT provider_id, nombre FROM tbl_proveedores WHERE activo = 1 ORDER BY nombre";
+>>>>>>> bb658e7 (Primer commit)
         
         try (Connection con = com.example.pantallas.config.ConnectionManager.getConnection();
              Statement st = con.createStatement();
@@ -125,6 +129,7 @@ public class ProduccionController {
                 listaProveedores.add(new Proveedor(rs.getInt(1), rs.getString("nombre")));
                 cbProveedor.getItems().add(rs.getString("nombre"));
             }
+<<<<<<< HEAD
             tablaProveedores.setItems(listaProveedores);
             
         } catch (Exception e) {
@@ -132,6 +137,39 @@ public class ProduccionController {
             listaProveedores.add(new Proveedor(2, "Lácteos del Yaque"));
             cbProveedor.getItems().addAll("Granja SantaRosa", "Lácteos del Yaque");
             tablaProveedores.setItems(listaProveedores);
+=======
+            // Also load from tbl_proveedores (Compras module)
+            try (Statement st2 = con.createStatement();
+                 ResultSet rs2 = st2.executeQuery(sqlProv)) {
+                while (rs2.next()) {
+                    String nombre = rs2.getString("nombre");
+                    if (!cbProveedor.getItems().contains(nombre)) {
+                        listaProveedores.add(new Proveedor(rs2.getInt(1), nombre));
+                        cbProveedor.getItems().add(nombre);
+                    }
+                }
+            }
+            tablaProveedores.setItems(listaProveedores);
+            
+        } catch (Exception e) {
+            // Fallback: try loading from tbl_proveedores directly
+            try (Connection con2 = com.example.pantallas.config.ConnectionManager.getConnection();
+                 Statement st2 = con2.createStatement();
+                 ResultSet rs2 = st2.executeQuery(sqlProv)) {
+                while (rs2.next()) {
+                    String nombre = rs2.getString("nombre");
+                    listaProveedores.add(new Proveedor(rs2.getInt(1), nombre));
+                    cbProveedor.getItems().add(nombre);
+                }
+                tablaProveedores.setItems(listaProveedores);
+            } catch (Exception e2) {
+                listaProveedores.add(new Proveedor(1, "Granja SantaRosa"));
+                listaProveedores.add(new Proveedor(2, "Lácteos del Yaque"));
+                listaProveedores.add(new Proveedor(3, "Insumos RD"));
+                cbProveedor.getItems().addAll("Granja SantaRosa", "Lácteos del Yaque", "Insumos RD");
+                tablaProveedores.setItems(listaProveedores);
+            }
+>>>>>>> bb658e7 (Primer commit)
         }
     }
 
@@ -562,6 +600,27 @@ public class ProduccionController {
     }
 
     @FXML
+<<<<<<< HEAD
+=======
+    private void irAProveedoresCompras() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/pantallas/ProcesoCompras/CompraPrincipal.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) contentArea.getScene().getWindow();
+            boolean wasMaximized = stage.isMaximized();
+            stage.setScene(new Scene(root));
+            stage.setResizable(true);
+            stage.setMaximized(wasMaximized);
+            if (!wasMaximized) stage.centerOnScreen();
+            stage.show();
+        } catch (Exception e) {
+            com.example.pantallas.utils.LoggerUtil.error("Excepción detectada", e);
+            mostrarAlerta("Error de Navegación", "No se pudo cargar la pantalla de Proveedores.");
+        }
+    }
+
+    @FXML
+>>>>>>> bb658e7 (Primer commit)
     private void irAMenuPrincipal() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/pantallas/MenuPrincipal/MenuPrincipal.fxml"));
@@ -574,7 +633,11 @@ public class ProduccionController {
             if (!wasMaximized) stage.centerOnScreen();
             stage.show();
         } catch (Exception e) {
+<<<<<<< HEAD
             com.example.pantallas.utils.LoggerUtil.error("Excepci�n detectada", e);
+=======
+            com.example.pantallas.utils.LoggerUtil.error("Excepción detectada", e);
+>>>>>>> bb658e7 (Primer commit)
             mostrarAlerta("Error de Navegación", "No se pudo cargar el Menú Principal.");
         }
     }

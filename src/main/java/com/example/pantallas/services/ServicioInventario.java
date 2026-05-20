@@ -25,7 +25,11 @@ public final class ServicioInventario {
                 return rs.getDouble("cantidad_stock") >= cantidadRequerida;
             }
         } catch (SQLException e) {
+<<<<<<< HEAD
             com.example.pantallas.utils.LoggerUtil.error("Excepci髇 detectada", e);
+=======
+            com.example.pantallas.utils.LoggerUtil.error("Excepci贸n detectada", e);
+>>>>>>> bb658e7 (Primer commit)
         }
         return false;
     }
@@ -38,7 +42,11 @@ public final class ServicioInventario {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) return rs.getDouble("cantidad_stock");
         } catch (SQLException e) {
+<<<<<<< HEAD
             com.example.pantallas.utils.LoggerUtil.error("Excepci髇 detectada", e);
+=======
+            com.example.pantallas.utils.LoggerUtil.error("Excepci贸n detectada", e);
+>>>>>>> bb658e7 (Primer commit)
         }
         return 0.0;
     }
@@ -90,7 +98,11 @@ public final class ServicioInventario {
                 throw e;
             }
         } catch (SQLException e) {
+<<<<<<< HEAD
             com.example.pantallas.utils.LoggerUtil.error("Excepci髇 detectada", e);
+=======
+            com.example.pantallas.utils.LoggerUtil.error("Excepci贸n detectada", e);
+>>>>>>> bb658e7 (Primer commit)
             return false;
         }
     }
@@ -119,7 +131,11 @@ public final class ServicioInventario {
                 throw e;
             }
         } catch (SQLException e) {
+<<<<<<< HEAD
             com.example.pantallas.utils.LoggerUtil.error("Excepci髇 detectada", e);
+=======
+            com.example.pantallas.utils.LoggerUtil.error("Excepci贸n detectada", e);
+>>>>>>> bb658e7 (Primer commit)
             return false;
         }
     }
