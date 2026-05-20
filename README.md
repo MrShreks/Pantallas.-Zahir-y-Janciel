@@ -87,67 +87,6 @@ Nuestra Fabrica de Queso opera actualmente sus procesos de forma manual o con he
 
 ## 4. Arquitectura del Sistema
 
-### 4.1 Diagrama de Capas
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                   PRESENTATION LAYER                        │
-│  ┌─────────┐  ┌──────────┐  ┌──────────┐  ┌─────────────┐  │
-│  │ FXML    │  │ CSS      │  │ Controls │  │ Controllers │  │
-│  │ Screens │  │ Themes   │  │ JavaFX   │  │ (MVC)       │  │
-│  └─────────┘  └──────────┘  └──────────┘  └─────────────┘  │
-├─────────────────────────────────────────────────────────────┤
-│                   BUSINESS LAYER                            │
-│  ┌──────────────┐  ┌───────────────┐  ┌──────────────────┐ │
-│  │ Services     │  │ Domain Models │  │ Reporting Engine │ │
-│  │ (Servicio*)  │  │ (dominio/)    │  │ (JasperReports)  │ │
-│  └──────────────┘  └───────────────┘  └──────────────────┘ │
-├─────────────────────────────────────────────────────────────┤
-│                   DATA ACCESS LAYER                         │
-│  ┌────────────────┐  ┌──────────────┐  ┌─────────────────┐ │
-│  │ FabricaBase    │  │ JDBC        │  │ SQL Server      │ │
-│  │ (Connection)   │  │ Statements  │  │ Database        │ │
-│  └────────────────┘  └──────────────┘  └─────────────────┘ │
-└─────────────────────────────────────────────────────────────┘
-```
-
-### 4.2 Estructura del Proyecto
-
-```
-Pantalllas/
-├── Pantallas/                          # Módulo Maven principal
-│   ├── pom.xml                         # Dependencias y plugins
-│   ├── src/main/java/
-│   │   ├── com/example/pantallas/
-│   │   │   ├── SplashApp.java          # Entry point
-│   │   │   ├── LoginController.java    # Autenticación
-│   │   │   ├── SessionManager.java     # Sesión de usuario
-│   │   │   ├── ReporteHelper.java      # Utilidad JasperReports
-│   │   │   ├── base/
-│   │   │   │   └── FabricaBase.java    # Singleton BD
-│   │   │   ├── dominio/                # Modelos de dominio
-│   │   │   ├── ProcesoDeCompras/       # Módulo Compras
-│   │   │   ├── ProcesoDeVenta/         # Módulo Ventas
-│   │   │   ├── ProcesoDeInventario/    # Módulo Inventario
-│   │   │   ├── ProcesoDeProduccion/    # Módulo Producción
-│   │   │   ├── ProcesoDeDistribucion/  # Módulo Distribución
-│   │   │   ├── ProcesoDeMantenimiento/ # Módulo Mantenimiento
-│   │   │   ├── Dashboard/              # Dashboard ejecutivo
-│   │   │   └── MenuPrincipal/          # Navegación principal
-│   │   ├── com/fabricaqueso/           # Arquitectura refactorizada
-│   │   │   ├── security/               # Servicio de autenticación RBAC
-│   │   │   └── controller/ventas/      # POS profesional
-│   │   └── Modelos/                    # Stubs de entidades BD
-│   ├── src/main/resources/
-│   │   ├── com/example/pantallas/      # 17 pantallas FXML + CSS
-│   │   └── reportes/                   # Plantillas JasperReports (.jrxml)
-│   └── ...
-├── ESQUEMA_BASE_DATOS.sql              # Esquema BD refactorizado
-├── ESTRUCTURA_PROYECTO.md             # Documentación arquitectura MVC
-├── GUIA_IMPLEMENTACION.md             # Guía de implementación
-└── README.md                          # ← Este archivo
-```
-
 ### 4.3 Patrones de Diseño
 
 | Patrón | Implementación |
@@ -162,25 +101,6 @@ Pantalllas/
 ### 4.4 Manejo Modular (Java Platform Module System)
 
 El proyecto utiliza **JPMS** (Java 24) con un módulo `com.example.pantallas` que declara explícitamente sus dependencias:
-
-```
-requires javafx.controls;
-requires javafx.fxml;
-requires java.sql;
-requires com.microsoft.sqlserver.jdbc;
-requires jasperreports;
-requires commons.logging;
-requires commons.beanutils;
-requires org.apache.commons.collections4;
-requires com.fasterxml.jackson.core;
-requires com.fasterxml.jackson.databind;
-requires com.fasterxml.jackson.dataformat.xml;
-requires commons.digester;
-requires java.desktop;
-requires java.xml;
-```
-
----
 
 ## 5. Módulos del Sistema
 
