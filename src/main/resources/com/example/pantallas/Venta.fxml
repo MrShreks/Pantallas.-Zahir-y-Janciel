@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<HBox prefHeight="750.0" prefWidth="1200.0" stylesheets="@Style5.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pantallas.controllers.VentaController">
+    <children>
+        <VBox prefWidth="280.0" styleClass="sidebar">
+            <children>
+                <VBox alignment="CENTER" spacing="15.0" style="-fx-padding: 40 20;">
+                    <children>
+                        <Label style="-fx-font-size: 50;" text="🧀" />
+                        <Label style="-fx-font-size: 22; -fx-font-weight: 800; -fx-text-fill: white;" text="QUESERÍA" />
+                        <Separator opacity="0.1" prefWidth="200.0" />
+                    </children>
+                </VBox>
+                <VBox spacing="10" style="-fx-padding: 0 20;">
+                    <Button fx:id="btnNavVentas" maxWidth="Infinity" onAction="#mostrarVentas" styleClass="nav-item-active" text="🛒 Registro de Ventas" />
+                    <Button fx:id="btnNavEnvios" maxWidth="Infinity" onAction="#mostrarEnvios" styleClass="nav-item" text="🚚 Gestión de Envíos" />
+                </VBox>
+                
+                <Region VBox.vgrow="ALWAYS" />
+
+                <VBox style="-fx-padding: 30;">
+                    <Button maxWidth="Infinity" onAction="#volverAlMenu" prefHeight="50.0" styleClass="btn-danger" text="🏠 VOLVER AL MENÚ" />
+                </VBox>
+            </children>
+        </VBox>
+
+        <VBox styleClass="main-content" HBox.hgrow="ALWAYS">
+            <children>
+                <Label styleClass="title-large" text="Nueva Transacción de Venta" />
+
+                <VBox spacing="20.0" styleClass="card-premium" style="-fx-margin: 20 0;">
+                    <children>
+                        <GridPane hgap="25.0" vgap="15.0">
+                            <children>
+                                <VBox spacing="8.0" GridPane.rowIndex="0">
+                                    <children>
+                                        <Label styleClass="label-bold" text="CLIENTE" />
+                                        <ComboBox maxWidth="Infinity" promptText="Seleccionar cliente..." />
+                                    </children>
+                                </VBox>
+
+                                <VBox spacing="8.0" GridPane.rowIndex="1">
+                                    <children>
+                                        <Label styleClass="label-bold" text="DETALLE DEL PRODUCTO" />
+                                        <HBox spacing="15.0">
+                                            <children>
+                                                <ComboBox prefWidth="250.0" promptText="Tipo de Queso..." />
+                                                <TextField fx:id="txtCantidad" prefWidth="100.0" promptText="Cantidad" />
+                                                <TextField fx:id="txtPrecioUnitario" prefWidth="120.0" promptText="Precio RD$" />
+                                                <TextField fx:id="txtImporteTotal" editable="false" prefWidth="150.0" style="-fx-background-color: #f1f5f9; -fx-font-weight: bold;" text="RD$ 0.00" />
+                                            </children>
+                                        </HBox>
+                                    </children>
+                                </VBox>
+
+                                <HBox alignment="BOTTOM_LEFT" spacing="15.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                    <children>
+                                        <Button onAction="#calcularItem" styleClass="btn-primary" text="CALCULAR" />
+                                        <Button onAction="#añadirItem" styleClass="btn-accent" text="+ AÑADIR" />
+                                        <Button onAction="#borrarItem" styleClass="btn-danger" text="ELIMINAR" />
+                                    </children>
+                                </HBox>
+                            </children>
+                        </GridPane>
+                    </children>
+                </VBox>
+
+                <TableView fx:id="tablaVentas" VBox.vgrow="ALWAYS" />
+
+                <HBox alignment="CENTER_RIGHT" spacing="30.0" style="-fx-padding: 30 0 0 0;">
+                    <children>
+                        <VBox alignment="CENTER_RIGHT">
+                            <children>
+                                <Label styleClass="label-muted" text="TOTAL GENERAL" />
+                                <Label fx:id="lblTotal" style="-fx-font-size: 36; -fx-font-weight: 900; -fx-text-fill: -success;" text="RD$ 0.00" />
+                            </children>
+                        </VBox>
+                        <Button onAction="#mostrarCobro" prefHeight="60.0" prefWidth="250.0" styleClass="btn-primary" text="PROCESAR PAGO" />
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </children>
+</HBox>

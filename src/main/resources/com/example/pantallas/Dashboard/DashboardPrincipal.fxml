@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+
+<ScrollPane fitToHeight="true" fitToWidth="true" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pantallas.controllers.DashboardController" stylesheets="@../Style5.css" style="-fx-background-color: -bg-main;">
+    <content>
+        <VBox styleClass="main-content" spacing="20" alignment="TOP_CENTER" style="-fx-padding: 25;">
+            <HBox spacing="16" alignment="CENTER_LEFT" styleClass="card" maxWidth="Infinity">
+                <VBox spacing="5">
+                    <Label text="Panel de Control General" styleClass="title-large" style="-fx-font-size: 22;"/>
+                    <Label text="QUESERÍA SANTIAGUERO" styleClass="label-muted"/>
+                </VBox>
+                <Region HBox.hgrow="ALWAYS"/>
+                <HBox spacing="8" alignment="CENTER_RIGHT">
+                    <Button onAction="#refrescar" text="⟳ ACTUALIZAR" styleClass="btn-accent" style="-fx-padding: 8 16;"/>
+                    <Button onAction="#irAMenuPrincipal" text="MENU" styleClass="btn-danger" style="-fx-padding: 8 16; -fx-font-size: 12;"/>
+                    <Label fx:id="lblFecha" text="" styleClass="label-muted"/>
+                    <Label fx:id="lblUsuarioLogueado" text="USUARIO" style="-fx-background-color: -accent; -fx-text-fill: white; -fx-padding: 8 18; -fx-background-radius: 25; -fx-font-weight: 800; -fx-font-size: 12;"/>
+                </HBox>
+            </HBox>
+
+            <FlowPane hgap="15" vgap="15" alignment="TOP_LEFT">
+                <VBox styleClass="card-premium" minWidth="210" minHeight="110" spacing="8">
+                    <Label text="Valor del Inventario" styleClass="label-bold" style="-fx-text-fill: -primary;"/>
+                    <Label fx:id="lblValorInventario" text="RD$ 0.00" style="-fx-font-size: 22; -fx-font-weight: 900;"/>
+                    <Label fx:id="lblCambioValor" text="▲ 0.0% vs mes pasado" style=""/>
+                </VBox>
+                <VBox styleClass="card-premium" minWidth="210" minHeight="110" spacing="8">
+                    <Label text="Producción Activa" styleClass="label-bold" style="-fx-text-fill: -primary;"/>
+                    <Label fx:id="lblProduccionActiva" text="0 lotes" style="-fx-font-size: 22; -fx-font-weight: 900;"/>
+                    <Label text="En curso en este momento" styleClass="label-muted"/>
+                </VBox>
+                <VBox styleClass="card-premium" minWidth="210" minHeight="110" spacing="8">
+                    <Label text="Ventas del Mes" styleClass="label-bold" style="-fx-text-fill: -primary;"/>
+                    <Label fx:id="lblVentasMes" text="RD$ 0.00" style="-fx-font-size: 22; -fx-font-weight: 900;"/>
+                    <Label fx:id="lblCambioVentas" text="▲ 0.0% vs mes pasado" style=""/>
+                </VBox>
+                <VBox styleClass="card-premium" minWidth="210" minHeight="110" spacing="8">
+                    <Label text="Alertas Stock Bajo" styleClass="label-bold" style="-fx-text-fill: -danger;"/>
+                    <Label fx:id="lblStockBajo" text="0 productos" style="-fx-font-size: 22; -fx-font-weight: 900; -fx-text-fill: -danger;"/>
+                    <Label text="Requieren atención inmediata" styleClass="label-muted"/>
+                </VBox>
+                <VBox styleClass="card-premium" minWidth="210" minHeight="110" spacing="8">
+                    <Label text="Órdenes Pendientes" styleClass="label-bold" style="-fx-text-fill: -primary;"/>
+                    <Label fx:id="lblOrdenesPendientes" text="0 órdenes" style="-fx-font-size: 22; -fx-font-weight: 900;"/>
+                    <Label text="Esperando aprobación" styleClass="label-muted"/>
+                </VBox>
+            </FlowPane>
+
+            <HBox spacing="20" maxWidth="Infinity" VBox.vgrow="ALWAYS" style="-fx-min-height: 350;">
+                <VBox spacing="12" HBox.hgrow="ALWAYS" styleClass="card-premium" minHeight="320">
+                    <Label text="Distribución de Inventario por Categoría" styleClass="title-medium"/>
+                    <PieChart fx:id="pieDistribucion" VBox.vgrow="ALWAYS" minHeight="280" animated="true"/>
+                </VBox>
+                <VBox spacing="12" HBox.hgrow="ALWAYS" styleClass="card-premium" minHeight="320">
+                    <Label text="Tendencia de Ventas Mensuales" styleClass="title-medium"/>
+                    <BarChart fx:id="barVentas" VBox.vgrow="ALWAYS" minHeight="280" animated="true">
+                        <xAxis>
+                            <CategoryAxis label="Mes"/>
+                        </xAxis>
+                        <yAxis>
+                            <NumberAxis label="RD$"/>
+                        </yAxis>
+                    </BarChart>
+                </VBox>
+            </HBox>
+
+            <HBox spacing="20" maxWidth="Infinity" VBox.vgrow="ALWAYS" style="-fx-min-height: 300;">
+                <VBox spacing="12" HBox.hgrow="ALWAYS">
+                    <Label text="Movimientos de Inventario" styleClass="title-medium"/>
+                    <TableView fx:id="tablaMovimientos" VBox.vgrow="ALWAYS" minHeight="280">
+                        <columns>
+                            <TableColumn fx:id="colMovFecha" text="Fecha" prefWidth="150"/>
+                            <TableColumn fx:id="colMovProducto" text="Producto" prefWidth="180"/>
+                            <TableColumn fx:id="colMovTipo" text="Tipo" prefWidth="100"/>
+                            <TableColumn fx:id="colMovCantidad" text="Cantidad" prefWidth="100"/>
+                            <TableColumn fx:id="colMovUsuario" text="Usuario" prefWidth="120"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+                <VBox spacing="12" prefWidth="320" minWidth="280">
+                    <Label text="Alertas Críticas de Stock" styleClass="title-medium"/>
+                    <VBox styleClass="card-premium" VBox.vgrow="ALWAYS" minHeight="280">
+                        <ListView fx:id="listaAlertasStock" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent;"/>
+                    </VBox>
+                </VBox>
+            </HBox>
+
+            <HBox spacing="20" alignment="CENTER_LEFT">
+                <Label fx:id="lblFuenteDatos" text="" style="-fx-font-size: 11;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label fx:id="lblUltimaActualizacion" text="" styleClass="label-muted" style="-fx-font-size: 11;"/>
+            </HBox>
+        </VBox>
+    </content>
+</ScrollPane>

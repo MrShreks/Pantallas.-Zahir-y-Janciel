@@ -1,0 +1,343 @@
+/* ============================================================
+   FABRICA DE QUESO - SISTEMA EMPRESARIAL PREMIUM
+   Material Design 3 + Neumorphism + Gradient Accents
+   Public Domain License - QuesoSantiaguero System
+   ============================================================ */
+
+/* ---------- COLOR PRIMITIVE TOKENS ---------- */
+* {
+    -fx-fabrica-primario:       #0D1B2A;
+    -fx-fabrica-secundario:     #1B263B;
+    -fx-fabrica-acento:         #D4A43B;
+    -fx-fabrica-acento-hover:   #E8C158;
+    -fx-fabrica-acento-pressed: #B8941B;
+    -fx-fabrica-surface:        #FFFFFF;
+    -fx-fabrica-elevated:       #F8FAFB;
+    -fx-fabrica-border:         #E2E8F0;
+    -fx-fabrica-text-primary:   #0F172A;
+    -fx-fabrica-text-secondary: #64748B;
+    -fx-fabrica-text-light:     #94A3B8;
+    -fx-fabrica-success:        #10B981;
+    -fx-fabrica-warning:        #F59E0B;
+    -fx-fabrica-danger:         #EF4444;
+    -fx-fabrica-info:           #3B82F6;
+}
+
+/* ---------- ROOT & SCENE ---------- */
+.root {
+    -fx-background-color: -fx-fabrica-elevated;
+    -fx-font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    -fx-font-size: 14px;
+    -fx-text-fill: -fx-fabrica-text-primary;
+}
+
+/* ---------- SIDEBAR ---------- */
+.sidebar {
+    -fx-background-color: linear-gradient(to bottom, -fx-fabrica-primario 0%, -fx-fabrica-secundario 100%);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 12, 0, 4, 0);
+    -fx-min-width: 260px;
+}
+
+.sidebar-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: 700;
+    -fx-text-fill: -fx-fabrica-acento;
+    -fx-padding: 24 0 8 0;
+    -fx-letter-spacing: 0.5;
+}
+
+.sidebar-subtitle {
+    -fx-font-size: 11px;
+    -fx-text-fill: -fx-fabrica-text-light;
+    -fx-padding: 0 0 24 0;
+}
+
+.nav-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #CBD5E1;
+    -fx-font-size: 14px;
+    -fx-font-weight: 500;
+    -fx-padding: 14 20;
+    -fx-alignment: CENTER_LEFT;
+    -fx-cursor: hand;
+    -fx-background-radius: 0 8 8 0;
+    -fx-transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+    -fx-border-width: 0 0 0 3px;
+    -fx-border-color: transparent;
+}
+
+.nav-button:hover {
+    -fx-background-color: rgba(212, 164, 59, 0.1);
+    -fx-text-fill: -fx-fabrica-surface;
+    -fx-border-color: -fx-fabrica-acento;
+}
+
+.nav-button:pressed {
+    -fx-background-color: rgba(212, 164, 59, 0.2);
+    -fx-text-fill: -fx-fabrica-acento;
+}
+
+/* ---------- MAIN CONTENT ---------- */
+.main-content {
+    -fx-background-color: -fx-fabrica-elevated;
+    -fx-padding: 32;
+}
+
+.header-title {
+    -fx-font-size: 28px;
+    -fx-font-weight: 700;
+    -fx-text-fill: -fx-fabrica-text-primary;
+    -fx-padding: 0 0 8 0;
+}
+
+.header-subtitle {
+    -fx-font-size: 13px;
+    -fx-text-fill: -fx-fabrica-text-secondary;
+}
+
+/* ---------- CARDS ---------- */
+.card {
+    -fx-background-color: -fx-fabrica-surface;
+    -fx-background-radius: 16;
+    -fx-padding: 24;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 12, 0, 0, 4);
+    -fx-border-color: -fx-fabrica-border;
+    -fx-border-width: 1;
+    -fx-border-radius: 16;
+}
+
+.card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 16, 0, 0, 6);
+}
+
+/* ---------- STAT CARDS (DASHBOARD) ---------- */
+.stat-card {
+    -fx-background-color: -fx-fabrica-surface;
+    -fx-background-radius: 16;
+    -fx-padding: 24;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 12, 0, 0, 4);
+    -fx-border-width: 1 1 4 1;
+    -fx-border-color: -fx-fabrica-border;
+    -fx-border-radius: 16;
+    -fx-cursor: hand;
+    -fx-min-width: 220;
+    -fx-min-height: 130;
+    -fx-alignment: TOP_LEFT;
+}
+
+.stat-card-accent { -fx-border-color: -fx-fabrica-acento; }
+.stat-card-success { -fx-border-color: -fx-fabrica-success; }
+.stat-card-warning { -fx-border-color: -fx-fabrica-warning; }
+.stat-card-danger  { -fx-border-color: -fx-fabrica-danger; }
+.stat-card-info    { -fx-border-color: -fx-fabrica-info; }
+
+.stat-card .label-title {
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+    -fx-text-fill: -fx-fabrica-text-secondary;
+    -fx-padding: 0 0 8 0;
+}
+
+.stat-card .label-value {
+    -fx-font-size: 28px;
+    -fx-font-weight: 800;
+    -fx-text-fill: -fx-fabrica-text-primary;
+}
+
+.stat-card .label-change {
+    -fx-font-size: 12px;
+    -fx-font-weight: 500;
+    -fx-padding: 4 0 0 0;
+}
+
+/* ---------- BUTTONS ---------- */
+.button {
+    -fx-background-color: -fx-fabrica-primario;
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+    -fx-padding: 12 24;
+    -fx-background-radius: 10;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 6, 0, 0, 2);
+    -fx-transition: all 0.15s ease-in-out;
+}
+
+.button:hover {
+    -fx-background-color: derive(-fx-fabrica-primario, -10%);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 8, 0, 0, 4);
+    -fx-scale-y: 1.02;
+}
+
+.button:pressed {
+    -fx-scale-y: 0.98;
+}
+
+.button-primary {
+    -fx-background-color: -fx-fabrica-acento;
+    -fx-text-fill: -fx-fabrica-primario;
+}
+
+.button-success {
+    -fx-background-color: -fx-fabrica-success;
+    -fx-text-fill: white;
+}
+
+.button-danger {
+    -fx-background-color: -fx-fabrica-danger;
+    -fx-text-fill: white;
+}
+
+.button-warning {
+    -fx-background-color: -fx-fabrica-warning;
+    -fx-text-fill: -fx-fabrica-primario;
+}
+
+.button-info {
+    -fx-background-color: -fx-fabrica-info;
+    -fx-text-fill: white;
+}
+
+.button-outline {
+    -fx-background-color: transparent;
+    -fx-text-fill: -fx-fabrica-primario;
+    -fx-border-color: -fx-fabrica-border;
+    -fx-border-width: 1;
+    -fx-border-radius: 10;
+    -fx-effect: none;
+}
+
+.button-glow:hover {
+    -fx-effect: dropshadow(gaussian, -fx-fabrica-acento, 20, 0, 0, 0);
+}
+
+/* ---------- FORMS ---------- */
+.text-field, .text-area, .combo-box, .date-picker {
+    -fx-background-color: -fx-fabrica-surface;
+    -fx-background-radius: 10;
+    -fx-border-color: -fx-fabrica-border;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 10;
+    -fx-padding: 10 14;
+    -fx-font-size: 13px;
+    -fx-text-fill: -fx-fabrica-text-primary;
+    -fx-prompt-text-fill: -fx-fabrica-text-light;
+    -fx-transition: all 0.2s;
+}
+
+.text-field:focused, .text-area:focused, .combo-box:focused, .date-picker:focused {
+    -fx-border-color: -fx-fabrica-acento;
+    -fx-effect: dropshadow(gaussian, rgba(212,164,59,0.15), 8, 0, 0, 0);
+}
+
+/* ---------- TABLES ---------- */
+.table-view {
+    -fx-background-color: transparent;
+    -fx-table-cell-border-color: transparent;
+    -fx-padding: 0;
+}
+
+.table-view .column-header {
+    -fx-background-color: -fx-fabrica-elevated;
+    -fx-text-fill: -fx-fabrica-text-secondary;
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+    -fx-padding: 12 16;
+    -fx-border-color: transparent transparent -fx-fabrica-border transparent;
+    -fx-border-width: 0 0 2 0;
+}
+
+.table-view .column-header .label {
+    -fx-alignment: CENTER_LEFT;
+}
+
+.table-view .table-row-cell {
+    -fx-background-color: -fx-fabrica-surface;
+    -fx-border-color: transparent transparent -fx-fabrica-border transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 12 0;
+    -fx-transition: all 0.15s;
+}
+
+.table-view .table-row-cell:hover {
+    -fx-background-color: derive(-fx-fabrica-acento, 90%);
+}
+
+.table-view .table-row-cell:selected {
+    -fx-background-color: derive(-fx-fabrica-acento, 80%);
+    -fx-text-fill: -fx-fabrica-text-primary;
+}
+
+/* ---------- PROGRESS & METERS ---------- */
+.progress-bar {
+    -fx-pref-height: 8;
+    -fx-accent: -fx-fabrica-acento;
+    -fx-background-radius: 4;
+}
+
+/* ---------- CHARTS (if using JavaFX Charts) ---------- */
+.chart {
+    -fx-background-color: transparent;
+}
+
+.chart-legend {
+    -fx-background-color: transparent;
+    -fx-font-size: 11px;
+}
+
+/* ---------- ANIMATIONS ---------- */
+.fade-in {
+    -fx-opacity: 0;
+    -fx-animation: fadeIn ease 0.4s forwards;
+}
+
+@keyframes fadeIn {
+    from { -fx-opacity: 0; -fx-translate-y: 10; }
+    to   { -fx-opacity: 1; -fx-translate-y: 0; }
+}
+
+/* ---------- LOGIN ---------- */
+.login-card {
+    -fx-background-color: -fx-fabrica-surface;
+    -fx-background-radius: 20;
+    -fx-padding: 40 48;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 24, 0, 0, 8);
+    -fx-min-width: 380;
+    -fx-max-width: 420;
+}
+
+.login-card .login-title {
+    -fx-font-size: 22px;
+    -fx-font-weight: 800;
+    -fx-text-fill: -fx-fabrica-text-primary;
+}
+
+/* ---------- ALERTS & DIALOGS ---------- */
+.dialog-pane {
+    -fx-background-color: -fx-fabrica-surface;
+    -fx-background-radius: 16;
+}
+
+/* ---------- SCROLL BARS ---------- */
+.scroll-pane .scroll-bar:vertical {
+    -fx-pref-width: 6;
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .scroll-bar:vertical .thumb {
+    -fx-background-color: derive(-fx-fabrica-text-light, 20%);
+    -fx-background-radius: 3;
+}
+
+/* ---------- TAGS / BADGES ---------- */
+.badge {
+    -fx-background-radius: 12;
+    -fx-padding: 4 12;
+    -fx-font-size: 11px;
+    -fx-font-weight: 600;
+}
+
+.badge-success { -fx-background-color: derive(-fx-fabrica-success, 85%); -fx-text-fill: -fx-fabrica-success; }
+.badge-warning { -fx-background-color: derive(-fx-fabrica-warning, 85%); -fx-text-fill: -fx-fabrica-warning; }
+.badge-danger  { -fx-background-color: derive(-fx-fabrica-danger, 85%);  -fx-text-fill: -fx-fabrica-danger; }
+.badge-info    { -fx-background-color: derive(-fx-fabrica-info, 85%);    -fx-text-fill: -fx-fabrica-info; }

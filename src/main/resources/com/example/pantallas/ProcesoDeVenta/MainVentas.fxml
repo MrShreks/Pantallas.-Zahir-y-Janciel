@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<HBox fx:id="rootPane" prefHeight="750.0" prefWidth="1300.0" stylesheets="@../Style5.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pantallas.controllers.VentaController">
+    <fx:define>
+        <ToggleGroup fx:id="tgEntrega" />
+    </fx:define>
+    <children>
+        <VBox prefWidth="280.0" styleClass="sidebar">
+            <children>
+                <VBox alignment="CENTER" spacing="15.0" style="-fx-padding: 40 20;">
+                    <children>
+                        <Label style="-fx-font-size: 50;" text="🧀" />
+                        <Label style="-fx-font-size: 22; -fx-font-weight: 800; -fx-text-fill: white;" text="VENTAS" />
+                        <Separator opacity="0.1" prefWidth="200.0" />
+                    </children>
+                </VBox>
+
+                <VBox spacing="10" style="-fx-padding: 0 20;">
+                    <Button fx:id="btnNavFacturacion" maxWidth="Infinity" onAction="#mostrarVentas" styleClass="nav-item-active" text="🛒 Punto de Venta" />
+                </VBox>
+
+                <Region VBox.vgrow="ALWAYS" />
+
+                <VBox style="-fx-padding: 30;">
+                    <Button maxWidth="Infinity" onAction="#volverAlMenu" prefHeight="50.0" styleClass="btn-danger" text="🏠 VOLVER AL MENÚ" />
+                </VBox>
+            </children>
+        </VBox>
+
+        <StackPane fx:id="contentArea" styleClass="main-content" HBox.hgrow="ALWAYS">
+            <children>
+                <!-- VISTA PRINCIPAL: VENTAS -->
+                <VBox fx:id="viewVentas" spacing="15.0">
+                    <children>
+                        <!-- Cliente selector -->
+                        <HBox alignment="CENTER_LEFT" spacing="15">
+                            <Label styleClass="label-bold" text="CLIENTE:" />
+                            <ComboBox fx:id="cbCliente" prefWidth="300.0" promptText="Seleccionar cliente..." />
+                            <Button onAction="#mostrarNuevoCliente" styleClass="btn-primary" text="+ NUEVO" />
+                            <Region HBox.hgrow="ALWAYS" />
+                        </HBox>
+
+                        <HBox spacing="15" VBox.vgrow="ALWAYS">
+                            <!-- IZQUIERDA: Productos en tarjetas -->
+                            <VBox spacing="10" HBox.hgrow="ALWAYS">
+                                <Label styleClass="title-medium" text="Productos Disponibles" />
+                                <ScrollPane fitToWidth="true" style="-fx-background: transparent; -fx-background-color: transparent;" VBox.vgrow="ALWAYS">
+                                    <FlowPane fx:id="productGrid" hgap="15" vgap="15" prefWrapLength="900" style="-fx-padding: 5;" />
+                                </ScrollPane>
+                            </VBox>
+
+                            <!-- DERECHA: Carrito + Checkout -->
+                            <VBox prefWidth="420.0" spacing="12">
+                                <Label styleClass="title-medium" text="Carrito de Compra" />
+
+                                <!-- Configuración del item -->
+                                <VBox spacing="8" styleClass="card" style="-fx-padding: 15;">
+                                    <Label fx:id="lblProductoSeleccionado" style="-fx-font-weight: 700; -fx-font-size: 14; -fx-text-fill: -primary;" text="Seleccione un producto..." />
+                                    <HBox alignment="CENTER_LEFT" spacing="10">
+                                        <TextField fx:id="txtCantidad" onKeyReleased="#calcularItem" prefWidth="100" promptText="Cantidad" />
+                                        <ComboBox fx:id="cbUnidadMedida" prefWidth="140" promptText="Unidad..." />
+                                        <Label styleClass="label-muted" text="Precio:" />
+                                        <TextField fx:id="txtPrecioUnitario" onKeyReleased="#calcularItem" prefWidth="100" promptText="RD$" style="-fx-text-fill: -success; -fx-font-weight: bold;" />
+                                    </HBox>
+                                    <HBox alignment="CENTER_RIGHT" spacing="10">
+                                        <Label styleClass="label-muted" text="Importe:" />
+                                        <TextField fx:id="txtImporteTotal" editable="false" prefWidth="120" style="-fx-background-color: #f1f5f9; -fx-font-weight: 800;" text="0.00" />
+                                        <Button onAction="#añadirItem" prefWidth="160" styleClass="btn-primary" text="AGREGAR AL CARRITO" />
+                                    </HBox>
+                                </VBox>
+
+                                <!-- Tabla del carrito -->
+                                <TableView fx:id="tablaVentas" prefHeight="200.0">
+                                    <columns>
+                                        <TableColumn fx:id="colDesc" prefWidth="150" text="Producto" />
+                                        <TableColumn fx:id="colLbs" prefWidth="70" text="Cantidad" />
+                                        <TableColumn fx:id="colUnidad" prefWidth="70" text="Unidad" />
+                                        <TableColumn fx:id="colPre" prefWidth="80" text="Precio U." />
+                                        <TableColumn fx:id="colSub" prefWidth="80" text="Subtotal" />
+                                    </columns>
+                                </TableView>
+                                <Button onAction="#borrarItem" styleClass="btn-danger" style="-fx-background-color: transparent; -fx-text-fill: -danger; -fx-alignment: center-left;" text="🗑 Quitar seleccionado" />
+
+                                <Separator />
+
+                                <!-- Opciones de entrega -->
+                                <VBox spacing="8" styleClass="card" style="-fx-padding: 15;">
+                                    <Label style="-fx-font-weight: 700; -fx-font-size: 13;" text="Tipo de entrega" />
+                                    <HBox spacing="20">
+                                        <RadioButton fx:id="rbTienda" selected="true" text="Entrega en tienda (Caja)" toggleGroup="$tgEntrega" />
+                                        <RadioButton fx:id="rbEnvio" text="Envío a domicilio" toggleGroup="$tgEntrega" />
+                                    </HBox>
+                                    <VBox fx:id="panelEnvio" disable="true" managed="false" spacing="8" visible="false">
+                                        <ComboBox fx:id="cbRepartidor" maxWidth="Infinity" prefHeight="40" promptText="Seleccionar repartidor..." />
+                                        <TextField fx:id="txtDireccion" prefHeight="40" promptText="Calle / Residencial / Casa" />
+                                        <TextField fx:id="txtApartamento" prefHeight="40" promptText="Número de apartamento / interior" />
+                                    </VBox>
+                                </VBox>
+
+                                <!-- Total y pago -->
+                                <HBox alignment="CENTER_RIGHT" spacing="15">
+                                    <VBox alignment="CENTER_RIGHT">
+                                        <Label styleClass="label-muted" text="TOTAL A PAGAR" />
+                                        <Label fx:id="lblTotal" style="-fx-font-size: 36; -fx-font-weight: 900; -fx-text-fill: -success;" text="RD$ 0.00" />
+                                    </VBox>
+                                    <Button onAction="#mostrarCobro" prefHeight="60.0" prefWidth="240.0" styleClass="btn-accent" style="-fx-font-size: 16;" text="PROCESAR PAGO" />
+                                </HBox>
+                            </VBox>
+                        </HBox>
+                    </children>
+                </VBox>
+
+                <!-- VISTA: COBRO (MODAL) -->
+                <VBox fx:id="viewCobro" alignment="CENTER" managed="false" style="-fx-background-color: rgba(0,0,0,0.8);" visible="false">
+                    <VBox alignment="CENTER" maxWidth="500" spacing="25" styleClass="card-premium">
+                        <VBox alignment="CENTER" spacing="5">
+                            <Label styleClass="title-medium" text="Finalizar Venta" />
+                            <Label fx:id="lblMontoCobro" style="-fx-font-size: 32; -fx-font-weight: 900; -fx-text-fill: -success;" text="RD$ 0.00" />
+                        </VBox>
+
+                        <VBox spacing="12">
+                            <ComboBox fx:id="comboMetodoPago" maxWidth="Infinity" prefHeight="50" promptText="Método de Pago" />
+                            <TextField fx:id="txtEfectivoRecibido" onKeyReleased="#calcularDevuelta" prefHeight="60" promptText="Monto Recibido RD$" style="-fx-font-size: 22; -fx-alignment: center; -fx-font-weight: bold;" />
+                            <Label fx:id="lblDevuelta" style="-fx-font-size: 22; -fx-font-weight: 800; -fx-text-fill: -accent;" text="Devuelta: RD$ 0.00" />
+                        </VBox>
+
+                        <VBox spacing="10">
+                            <Button maxWidth="Infinity" onAction="#finalizarVenta" prefHeight="60" styleClass="btn-primary" text="CONFIRMAR PAGO Y FACTURAR" />
+                            <Button maxWidth="Infinity" onAction="#mostrarVentas" styleClass="btn-danger" style="-fx-background-color: transparent; -fx-text-fill: -danger;" text="CANCELAR" />
+                        </VBox>
+                    </VBox>
+                </VBox>
+
+                <!-- VISTA: NUEVO CLIENTE (MODAL) -->
+                <VBox fx:id="viewNuevoCliente" alignment="CENTER" managed="false" style="-fx-background-color: rgba(0,0,0,0.8);" visible="false">
+                    <VBox alignment="CENTER" maxWidth="450" spacing="25" styleClass="card-premium">
+                        <Label styleClass="title-medium" text="Registro de Cliente" />
+
+                        <VBox spacing="15">
+                            <TextField fx:id="txtNewNombre" prefHeight="50" promptText="Nombre Completo" />
+                            <TextField fx:id="txtNewRnc" prefHeight="50" promptText="RNC / Cédula" />
+                            <TextField fx:id="txtNewTel" prefHeight="50" promptText="Teléfono de contacto" />
+                        </VBox>
+
+                        <VBox spacing="10">
+                            <Button maxWidth="Infinity" onAction="#guardarCliente" prefHeight="55" styleClass="btn-primary" text="REGISTRAR CLIENTE" />
+                            <Button maxWidth="Infinity" onAction="#mostrarVentas" styleClass="btn-danger" style="-fx-background-color: transparent; -fx-text-fill: -danger;" text="DESCARTAR" />
+                        </VBox>
+                    </VBox>
+                </VBox>
+            </children>
+        </StackPane>
+    </children>
+</HBox>

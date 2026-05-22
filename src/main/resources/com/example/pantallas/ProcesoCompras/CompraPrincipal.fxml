@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import java.net.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+
+<HBox prefHeight="750.0" prefWidth="1300.0" stylesheets="@../Style5.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pantallas.controllers.CompraController">
+    <children>
+        <VBox prefWidth="280.0" styleClass="sidebar">
+            <children>
+                <VBox alignment="CENTER" spacing="15.0" style="-fx-padding: 40 20;">
+                    <children>
+                        <Label style="-fx-font-size: 50;" text="🧀" />
+                        <Label style="-fx-font-size: 22; -fx-font-weight: 800; -fx-text-fill: white;" text="COMPRAS" />
+                        <Separator opacity="0.1" prefWidth="200.0" />
+                    </children>
+                </VBox>
+                <VBox spacing="10" style="-fx-padding: 0 20;">
+                    <Button fx:id="btnNavOrden" maxWidth="Infinity" onAction="#mostrarNuevaOrden" styleClass="nav-item-active" text="🛒 Generar Orden" />
+                    <Button fx:id="btnNavRecepcion" maxWidth="Infinity" onAction="#mostrarRecepcion" styleClass="nav-item" text="📦 Recepción de Insumos" />
+                    <Button fx:id="btnNavHistorial" maxWidth="Infinity" onAction="#mostrarHistorial" styleClass="nav-item" text="📋 Historial y Estados" />
+                    <Button fx:id="btnNavProveedores" maxWidth="Infinity" onAction="#mostrarProveedores" styleClass="nav-item" text="👥 Gestión de Proveedores" />
+                </VBox>
+                <Region VBox.vgrow="ALWAYS" />
+                <VBox style="-fx-padding: 30;">
+                    <Button maxWidth="Infinity" onAction="#irAMenuPrincipal" prefHeight="50.0" styleClass="btn-danger" text="← Volver al Menú" />
+                </VBox>
+            </children>
+        </VBox>
+
+        <StackPane HBox.hgrow="ALWAYS" style="-fx-background-color: #f4f7f6;">
+            <children>
+                <!-- PANEL: NUEVA ORDEN DE COMPRA -->
+                <VBox fx:id="paneNuevaOrden" spacing="20.0" style="-fx-padding: 30;">
+                    <children>
+                        <Label text="Crear Nueva Orden de Compra" textFill="#2c3e50"><font><Font name="System Bold" size="24.0" /></font></Label>
+
+                        <GridPane hgap="20" vgap="15" style="-fx-background-color: white; -fx-padding: 25; -fx-background-radius: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);">
+                            <columnConstraints>
+                                <ColumnConstraints prefWidth="120" />
+                                <ColumnConstraints prefWidth="250" />
+                                <ColumnConstraints prefWidth="120" />
+                                <ColumnConstraints prefWidth="250" />
+                            </columnConstraints>
+                            <children>
+                                <Label text="Suplidor:" GridPane.rowIndex="0" />
+                                <ComboBox fx:id="cbSuplidor" prefWidth="250" GridPane.columnIndex="1" />
+
+                                <Label text="Insumo:" GridPane.rowIndex="1" />
+                                <ComboBox fx:id="cbInsumo" prefWidth="250" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                                <Label text="Cantidad:" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                                <HBox spacing="5" GridPane.columnIndex="3" GridPane.rowIndex="0">
+                                    <children>
+                                        <TextField fx:id="txtCantidad" prefWidth="150.0" />
+                                        <ComboBox fx:id="cbUnidad" prefWidth="100.0" />
+                                    </children>
+                                </HBox>
+
+                                <Label text="Precio Unit. (RD$):" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                <Label fx:id="lblPrecioUnitario" style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #27ae60;" text="RD$ 0.00" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+
+                                <Label text="Fecha Entrega:" GridPane.rowIndex="2" />
+                                <DatePicker fx:id="dpFechaEntrega" prefWidth="250" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+                                <HBox spacing="10" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="3">
+                                    <padding><Insets top="10"/></padding>
+                                    <Button onAction="#generarOrden" prefHeight="35.0" prefWidth="150.0" style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold;" text="💾 GUARDAR ORDEN" />
+                                    <Button onAction="#limpiarDatosOrden" prefHeight="35.0" prefWidth="120.0" style="-fx-background-color: #95a5a6; -fx-text-fill: white;" text="LIMPIAR" />
+                                </HBox>
+                            </children>
+                        </GridPane>
+                        <TableView fx:id="tablaOrdenesPendientes" VBox.vgrow="ALWAYS" style="-fx-background-radius: 10;" />
+                    </children>
+                </VBox>
+
+                <!-- PANEL: RECEPCIÓN DE MERCANCÍA (ALMACÉN) -->
+                <VBox fx:id="paneRecepcion" managed="false" visible="false" spacing="20.0" style="-fx-padding: 30;">
+                    <children>
+                        <Label text="Recepción de Mercancía (Almacén)" textFill="#2c3e50"><font><Font name="System Bold" size="24.0" /></font></Label>
+
+                        <!-- Barra de búsqueda por cliente/suplidor -->
+                        <HBox spacing="15" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 12; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 8, 0, 0, 3);">
+                            <children>
+                                <Label text="🔍 Buscar por cliente:" style="-fx-font-weight: bold; -fx-font-size: 14;" />
+                                <TextField fx:id="txtFiltroRecepcion" prefWidth="350" promptText="Escriba nombre del suplidor para filtrar..." />
+                            </children>
+                        </HBox>
+
+                        <!-- Selección de orden pendiente -->
+                        <HBox spacing="20" style="-fx-background-color: white; -fx-padding: 25; -fx-background-radius: 15;">
+                            <VBox spacing="10">
+                                <Label text="Seleccionar Orden Pendiente:" style="-fx-font-weight: bold;"/>
+                                <ComboBox fx:id="cbOrdenesPendientes" prefWidth="400" promptText="ID Orden - Suplidor" />
+                            </VBox>
+                        </HBox>
+
+                        <!-- Checkboxes de verificación de cantidad -->
+                        <VBox spacing="10" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 8, 0, 0, 3);">
+                            <children>
+                                <Label text="Verificación de Cantidad Recibida:" style="-fx-font-weight: bold; -fx-font-size: 14;" />
+                                <HBox spacing="30">
+                                    <children>
+                                        <CheckBox fx:id="chkCantidadCorrecta" text="✅ Se entregó la cantidad correcta" style="-fx-font-size: 14; -fx-font-weight: bold;" />
+                                        <CheckBox fx:id="chkCantidadIncorrecta" text="❌ No se entregó la cantidad acordada" style="-fx-font-size: 14; -fx-font-weight: bold;" />
+                                    </children>
+                                </HBox>
+                                <HBox fx:id="hboxCantidadReal" managed="false" visible="false" spacing="15" style="-fx-padding: 10 0 0 0;">
+                                    <children>
+                                        <Label text="Cantidad Real Recibida:" style="-fx-font-weight: bold;" />
+                                        <TextField fx:id="txtCantidadReal" prefWidth="120" promptText="Cantidad" />
+                                        <ComboBox fx:id="cbUnidadReal" prefWidth="130" promptText="Unidad" />
+                                    </children>
+                                </HBox>
+                            </children>
+                        </VBox>
+
+                        <!-- Observaciones y botón de confirmación -->
+                        <VBox spacing="10">
+                            <Label text="Observaciones de Calidad:" style="-fx-font-weight: bold;" />
+                            <TextArea fx:id="txtNotasRecepcion" prefHeight="80" promptText="Ej: El empaque llegó húmedo, o mercancía completa..." />
+                            <Button onAction="#confirmarRecepcion" prefHeight="45.0" prefWidth="250.0" style="-fx-background-color: #2980b9; -fx-text-fill: white; -fx-font-weight: bold;" text="✅ REGISTRAR ENTRADA" />
+                        </VBox>
+
+                        <!-- Historial detallado de calidad -->
+                        <VBox spacing="10" VBox.vgrow="ALWAYS">
+                            <Label text="Historial de Control de Calidad" textFill="#2c3e50" style="-fx-font-size: 18; -fx-font-weight: bold;" />
+                            <TableView fx:id="tablaHistorialCalidad" VBox.vgrow="ALWAYS" />
+                        </VBox>
+                    </children>
+                </VBox>
+
+                <!-- PANEL: HISTORIAL Y ESTADOS -->
+                <VBox fx:id="paneHistorial" managed="false" visible="false" spacing="20.0" style="-fx-padding: 30;">
+                    <children>
+                        <Label text="Historial y Control de Estados" textFill="#2c3e50"><font><Font name="System Bold" size="24.0" /></font></Label>
+                        <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-background-color: #dfe6e9; -fx-padding: 15; -fx-background-radius: 10;">
+                            <Label text="Cambiar Estado de Selección:" />
+                            <ComboBox fx:id="cbNuevoEstado" prefWidth="180" />
+                            <Button onAction="#actualizarEstadoMasivo" style="-fx-background-color: #f39c12; -fx-text-fill: white;" text="ACTUALIZAR ESTADO" />
+                            <Region HBox.hgrow="ALWAYS" />
+                            <Button onAction="#borrarRegistroHistorial" style="-fx-background-color: #e74c3c; -fx-text-fill: white;" text="ELIMINAR" />
+                        </HBox>
+                        <HBox spacing="20" alignment="CENTER_LEFT" style="-fx-background-color: #f8f9fa; -fx-padding: 10 15; -fx-background-radius: 8;">
+                            <Label text="Filtrar por estado:" style="-fx-font-weight: bold;" />
+                            <CheckBox fx:id="chkFiltrarPendiente" selected="true" text="Pendiente" style="-fx-font-weight: bold; -fx-text-fill: #f39c12;" />
+                            <CheckBox fx:id="chkFiltrarRecibido" selected="true" text="Recibido" style="-fx-font-weight: bold; -fx-text-fill: #27ae60;" />
+                            <CheckBox fx:id="chkFiltrarCancelado" selected="true" text="Cancelado" style="-fx-font-weight: bold; -fx-text-fill: #e74c3c;" />
+                        </HBox>
+                        <TableView fx:id="tablaHistorial" VBox.vgrow="ALWAYS" />
+                    </children>
+                </VBox>
+
+                <!-- PANEL: GESTIÓN DE PROVEEDORES (Rediseñado desde Distribución, sin Quesos) -->
+                <VBox fx:id="paneProveedores" managed="false" visible="false" spacing="20.0" style="-fx-padding: 30;">
+                    <children>
+                        <Label text="Gestión de Proveedores" textFill="#2c3e50"><font><Font name="System Bold" size="24.0" /></font></Label>
+
+                        <VBox spacing="20" style="-fx-background-color: white; -fx-padding: 25; -fx-background-radius: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);">
+                            <children>
+                                <Label style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="👥 Añadir un nuevo proveedor" />
+                                <GridPane hgap="25" vgap="15">
+                                    <columnConstraints>
+                                        <ColumnConstraints hgrow="ALWAYS" />
+                                        <ColumnConstraints hgrow="ALWAYS" />
+                                    </columnConstraints>
+                                    <children>
+                                        <VBox spacing="8">
+                                            <Label text="Nombre / Razón Social *" style="-fx-font-weight: bold;" />
+                                            <TextField fx:id="txtProvNombre" prefHeight="40" promptText="Ej: Lácteos del Yaque" />
+                                        </VBox>
+                                        <VBox spacing="8" GridPane.columnIndex="1">
+                                            <Label text="RNC" style="-fx-font-weight: bold;" />
+                                            <TextField fx:id="txtProvRnc" prefHeight="40" promptText="001-0000000-0" />
+                                        </VBox>
+                                        <VBox spacing="8" GridPane.rowIndex="1">
+                                            <Label text="Teléfono Contacto *" style="-fx-font-weight: bold;" />
+                                            <TextField fx:id="txtProvTelefono" prefHeight="40" promptText="809-000-0000" />
+                                        </VBox>
+                                        <VBox spacing="8" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                            <Label text="Dirección *" style="-fx-font-weight: bold;" />
+                                            <TextField fx:id="txtProvDireccion" prefHeight="40" promptText="Av. Principal #123..." />
+                                        </VBox>
+                                    </children>
+                                </GridPane>
+
+                                <HBox alignment="CENTER_RIGHT" spacing="15">
+                                    <Button onAction="#limpiarProveedor" prefWidth="120" style="-fx-background-color: #95a5a6; -fx-text-fill: white;" text="LIMPIAR" />
+                                    <Button onAction="#borrarProveedor" prefWidth="120" style="-fx-background-color: #e74c3c; -fx-text-fill: white;" text="ELIMINAR" />
+                                    <Button onAction="#actualizarProveedor" prefWidth="150" style="-fx-background-color: #f39c12; -fx-text-fill: white;" text="ACTUALIZAR" />
+                                    <Button onAction="#agregarProveedor" prefWidth="150" style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold;" text="💾 GUARDAR" />
+                                </HBox>
+                            </children>
+                        </VBox>
+
+                        <TableView fx:id="tablaProveedores" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="colProvId" prefWidth="60" text="ID" />
+                                <TableColumn fx:id="colProvNombre" prefWidth="250" text="Nombre" />
+                                <TableColumn fx:id="colProvTel" prefWidth="150" text="Teléfono" />
+                                <TableColumn fx:id="colProvRnc" prefWidth="150" text="RNC" />
+                                <TableColumn fx:id="colProvDir" prefWidth="250" text="Dirección" />
+                            </columns>
+                        </TableView>
+                    </children>
+                </VBox>
+            </children>
+        </StackPane>
+    </children>
+</HBox>

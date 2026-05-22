@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<StackPane fx:id="contentArea" prefHeight="750.0" prefWidth="1300.0" stylesheets="@../Style5.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pantallas.controllers.InventarioController">
+    <fx:define><ToggleGroup fx:id="tgTipoMovimiento" /></fx:define>
+    <children>
+        <HBox prefHeight="750.0" prefWidth="1300.0">
+            <children>
+                <VBox prefWidth="280.0" styleClass="sidebar">
+                    <children>
+                        <VBox alignment="CENTER" spacing="15.0" style="-fx-padding: 40 20;">
+                            <children>
+                                <Label style="-fx-font-size: 50;" text="📋" />
+                                <Label style="-fx-font-size: 22; -fx-font-weight: 800; -fx-text-fill: white;" text="INVENTARIO" />
+                                <Separator opacity="0.1" prefWidth="200.0" />
+                            </children>
+                        </VBox>
+                        <VBox spacing="10" style="-fx-padding: 0 20;">
+                            <Button fx:id="btnStock" maxWidth="Infinity" onAction="#mostrarStock" styleClass="nav-item-active" text="📦 Stock Actual" />
+                            <Button fx:id="btnMovimientos" maxWidth="Infinity" onAction="#mostrarMovimientos" styleClass="nav-item" text="📊 Kardex / Movimientos" />
+                            <Button fx:id="btnAjustes" maxWidth="Infinity" onAction="#mostrarAjustes" styleClass="nav-item" text="⚖️ Ajustes" />
+                            <Button fx:id="btnReportes" maxWidth="Infinity" onAction="#mostrarReportes" styleClass="nav-item" text="📈 Reportes" />
+                        </VBox>
+                        <Region VBox.vgrow="ALWAYS" />
+                        <VBox style="-fx-padding: 30;">
+                            <Button maxWidth="Infinity" onAction="#volverAlMenu" prefHeight="50.0" styleClass="btn-danger" text="← Volver al Menú" />
+                        </VBox>
+                    </children>
+                </VBox>
+
+                <VBox HBox.hgrow="ALWAYS" style="-fx-background-color: #f4f7f6;">
+                    <children>
+                        <!-- STOCK -->
+                        <VBox fx:id="viewStock" spacing="20.0" style="-fx-padding: 30;">
+                            <children>
+                                <Label text="Stock Actual de Productos" textFill="#2c3e50"><font><Font name="System Bold" size="24.0" /></font></Label>
+                                <HBox spacing="15">
+                                    <TextField fx:id="txtBusqueda" prefWidth="300" promptText="Buscar producto..." />
+                                    <ComboBox fx:id="cbCategoria" prefWidth="200" promptText="Todas las categorías" />
+                                </HBox>
+                                <TableView fx:id="tablaStock" VBox.vgrow="ALWAYS">
+                                    <columns>
+                                        <TableColumn fx:id="colNombre" prefWidth="250" text="Producto" />
+                                        <TableColumn fx:id="colCategoria" prefWidth="150" text="Categoría" />
+                                        <TableColumn fx:id="colCantidad" prefWidth="120" text="Cantidad" />
+                                        <TableColumn fx:id="colUnidad" prefWidth="100" text="Unidad" />
+                                        <TableColumn fx:id="colCantMinima" prefWidth="120" text="Stock Mín." />
+                                    </columns>
+                                </TableView>
+                            </children>
+                        </VBox>
+
+                        <!-- MOVIMIENTOS -->
+                        <VBox fx:id="viewMovimientos" managed="false" visible="false" spacing="20.0" style="-fx-padding: 30;">
+                            <children>
+                                <Label text="Historial de Movimientos (Kardex)" textFill="#2c3e50"><font><Font name="System Bold" size="24.0" /></font></Label>
+                                <TableView fx:id="tablaKardex" VBox.vgrow="ALWAYS">
+                                    <columns>
+                                        <TableColumn fx:id="colKFecha" prefWidth="150" text="Fecha" />
+                                        <TableColumn fx:id="colKProducto" prefWidth="200" text="Producto" />
+                                        <TableColumn fx:id="colKTipo" prefWidth="120" text="Tipo" />
+                                        <TableColumn fx:id="colKCant" prefWidth="100" text="Cantidad" />
+                                        <TableColumn fx:id="colKUnidad" prefWidth="100" text="Unidad" />
+                                        <TableColumn fx:id="colKJustificacion" prefWidth="250" text="Justificación" />
+                                    </columns>
+                                </TableView>
+                            </children>
+                        </VBox>
+
+                        <!-- AJUSTES -->
+                        <VBox fx:id="viewAjustes" managed="false" visible="false" spacing="20.0" style="-fx-padding: 30;">
+                            <children>
+                                <Label text="Ajuste de Inventario" textFill="#2c3e50"><font><Font name="System Bold" size="24.0" /></font></Label>
+                                <GridPane hgap="15" vgap="15" style="-fx-background-color: white; -fx-padding: 25; -fx-background-radius: 15;">
+                                    <columnConstraints><ColumnConstraints prefWidth="120" /><ColumnConstraints prefWidth="250" /></columnConstraints>
+                                    <children>
+                                        <Label text="Producto:" GridPane.rowIndex="0" />
+                                        <ComboBox fx:id="cbItemAjuste" prefWidth="250" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                                        <Label text="Cantidad:" GridPane.rowIndex="1" />
+                                        <TextField fx:id="txtCantidadAjuste" prefWidth="250" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                        <Label text="Tipo:" GridPane.rowIndex="2" />
+                                        <HBox spacing="15" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                            <RadioButton fx:id="rbEntrada" text="Entrada" toggleGroup="$tgTipoMovimiento" />
+                                            <RadioButton fx:id="rbSalida" text="Salida" toggleGroup="$tgTipoMovimiento" />
+                                        </HBox>
+                                        <Label text="Stock Mínimo:" GridPane.rowIndex="3" />
+                                        <TextField fx:id="txtCantidadMinima" prefWidth="250" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                    </children>
+                                </GridPane>
+                                <Label fx:id="lblUnidadProducto" styleClass="label-muted" text="Seleccione un producto para ver su unidad" />
+                                <Label text="Justificación del ajuste:" />
+                                <TextArea fx:id="txtJustificacion" prefHeight="100" promptText="Indique el motivo del ajuste..." />
+                                <Button onAction="#procesarMovimiento" prefHeight="45.0" prefWidth="250.0" style="-fx-background-color: #2980b9; -fx-text-fill: white; -fx-font-weight: bold;" text="💾 REALIZAR AJUSTE" />
+                            </children>
+                        </VBox>
+
+                        <!-- REPORTES -->
+                        <VBox fx:id="viewReportes" managed="false" visible="false" spacing="20.0" style="-fx-padding: 30;">
+                            <children>
+                                <Label text="Reportes de Inventario" textFill="#2c3e50"><font><Font name="System Bold" size="24.0" /></font></Label>
+                                <Label text="(Próximamente)" styleClass="label-muted" />
+                            </children>
+                        </VBox>
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+    </children>
+</StackPane>

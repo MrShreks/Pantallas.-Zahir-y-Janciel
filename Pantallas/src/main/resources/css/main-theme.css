@@ -1,0 +1,95 @@
+/* main-theme.css */
+.root {
+    -fx-background-color: #1a1a1a;
+    -fx-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    -fx-font-size: 14px;
+    -fx-text-fill: #e0e0e0;
+}
+
+.label {
+    -fx-text-fill: #e0e0e0;
+}
+
+.button {
+    -fx-background-color: #333333;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-border-color: #555555;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-padding: 8px 15px;
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-background-color: #4CAF50;
+    -fx-border-color: #45a049;
+}
+
+.button:pressed {
+    -fx-background-color: #3d8b40;
+}
+
+.text-field, .password-field {
+    -fx-background-color: #2b2b2b;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #888888;
+    -fx-border-color: #444444;
+    -fx-border-radius: 3px;
+    -fx-padding: 8px;
+}
+
+.text-field:focused, .password-field:focused {
+    -fx-border-color: #4CAF50;
+    -fx-background-color: #333333;
+}
+
+.table-view {
+    -fx-background-color: #2b2b2b;
+    -fx-border-color: #444444;
+    -fx-text-fill: white;
+}
+
+.table-view .column-header {
+    -fx-background-color: #333333;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-border-color: #444444;
+}
+
+.table-view .table-cell {
+    -fx-text-fill: white;
+    -fx-border-color: transparent transparent #444444 transparent;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: #222222;
+}
+
+.table-row-cell:even {
+    -fx-background-color: #2b2b2b;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+}
+
+.tab-pane .tab-header-area .tab-header-background {
+    -fx-background-color: #1a1a1a;
+}
+
+.tab-pane .tab {
+    -fx-background-color: #333333;
+    -fx-text-fill: white;
+}
+
+.tab-pane .tab:selected {
+    -fx-background-color: #4CAF50;
+}
+
+.title-label {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #4CAF50;
+}
