@@ -382,7 +382,9 @@ public final class ServicioInventario {
                  ResultSet rs = st.executeQuery(sql)) {
                 boolean hay = false;
                 while (rs.next()) {
-                    dist.put(rs.getString(t[1]), rs.getInt("cnt"));
+                    String cat = rs.getString(t[1]);
+                    if (cat != null && !cat.trim().isEmpty())
+                        dist.put(cat, rs.getInt("cnt"));
                     hay = true;
                 }
                 if (hay) return dist;
@@ -396,7 +398,9 @@ public final class ServicioInventario {
                  ResultSet rs = st.executeQuery(sql)) {
                 boolean hay = false;
                 while (rs.next()) {
-                    dist.put(rs.getString(t[1]), rs.getInt("cnt"));
+                    String cat = rs.getString(t[1]);
+                    if (cat != null && !cat.trim().isEmpty())
+                        dist.put(cat, rs.getInt("cnt"));
                     hay = true;
                 }
                 if (hay) return dist;
@@ -508,6 +512,86 @@ public final class ServicioInventario {
     }
 
     // ========================================================================
+    // KPI: TOTAL ENTRADAS / SALIDAS DEL MES (para reportes)
+    // ========================================================================
+
+    public static double obtenerTotalEntradasMes() {
+        return obtenerTotalMovimientosPorTipo("ENTRADA");
+    }
+
+    public static double obtenerTotalSalidasMes() {
+        return obtenerTotalMovimientosPorTipo("SALIDA");
+    }
+
+    private static double obtenerTotalMovimientosPorTipo(String tipo) {
+        String[][] tablas = {
+            {"tbl_movimientos_inventario", "cantidad"},
+            {"Movimientos_Inventario", "cantidad"}
+        };
+        for (String[] t : tablas) {
+            String sql = "SELECT COALESCE(SUM(" + t[1] + "),0) FROM " + t[0]
+                + " WHERE tipo = '" + tipo.replace("'", "''") + "'"
+                + " AND MONTH(fecha_movimiento) = MONTH(GETDATE())"
+                + " AND YEAR(fecha_movimiento) = YEAR(GETDATE())";
+            try (Connection con = obtenerConexion();
+                 Statement st = con.createStatement();
+                 ResultSet rs = st.executeQuery(sql)) {
+                if (rs.next()) return rs.getDouble(1);
+            } catch (SQLException ignored) {}
+        }
+        return 0.0;
+    }
+
+    // ========================================================================
+    // KPI: STOCK TOTAL
+    // ========================================================================
+
+    public static double obtenerStockTotal() {
+        String[][] tablas = {
+            {"tbl_inventario_productos", "SUM(cantidad_stock)"},
+            {"Productos", "SUM(stock_actual)"},
+            {"tbl_productos", "SUM(cantidad_stock)"}
+        };
+        return consultar(tablas, "", (rs, t) -> rs.next() ? rs.getDouble(1) : null, 0.0);
+    }
+
+    // ========================================================================
+    // FLUJO MENSUAL (Entradas vs Salidas por mes) — para gráfico de reportes
+    // ========================================================================
+
+    public static Map<String, double[]> obtenerFlujoMensual(int ultimosMeses) {
+        Map<String, double[]> flujo = new LinkedHashMap<>();
+        LocalDate hoy = LocalDate.now();
+        for (int i = ultimosMeses - 1; i >= 0; i--) {
+            LocalDate mes = hoy.minusMonths(i);
+            String label = abreviarMes(mes.getMonthValue(), mes.getYear());
+            flujo.put(label, new double[]{0.0, 0.0});
+        }
+        String sql = "SELECT MONTH(fecha_movimiento) AS mes, YEAR(fecha_movimiento) AS anio, "
+            + "tipo, COALESCE(SUM(cantidad),0) AS total "
+            + "FROM tbl_movimientos_inventario "
+            + "WHERE fecha_movimiento >= DATEADD(MONTH, -" + ultimosMeses + ", GETDATE()) "
+            + "GROUP BY YEAR(fecha_movimiento), MONTH(fecha_movimiento), tipo "
+            + "ORDER BY anio ASC, mes ASC";
+        try (Connection con = obtenerConexion();
+             Statement st = con.createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
+            while (rs.next()) {
+                String label = abreviarMes(rs.getInt("mes"), rs.getInt("anio"));
+                String tipo = rs.getString("tipo");
+                double total = rs.getDouble("total");
+                flujo.putIfAbsent(label, new double[]{0.0, 0.0});
+                if ("ENTRADA".equalsIgnoreCase(tipo)) {
+                    flujo.get(label)[0] = total;
+                } else if ("SALIDA".equalsIgnoreCase(tipo)) {
+                    flujo.get(label)[1] = total;
+                }
+            }
+        } catch (SQLException ignored) {}
+        return flujo;
+    }
+
+    // ========================================================================
     // DATOS DE DEMOSTRACION (cuando la BD no está disponible)
     // ========================================================================
 
@@ -563,6 +647,21 @@ public final class ServicioInventario {
         return alertas;
     }
 
+    public static Map<String, double[]> generarDemoFlujoMensual() {
+        Map<String, double[]> demo = new LinkedHashMap<>();
+        LocalDate hoy = LocalDate.now();
+        double[][] valores = {
+            {12500, 8200}, {13800, 9100}, {14200, 10100},
+            {15100, 9500}, {14800, 11200}, {16200, 10500}
+        };
+        for (int i = 5; i >= 0; i--) {
+            LocalDate mes = hoy.minusMonths(i);
+            String label = abreviarMes(mes.getMonthValue(), mes.getYear());
+            demo.put(label, new double[]{valores[5 - i][0], valores[5 - i][1]});
+        }
+        return demo;
+    }
+
     public static List<Map<String, String>> generarDemoMovimientos() {
         List<Map<String, String>> movs = new ArrayList<>();
         String[][] data = {
@@ -587,5 +686,10 @@ public final class ServicioInventario {
             movs.add(m);
         }
         return movs;
+    }
+
+    private static String abreviarMes(int mes, int anio) {
+        String[] meses = {"Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"};
+        return meses[mes - 1] + " " + anio;
     }
 }

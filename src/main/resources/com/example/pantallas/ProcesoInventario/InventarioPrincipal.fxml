@@ -4,9 +4,12 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
 
 <StackPane fx:id="contentArea" prefHeight="750.0" prefWidth="1300.0" stylesheets="@../Style5.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pantallas.controllers.InventarioController">
-    <fx:define><ToggleGroup fx:id="tgTipoMovimiento" /></fx:define>
     <children>
         <HBox prefHeight="750.0" prefWidth="1300.0">
             <children>
@@ -14,20 +17,19 @@
                     <children>
                         <VBox alignment="CENTER" spacing="15.0" style="-fx-padding: 40 20;">
                             <children>
-                                <Label style="-fx-font-size: 50;" text="📋" />
                                 <Label style="-fx-font-size: 22; -fx-font-weight: 800; -fx-text-fill: white;" text="INVENTARIO" />
                                 <Separator opacity="0.1" prefWidth="200.0" />
                             </children>
                         </VBox>
                         <VBox spacing="10" style="-fx-padding: 0 20;">
-                            <Button fx:id="btnStock" maxWidth="Infinity" onAction="#mostrarStock" styleClass="nav-item-active" text="📦 Stock Actual" />
-                            <Button fx:id="btnMovimientos" maxWidth="Infinity" onAction="#mostrarMovimientos" styleClass="nav-item" text="📊 Kardex / Movimientos" />
-                            <Button fx:id="btnAjustes" maxWidth="Infinity" onAction="#mostrarAjustes" styleClass="nav-item" text="⚖️ Ajustes" />
-                            <Button fx:id="btnReportes" maxWidth="Infinity" onAction="#mostrarReportes" styleClass="nav-item" text="📈 Reportes" />
+                            <Button fx:id="btnStock" maxWidth="Infinity" onAction="#mostrarStock" styleClass="nav-item-active" text="Stock Actual" />
+                            <Button fx:id="btnMovimientos" maxWidth="Infinity" onAction="#mostrarMovimientos" styleClass="nav-item" text="Kardex / Movimientos" />
+                            <Button fx:id="btnAjustes" maxWidth="Infinity" onAction="#mostrarAjustes" styleClass="nav-item" text="Bajas / Mermas" />
+                            <Button fx:id="btnReportes" maxWidth="Infinity" onAction="#mostrarReportes" styleClass="nav-item" text="Reportes" />
                         </VBox>
                         <Region VBox.vgrow="ALWAYS" />
                         <VBox style="-fx-padding: 30;">
-                            <Button maxWidth="Infinity" onAction="#volverAlMenu" prefHeight="50.0" styleClass="btn-danger" text="← Volver al Menú" />
+                            <Button maxWidth="Infinity" onAction="#volverAlMenu" prefHeight="50.0" styleClass="btn-danger" text="Volver al Menú" />
                         </VBox>
                     </children>
                 </VBox>
@@ -58,6 +60,10 @@
                         <VBox fx:id="viewMovimientos" managed="false" visible="false" spacing="20.0" style="-fx-padding: 30;">
                             <children>
                                 <Label text="Historial de Movimientos (Kardex)" textFill="#2c3e50"><font><Font name="System Bold" size="24.0" /></font></Label>
+                                <HBox spacing="15">
+                                    <Label text="Filtrar por tipo:" styleClass="label-bold" />
+                                    <ComboBox fx:id="cbFiltroKardex" prefWidth="200" />
+                                </HBox>
                                 <TableView fx:id="tablaKardex" VBox.vgrow="ALWAYS">
                                     <columns>
                                         <TableColumn fx:id="colKFecha" prefWidth="150" text="Fecha" />
@@ -71,38 +77,121 @@
                             </children>
                         </VBox>
 
-                        <!-- AJUSTES -->
+                        <!-- AJUSTES (solo salidas/bajas/mermas) -->
                         <VBox fx:id="viewAjustes" managed="false" visible="false" spacing="20.0" style="-fx-padding: 30;">
                             <children>
-                                <Label text="Ajuste de Inventario" textFill="#2c3e50"><font><Font name="System Bold" size="24.0" /></font></Label>
+                                <Label text="Registro de Bajas y Mermas" textFill="#2c3e50"><font><Font name="System Bold" size="24.0" /></font></Label>
+                                <Label text="Esta sección está destinada únicamente al registro de salidas de inventario por concepto de caducidad, daños en producción o pérdidas de producto." wrapText="true" styleClass="label-muted" />
                                 <GridPane hgap="15" vgap="15" style="-fx-background-color: white; -fx-padding: 25; -fx-background-radius: 15;">
-                                    <columnConstraints><ColumnConstraints prefWidth="120" /><ColumnConstraints prefWidth="250" /></columnConstraints>
+                                    <columnConstraints><ColumnConstraints prefWidth="150" /><ColumnConstraints prefWidth="200" /><ColumnConstraints prefWidth="100" /></columnConstraints>
                                     <children>
                                         <Label text="Producto:" GridPane.rowIndex="0" />
-                                        <ComboBox fx:id="cbItemAjuste" prefWidth="250" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-                                        <Label text="Cantidad:" GridPane.rowIndex="1" />
-                                        <TextField fx:id="txtCantidadAjuste" prefWidth="250" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                        <Label text="Tipo:" GridPane.rowIndex="2" />
-                                        <HBox spacing="15" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                                            <RadioButton fx:id="rbEntrada" text="Entrada" toggleGroup="$tgTipoMovimiento" />
-                                            <RadioButton fx:id="rbSalida" text="Salida" toggleGroup="$tgTipoMovimiento" />
-                                        </HBox>
-                                        <Label text="Stock Mínimo:" GridPane.rowIndex="3" />
-                                        <TextField fx:id="txtCantidadMinima" prefWidth="250" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                        <ComboBox fx:id="cbItemAjuste" prefWidth="300" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="0" />
+                                        <Label text="Cantidad a retirar:" GridPane.rowIndex="1" />
+                                        <TextField fx:id="txtCantidadAjuste" prefWidth="200" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                        <ComboBox fx:id="cbUnidadMedida" prefWidth="100" style="-fx-font-weight: 700;" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                                     </children>
                                 </GridPane>
-                                <Label fx:id="lblUnidadProducto" styleClass="label-muted" text="Seleccione un producto para ver su unidad" />
-                                <Label text="Justificación del ajuste:" />
-                                <TextArea fx:id="txtJustificacion" prefHeight="100" promptText="Indique el motivo del ajuste..." />
-                                <Button onAction="#procesarMovimiento" prefHeight="45.0" prefWidth="250.0" style="-fx-background-color: #2980b9; -fx-text-fill: white; -fx-font-weight: bold;" text="💾 REALIZAR AJUSTE" />
+                                <Label text="Justificación (obligatoria):" />
+                                <TextArea fx:id="txtJustificacion" prefHeight="100" promptText="Indique el motivo de la baja/merma (caducidad, daño, pérdida, etc.)..." />
+                                <Button onAction="#procesarMovimiento" prefHeight="45.0" prefWidth="300.0" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 15;" text="REGISTRAR BAJA / MERMA" />
+                                <Label text="Historial de Bajas Registradas" textFill="#2c3e50"><font><Font name="System Bold" size="18.0" /></font></Label>
+                                <TableView fx:id="tablaSalidas" VBox.vgrow="ALWAYS" prefHeight="220">
+                                    <columns>
+                                        <TableColumn fx:id="colSProducto" prefWidth="200" text="Producto" />
+                                        <TableColumn fx:id="colSCantidad" prefWidth="100" text="Cantidad" />
+                                        <TableColumn fx:id="colSUnidad" prefWidth="100" text="Unidad" />
+                                        <TableColumn fx:id="colSJustificacion" prefWidth="350" text="Justificación" />
+                                        <TableColumn fx:id="colSFecha" prefWidth="170" text="Fecha de Salida" />
+                                    </columns>
+                                </TableView>
                             </children>
                         </VBox>
 
-                        <!-- REPORTES -->
-                        <VBox fx:id="viewReportes" managed="false" visible="false" spacing="20.0" style="-fx-padding: 30;">
+                        <!-- REPORTES DASHBOARD -->
+                        <VBox fx:id="viewReportes" managed="false" visible="false" spacing="0" style="-fx-padding: 0;">
                             <children>
-                                <Label text="Reportes de Inventario" textFill="#2c3e50"><font><Font name="System Bold" size="24.0" /></font></Label>
-                                <Label text="(Próximamente)" styleClass="label-muted" />
+                                <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-border-color: transparent;">
+                                    <content>
+                                        <VBox spacing="20" style="-fx-padding: 30;">
+                                            <HBox spacing="16" alignment="CENTER_LEFT" maxWidth="Infinity">
+                                                <VBox spacing="5">
+                                                    <Label text="Reportes Analíticos de Inventario" textFill="#2c3e50"><font><Font name="System Bold" size="24.0" /></font></Label>
+                                                    <Label text="Control, flujo, entradas y salidas del inventario" styleClass="label-muted" />
+                                                </VBox>
+                                                <Region HBox.hgrow="ALWAYS"/>
+                                                <Button fx:id="btnRefrescarReportes" onAction="#refrescarReportes" text="⟳ ACTUALIZAR" styleClass="btn-accent" style="-fx-padding: 8 16;"/>
+                                                <Label fx:id="lblFechaRep" text="" styleClass="label-muted"/>
+                                            </HBox>
+
+                                            <FlowPane hgap="15" vgap="15" alignment="TOP_LEFT">
+                                                <VBox styleClass="card-premium" minWidth="210" minHeight="110" spacing="8">
+                                                    <Label text="Total Entradas (Mes)" styleClass="label-bold" style="-fx-text-fill: -primary;"/>
+                                                    <Label fx:id="lblTotalEntradas" text="0.00" style="-fx-font-size: 22; -fx-font-weight: 900; -fx-text-fill: #2ecc71;"/>
+                                                    <Label text="Productos ingresados" styleClass="label-muted"/>
+                                                </VBox>
+                                                <VBox styleClass="card-premium" minWidth="210" minHeight="110" spacing="8">
+                                                    <Label text="Total Salidas (Mes)" styleClass="label-bold" style="-fx-text-fill: -danger;"/>
+                                                    <Label fx:id="lblTotalSalidas" text="0.00" style="-fx-font-size: 22; -fx-font-weight: 900; -fx-text-fill: #e74c3c;"/>
+                                                    <Label text="Productos egresados" styleClass="label-muted"/>
+                                                </VBox>
+                                                <VBox styleClass="card-premium" minWidth="210" minHeight="110" spacing="8">
+                                                    <Label text="Stock Total Actual" styleClass="label-bold" style="-fx-text-fill: -primary;"/>
+                                                    <Label fx:id="lblStockTotalActual" text="0 und" style="-fx-font-size: 22; -fx-font-weight: 900;"/>
+                                                    <Label text="Suma total de inventario" styleClass="label-muted"/>
+                                                </VBox>
+                                                <VBox styleClass="card-premium" minWidth="210" minHeight="110" spacing="8">
+                                                    <Label text="Valor del Inventario" styleClass="label-bold" style="-fx-text-fill: -primary;"/>
+                                                    <Label fx:id="lblValorInventarioRep" text="RD$ 0.00" style="-fx-font-size: 22; -fx-font-weight: 900;"/>
+                                                    <Label text="Costo total estimado" styleClass="label-muted"/>
+                                                </VBox>
+                                                <VBox styleClass="card-premium" minWidth="210" minHeight="110" spacing="8">
+                                                    <Label text="Stock Bajo" styleClass="label-bold" style="-fx-text-fill: -danger;"/>
+                                                    <Label fx:id="lblStockBajoRep" text="0 productos" style="-fx-font-size: 22; -fx-font-weight: 900; -fx-text-fill: -danger;"/>
+                                                    <Label text="Requieren atención" styleClass="label-muted"/>
+                                                </VBox>
+                                            </FlowPane>
+
+                                            <HBox spacing="20" maxWidth="Infinity" style="-fx-min-height: 350;">
+                                                <VBox spacing="12" HBox.hgrow="ALWAYS" styleClass="card-premium" minHeight="320">
+                                                    <Label text="Distribución por Categoría" styleClass="title-medium"/>
+                                                    <PieChart fx:id="pieDistribucionRep" VBox.vgrow="ALWAYS" minHeight="280" animated="true"/>
+                                                </VBox>
+                                                <VBox spacing="12" HBox.hgrow="ALWAYS" styleClass="card-premium" minHeight="320">
+                                                    <Label text="Flujo de Entradas vs Salidas" styleClass="title-medium"/>
+                                                    <BarChart fx:id="barFlujoInventario" VBox.vgrow="ALWAYS" minHeight="280" animated="true">
+                                                        <xAxis>
+                                                            <CategoryAxis label="Mes"/>
+                                                        </xAxis>
+                                                        <yAxis>
+                                                            <NumberAxis label="Cantidad"/>
+                                                        </yAxis>
+                                                    </BarChart>
+                                                </VBox>
+                                            </HBox>
+
+                                            <VBox spacing="12">
+                                                <Label text="Últimos Movimientos de Inventario" styleClass="title-medium"/>
+                                                <TableView fx:id="tablaMovimientosRep" prefHeight="280" VBox.vgrow="ALWAYS">
+                                                    <columns>
+                                                        <TableColumn fx:id="colRepFecha" prefWidth="150" text="Fecha" />
+                                                        <TableColumn fx:id="colRepProducto" prefWidth="200" text="Producto" />
+                                                        <TableColumn fx:id="colRepTipo" prefWidth="120" text="Tipo" />
+                                                        <TableColumn fx:id="colRepCant" prefWidth="100" text="Cantidad" />
+                                                        <TableColumn fx:id="colRepUnidad" prefWidth="100" text="Unidad" />
+                                                        <TableColumn fx:id="colRepJustificacion" prefWidth="250" text="Justificación" />
+                                                    </columns>
+                                                </TableView>
+                                            </VBox>
+
+                                            <HBox spacing="20" alignment="CENTER_LEFT">
+                                                <Label fx:id="lblFuenteDatosRep" text="" style="-fx-font-size: 11;"/>
+                                                <Region HBox.hgrow="ALWAYS"/>
+                                                <Label fx:id="lblUltimaActualizacionRep" text="" styleClass="label-muted" style="-fx-font-size: 11;"/>
+                                            </HBox>
+                                        </VBox>
+                                    </content>
+                                </ScrollPane>
                             </children>
                         </VBox>
                     </children>

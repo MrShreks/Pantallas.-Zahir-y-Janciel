@@ -47,7 +47,7 @@ public class VentaController {
     @FXML private RadioButton rbTienda, rbEnvio;
     @FXML private VBox panelEnvio;
     @FXML private ComboBox<String> cbRepartidor;
-    @FXML private TextField txtDireccion, txtApartamento;
+    @FXML private TextField txtDireccion, txtApartamento, txtSector, txtCiudad;
 
     private final ObservableList<ItemQueso> listaVenta = FXCollections.observableArrayList();
     private String productoSeleccionado;
@@ -124,13 +124,13 @@ public class VentaController {
     private void cargarProductos(Connection con) {
         productGrid.getChildren().clear();
         String[][] tablas = {
-            {"Productos", "nombre_producto", "precio_venta_base", "stock_actual", "descripcion"},
-            {"tbl_productos", "nombre", "precio_libra", "cantidad_stock", "descripcion"},
-            {"tbl_inventario_productos", "nombre_producto", "ultimo_costo", "cantidad_stock", "categoria"}
+            {"Productos", "nombre_producto", "precio_venta_base", "stock_actual", "nombre_producto LIKE '%Queso%' AND activo = 1"},
+            {"tbl_productos", "nombre", "precio_libra", "cantidad_stock", "nombre LIKE '%Queso%'"},
+            {"tbl_inventario_productos", "nombre_producto", "ultimo_costo", "cantidad_stock", "nombre_producto LIKE '%Queso%'"}
         };
         boolean cargo = false;
         for (String[] t : tablas) {
-            String sql = "SELECT " + t[1] + ", " + t[2] + ", " + t[3] + " FROM " + t[0];
+            String sql = "SELECT " + t[1] + ", " + t[2] + ", " + t[3] + " FROM " + t[0] + " WHERE " + t[4];
             try (Statement st = con.createStatement(); ResultSet rs = st.executeQuery(sql)) {
                 while (rs.next()) {
                     String nombre = rs.getString(t[1]);
@@ -397,14 +397,6 @@ public class VentaController {
         String metodo = comboMetodoPago.getValue();
         String tipoEntrega = esEnvio ? "Envio" : "Venta en sucursal";
 
-        if ("Efectivo".equals(metodo) && !esEnvio) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Gestion de Cobro - Empresa");
-            alert.setHeaderText("Aviso de Notificacion de Pago");
-            alert.setContentText("Se le llamara cerca de la fecha de entrega para hacer el pago y recibir su producto.");
-            alert.show();
-        }
-
         try {
             String facturaNo = "VTA-" + new SimpleDateFormat("yyyyMMdd-HHmmss").format(new Date());
             String cliente = cbCliente.getValue();
@@ -438,6 +430,8 @@ public class VentaController {
             }
 
             registrarVentaEnBD(cliente, metodo, tipoEntrega, totalVal);
+            descontarStock();
+            refrescarProductos();
 
         } catch (Exception e) {
             LoggerUtil.error("Error generando factura", e);
@@ -447,23 +441,55 @@ public class VentaController {
 
         listaVenta.clear();
         actualizarTotal();
+        limpiarCampos();
+        if (cbCliente != null) cbCliente.setValue(null);
+        if (rbTienda != null) rbTienda.setSelected(true);
+        if (txtDireccion != null) txtDireccion.clear();
+        if (txtApartamento != null) txtApartamento.clear();
+        if (txtSector != null) txtSector.clear();
+        if (txtCiudad != null) txtCiudad.clear();
+        if (cbRepartidor != null) cbRepartidor.setValue(null);
+        if (txtEfectivoRecibido != null) txtEfectivoRecibido.clear();
+        if (lblDevuelta != null) lblDevuelta.setText("Devuelta: RD$ 0.00");
+        if (comboMetodoPago != null) comboMetodoPago.setValue(null);
+        toggleEnvio();
         mostrarVentas();
     }
 
     private void guardarEnvio(String cliente, double total) {
-        String repartidor = cbRepartidor.getValue();
-        String direccion = txtDireccion.getText().trim();
-        String apartamento = txtApartamento.getText().trim();
-        String sql = "INSERT INTO tbl_envios (cliente, direccion, apartamento, repartidor, estatus, monto_total) VALUES (?, ?, ?, ?, 'Pendiente', ?)";
-        try (Connection con = ConnectionManager.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setString(1, cliente);
-            ps.setString(2, direccion);
-            ps.setString(3, apartamento.isEmpty() ? "S/N" : apartamento);
-            ps.setString(4, repartidor);
-            ps.setDouble(5, total);
-            ps.executeUpdate();
-            LoggerUtil.info("Envio registrado en cola de Distribucion para: " + cliente);
+        try (Connection con = ConnectionManager.getConnection()) {
+            // Crear la tabla si no existe
+            String createSql = "IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='tbl_envios' AND xtype='U') " +
+                "CREATE TABLE tbl_envios (" +
+                "id_envio INT IDENTITY(1,1) PRIMARY KEY, " +
+                "cliente NVARCHAR(200) NOT NULL, " +
+                "repartidor NVARCHAR(200), " +
+                "direccion NVARCHAR(500), " +
+                "estatus NVARCHAR(50) DEFAULT 'Pendiente', " +
+                "monto_total DECIMAL(18,2) DEFAULT 0, " +
+                "fecha_registro DATETIME DEFAULT GETDATE())";
+            try (Statement st = con.createStatement()) {
+                st.executeUpdate(createSql);
+            }
+
+            String repartidor = (cbRepartidor != null && cbRepartidor.getValue() != null) ? cbRepartidor.getValue() : "";
+            // Construir dirección completa
+            StringBuilder sb = new StringBuilder();
+            if (txtDireccion  != null && !txtDireccion.getText().trim().isEmpty())  sb.append(txtDireccion.getText().trim());
+            if (txtApartamento != null && !txtApartamento.getText().trim().isEmpty()) sb.append(", Apto: ").append(txtApartamento.getText().trim());
+            if (txtSector != null && !txtSector.getText().trim().isEmpty())          sb.append(", ").append(txtSector.getText().trim());
+            if (txtCiudad != null && !txtCiudad.getText().trim().isEmpty())          sb.append(", ").append(txtCiudad.getText().trim());
+            String direccion = sb.toString();
+
+            String sql = "INSERT INTO tbl_envios (cliente, repartidor, direccion, estatus, monto_total) VALUES (?, ?, ?, 'Pendiente', ?)";
+            try (PreparedStatement ps = con.prepareStatement(sql)) {
+                ps.setString(1, cliente);
+                ps.setString(2, repartidor);
+                ps.setString(3, direccion);
+                ps.setDouble(4, total);
+                ps.executeUpdate();
+                LoggerUtil.info("Envio registrado en cola de Distribucion para: " + cliente);
+            }
         } catch (SQLException e) {
             LoggerUtil.error("Error registrando envio", e);
             AlertManager.showError("Error de Envio", "Venta procesada pero no se pudo registrar el envio.\n" + e.getMessage());
@@ -491,6 +517,39 @@ public class VentaController {
             } catch (SQLException e2) {
                 LoggerUtil.warning("No se pudo registrar venta en BD: " + e2.getMessage());
             }
+        }
+    }
+
+    private void descontarStock() {
+        for (ItemQueso item : listaVenta) {
+            String sql = "UPDATE Productos SET stock_actual = stock_actual - ? WHERE nombre_producto = ? AND stock_actual >= ?";
+            try (Connection con = ConnectionManager.getConnection();
+                 PreparedStatement ps = con.prepareStatement(sql)) {
+                ps.setDouble(1, item.getCantidad());
+                ps.setString(2, item.getDescripcion());
+                ps.setDouble(3, item.getCantidad());
+                int filas = ps.executeUpdate();
+                if (filas == 0) {
+                    String sql2 = "UPDATE tbl_inventario_productos SET cantidad_stock = cantidad_stock - ? WHERE nombre_producto = ? AND cantidad_stock >= ?";
+                    try (PreparedStatement ps2 = con.prepareStatement(sql2)) {
+                        ps2.setDouble(1, item.getCantidad());
+                        ps2.setString(2, item.getDescripcion());
+                        ps2.setDouble(3, item.getCantidad());
+                        ps2.executeUpdate();
+                    }
+                }
+            } catch (SQLException e) {
+                LoggerUtil.warning("No se pudo descontar stock de " + item.getDescripcion() + ": " + e.getMessage());
+            }
+        }
+    }
+
+    private void refrescarProductos() {
+        if (productGrid == null) return;
+        try (Connection con = ConnectionManager.getConnection()) {
+            cargarProductos(con);
+        } catch (SQLException e) {
+            cargarProductosDesdeDB();
         }
     }
 

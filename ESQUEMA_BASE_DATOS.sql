@@ -210,6 +210,16 @@ CREATE TABLE Movimientos_Inventario (
     FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario)
 );
 
+-- Tabla de Salidas/Bajas/Mermas de Inventario
+CREATE TABLE tbl_salidas_inventario (
+    id_salida INT PRIMARY KEY IDENTITY(1,1),
+    producto VARCHAR(255) NOT NULL,
+    cantidad DECIMAL(18,2) NOT NULL,
+    unidad VARCHAR(50),
+    justificacion VARCHAR(500) NOT NULL,
+    fecha_salida DATETIME DEFAULT GETDATE()
+);
+
 -- Tabla de Ajustes de Inventario
 CREATE TABLE Ajustes_Inventario (
     id_ajuste INT PRIMARY KEY IDENTITY(1,1),

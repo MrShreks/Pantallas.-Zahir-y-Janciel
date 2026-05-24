@@ -262,6 +262,12 @@ TableView { -fx-background-color: white; -fx-background-radius: 16; -fx-effect: 
     -fx-font-weight: 700;
 }
 
+RadioButton {
+    -fx-text-fill: #1e293b;
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+}
+
 /* === TABLA HEADERS === */
 .table-view .column-header {
     -fx-background-color: linear-gradient(to bottom, #f1f5f9, #e2e8f0);

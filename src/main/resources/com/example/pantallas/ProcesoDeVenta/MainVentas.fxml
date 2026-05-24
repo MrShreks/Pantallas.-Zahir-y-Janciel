@@ -54,61 +54,67 @@
                             </VBox>
 
                             <!-- DERECHA: Carrito + Checkout -->
-                            <VBox prefWidth="420.0" spacing="12">
+                            <VBox prefWidth="420.0" spacing="10">
                                 <Label styleClass="title-medium" text="Carrito de Compra" />
+                                <ScrollPane fitToWidth="true" style="-fx-background: transparent; -fx-background-color: transparent;" VBox.vgrow="ALWAYS">
+                                    <VBox spacing="10" style="-fx-padding: 0 2 2 2;">
+                                        <!-- Configuración del item -->
+                                        <VBox spacing="8" styleClass="card" style="-fx-padding: 12;">
+                                            <Label fx:id="lblProductoSeleccionado" style="-fx-font-weight: 700; -fx-font-size: 14; -fx-text-fill: -primary;" text="Seleccione un producto..." />
+                                            <HBox alignment="CENTER_LEFT" spacing="8">
+                                                <TextField fx:id="txtCantidad" onKeyReleased="#calcularItem" prefWidth="80" promptText="Cantidad" />
+                                                <ComboBox fx:id="cbUnidadMedida" prefWidth="130" promptText="Unidad..." />
+                                                <Label styleClass="label-muted" text="Precio:" />
+                                                <TextField fx:id="txtPrecioUnitario" onKeyReleased="#calcularItem" prefWidth="80" promptText="RD$" style="-fx-text-fill: -success; -fx-font-weight: bold;" />
+                                            </HBox>
+                                            <HBox alignment="CENTER_RIGHT" spacing="8">
+                                                <Label styleClass="label-muted" text="Importe:" />
+                                                <TextField fx:id="txtImporteTotal" editable="false" prefWidth="100" style="-fx-background-color: #f1f5f9; -fx-font-weight: 800;" text="0.00" />
+                                                <Button onAction="#añadirItem" prefWidth="140" styleClass="btn-primary" text="AGREGAR" />
+                                            </HBox>
+                                        </VBox>
 
-                                <!-- Configuración del item -->
-                                <VBox spacing="8" styleClass="card" style="-fx-padding: 15;">
-                                    <Label fx:id="lblProductoSeleccionado" style="-fx-font-weight: 700; -fx-font-size: 14; -fx-text-fill: -primary;" text="Seleccione un producto..." />
-                                    <HBox alignment="CENTER_LEFT" spacing="10">
-                                        <TextField fx:id="txtCantidad" onKeyReleased="#calcularItem" prefWidth="100" promptText="Cantidad" />
-                                        <ComboBox fx:id="cbUnidadMedida" prefWidth="140" promptText="Unidad..." />
-                                        <Label styleClass="label-muted" text="Precio:" />
-                                        <TextField fx:id="txtPrecioUnitario" onKeyReleased="#calcularItem" prefWidth="100" promptText="RD$" style="-fx-text-fill: -success; -fx-font-weight: bold;" />
-                                    </HBox>
-                                    <HBox alignment="CENTER_RIGHT" spacing="10">
-                                        <Label styleClass="label-muted" text="Importe:" />
-                                        <TextField fx:id="txtImporteTotal" editable="false" prefWidth="120" style="-fx-background-color: #f1f5f9; -fx-font-weight: 800;" text="0.00" />
-                                        <Button onAction="#añadirItem" prefWidth="160" styleClass="btn-primary" text="AGREGAR AL CARRITO" />
-                                    </HBox>
-                                </VBox>
+                                        <!-- Tabla del carrito -->
+                                        <TableView fx:id="tablaVentas" prefHeight="160.0">
+                                            <columns>
+                                                <TableColumn fx:id="colDesc" prefWidth="130" text="Producto" />
+                                                <TableColumn fx:id="colLbs" prefWidth="60" text="Cant." />
+                                                <TableColumn fx:id="colUnidad" prefWidth="60" text="Unidad" />
+                                                <TableColumn fx:id="colPre" prefWidth="70" text="Precio U." />
+                                                <TableColumn fx:id="colSub" prefWidth="70" text="Subtotal" />
+                                            </columns>
+                                        </TableView>
+                                        <Button onAction="#borrarItem" styleClass="btn-danger" style="-fx-background-color: transparent; -fx-text-fill: -danger; -fx-alignment: center-left; -fx-padding: 6 12;" text="🗑 Quitar seleccionado" />
 
-                                <!-- Tabla del carrito -->
-                                <TableView fx:id="tablaVentas" prefHeight="200.0">
-                                    <columns>
-                                        <TableColumn fx:id="colDesc" prefWidth="150" text="Producto" />
-                                        <TableColumn fx:id="colLbs" prefWidth="70" text="Cantidad" />
-                                        <TableColumn fx:id="colUnidad" prefWidth="70" text="Unidad" />
-                                        <TableColumn fx:id="colPre" prefWidth="80" text="Precio U." />
-                                        <TableColumn fx:id="colSub" prefWidth="80" text="Subtotal" />
-                                    </columns>
-                                </TableView>
-                                <Button onAction="#borrarItem" styleClass="btn-danger" style="-fx-background-color: transparent; -fx-text-fill: -danger; -fx-alignment: center-left;" text="🗑 Quitar seleccionado" />
+                                        <!-- Opciones de entrega -->
+                                        <VBox spacing="8" styleClass="card" style="-fx-padding: 12;">
+                                            <Label style="-fx-font-weight: 700; -fx-font-size: 13;" text="Tipo de entrega" />
+                                            <HBox spacing="15">
+                                                <RadioButton fx:id="rbTienda" selected="true" text="En tienda (Caja)" toggleGroup="$tgEntrega" />
+                                                <RadioButton fx:id="rbEnvio" text="A domicilio" toggleGroup="$tgEntrega" />
+                                            </HBox>
+                                            <VBox fx:id="panelEnvio" disable="true" managed="false" spacing="8" visible="false">
+                                                <ComboBox fx:id="cbRepartidor" maxWidth="Infinity" prefHeight="36" promptText="Seleccionar repartidor..." />
+                                                <Label style="-fx-font-size: 11; -fx-font-weight: 700; -fx-text-fill: #64748b;" text="📍 DIRECCIÓN DE ENTREGA" />
+                                                <TextField fx:id="txtDireccion" prefHeight="36" promptText="Calle / Residencial / Casa No." />
+                                                <HBox spacing="8">
+                                                    <TextField fx:id="txtApartamento" prefHeight="36" promptText="Apto / Ref. interior" HBox.hgrow="ALWAYS" />
+                                                    <TextField fx:id="txtSector" prefHeight="36" promptText="Sector / Barrio" HBox.hgrow="ALWAYS" />
+                                                </HBox>
+                                                <TextField fx:id="txtCiudad" prefHeight="36" promptText="Ciudad / Municipio (ej: Santiago)" />
+                                            </VBox>
+                                        </VBox>
 
-                                <Separator />
-
-                                <!-- Opciones de entrega -->
-                                <VBox spacing="8" styleClass="card" style="-fx-padding: 15;">
-                                    <Label style="-fx-font-weight: 700; -fx-font-size: 13;" text="Tipo de entrega" />
-                                    <HBox spacing="20">
-                                        <RadioButton fx:id="rbTienda" selected="true" text="Entrega en tienda (Caja)" toggleGroup="$tgEntrega" />
-                                        <RadioButton fx:id="rbEnvio" text="Envío a domicilio" toggleGroup="$tgEntrega" />
-                                    </HBox>
-                                    <VBox fx:id="panelEnvio" disable="true" managed="false" spacing="8" visible="false">
-                                        <ComboBox fx:id="cbRepartidor" maxWidth="Infinity" prefHeight="40" promptText="Seleccionar repartidor..." />
-                                        <TextField fx:id="txtDireccion" prefHeight="40" promptText="Calle / Residencial / Casa" />
-                                        <TextField fx:id="txtApartamento" prefHeight="40" promptText="Número de apartamento / interior" />
+                                        <!-- Total y pago -->
+                                        <HBox alignment="CENTER_RIGHT" spacing="12">
+                                            <VBox alignment="CENTER_RIGHT">
+                                                <Label styleClass="label-muted" text="TOTAL A PAGAR" />
+                                                <Label fx:id="lblTotal" style="-fx-font-size: 30; -fx-font-weight: 900; -fx-text-fill: -success;" text="RD$ 0.00" />
+                                            </VBox>
+                                            <Button onAction="#mostrarCobro" prefHeight="55.0" prefWidth="200.0" styleClass="btn-accent" style="-fx-font-size: 15;" text="PROCESAR PAGO" />
+                                        </HBox>
                                     </VBox>
-                                </VBox>
-
-                                <!-- Total y pago -->
-                                <HBox alignment="CENTER_RIGHT" spacing="15">
-                                    <VBox alignment="CENTER_RIGHT">
-                                        <Label styleClass="label-muted" text="TOTAL A PAGAR" />
-                                        <Label fx:id="lblTotal" style="-fx-font-size: 36; -fx-font-weight: 900; -fx-text-fill: -success;" text="RD$ 0.00" />
-                                    </VBox>
-                                    <Button onAction="#mostrarCobro" prefHeight="60.0" prefWidth="240.0" styleClass="btn-accent" style="-fx-font-size: 16;" text="PROCESAR PAGO" />
-                                </HBox>
+                                </ScrollPane>
                             </VBox>
                         </HBox>
                     </children>
