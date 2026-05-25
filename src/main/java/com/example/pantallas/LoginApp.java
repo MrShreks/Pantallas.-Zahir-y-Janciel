@@ -3,6 +3,7 @@ package com.example.pantallas;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import java.net.URL;
 import com.example.pantallas.utils.LoggerUtil;
@@ -23,6 +24,11 @@ public class LoginApp extends Application {
             Scene scene = new Scene(fxmlLoader.load(), 850, 550);
 
             stage.setTitle("Inicio de Sesión - Fábrica de Queso");
+            try {
+                stage.getIcons().add(new Image(getClass().getResourceAsStream("/imagenes quesos/LogoQueso.png")));
+            } catch (Exception e) {
+                LoggerUtil.warning("No se pudo cargar el icono de la aplicación");
+            }
             stage.setScene(scene);
             stage.setResizable(true);
             stage.show();

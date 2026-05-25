@@ -21,12 +21,7 @@ public class MenuPrincipalController {
 
     @FXML private Label lblUsuario;
     @FXML private Label lblRol;
-    @FXML private Button btnCompras;
-    @FXML private Button btnVentas;
-    @FXML private Button btnInventario;
-    @FXML private Button btnProduccion;
-    @FXML private Button btnDistribucion;
-    @FXML private Button btnMantenimiento;
+    @FXML private Button btnCompras, btnVentas, btnInventario, btnProduccion, btnDistribucion, btnMantenimiento, btnDashboard;
 
     private static final Map<String, List<String>> ROL_MODULOS = new HashMap<>();
 
@@ -34,12 +29,13 @@ public class MenuPrincipalController {
         ROL_MODULOS.put("ADMINISTRADOR", Arrays.asList("COMPRAS", "VENTAS", "INVENTARIO", "PRODUCCION", "DISTRIBUCION", "MANTENIMIENTO"));
         ROL_MODULOS.put("ADMIN", Arrays.asList("COMPRAS", "VENTAS", "INVENTARIO", "PRODUCCION", "DISTRIBUCION", "MANTENIMIENTO"));
         ROL_MODULOS.put("GERENTE", Arrays.asList("COMPRAS", "VENTAS", "INVENTARIO", "PRODUCCION", "DISTRIBUCION", "MANTENIMIENTO"));
-        ROL_MODULOS.put("PRODUCCION", Arrays.asList("PRODUCCION", "INVENTARIO"));
-        ROL_MODULOS.put("VENTAS", Arrays.asList("VENTAS", "DISTRIBUCION"));
+        ROL_MODULOS.put("PRODUCCION", Arrays.asList("PRODUCCION"));
+        ROL_MODULOS.put("VENTAS", Arrays.asList("VENTAS"));
         ROL_MODULOS.put("COMPRAS", Arrays.asList("COMPRAS"));
         ROL_MODULOS.put("INVENTARIO", Arrays.asList("INVENTARIO"));
         ROL_MODULOS.put("MANTENIMIENTO", Arrays.asList("MANTENIMIENTO"));
-        ROL_MODULOS.put("DISTRIBUCION", Arrays.asList("DISTRIBUCION", "VENTAS"));
+        ROL_MODULOS.put("DISTRIBUCION", Arrays.asList("DISTRIBUCION"));
+        ROL_MODULOS.put("REPARTIDOR", Arrays.asList("DISTRIBUCION"));
         ROL_MODULOS.put("USUARIO", Arrays.asList("VENTAS", "INVENTARIO"));
     }
 
@@ -74,6 +70,12 @@ public class MenuPrincipalController {
             boolean permitido = modulosPermitidos.contains(entry.getKey());
             entry.getValue().setVisible(permitido);
             entry.getValue().setManaged(permitido);
+        }
+
+        boolean puedeVerDashboard = "ADMINISTRADOR".equals(rol) || "ADMIN".equals(rol) || "GERENTE".equals(rol) || "INVENTARIO".equals(rol);
+        if (btnDashboard != null) {
+            btnDashboard.setVisible(puedeVerDashboard);
+            btnDashboard.setManaged(puedeVerDashboard);
         }
     }
 

@@ -18,6 +18,7 @@
                 <VBox spacing="10" style="-fx-padding: 0 20;">
                     <Button fx:id="btnNavPendientes" maxWidth="Infinity" onAction="#mostrarPendientes" styleClass="nav-item-active" text="1. Mis Envíos Pendientes" />
                     <Button fx:id="btnNavEntrega" maxWidth="Infinity" onAction="#mostrarEntrega" styleClass="nav-item" text="2. Confirmar Entrega" />
+                    <Button fx:id="btnNavHistorial" maxWidth="Infinity" onAction="#mostrarHistorial" styleClass="nav-item" text="3. Historial de Entregas" />
                 </VBox>
 
                 <Region VBox.vgrow="ALWAYS" />
@@ -119,6 +120,24 @@
                             </children>
                         </VBox>
                     </children>
+                </VBox>
+
+                <!-- PANEL: HISTORIAL DE ENTREGAS -->
+                <VBox fx:id="paneHistorial" managed="false" spacing="20.0" visible="false" style="-fx-padding: 30;">
+                    <Label styleClass="title-large" text="Pedidos a Domicilio (Historial)" />
+                    <VBox spacing="10" styleClass="card-premium" VBox.vgrow="ALWAYS">
+                        <TableView fx:id="tablaHistorial" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="colHistId" prefWidth="60" text="ID" />
+                                <TableColumn fx:id="colHistCliente" prefWidth="200" text="Cliente" />
+                                <TableColumn fx:id="colHistFecha" prefWidth="150" text="Fecha" />
+                                <TableColumn fx:id="colHistTotal" prefWidth="130" text="Total" />
+                                <TableColumn fx:id="colHistMetodo" prefWidth="150" text="Método de Pago" />
+                                <TableColumn fx:id="colHistTipo" prefWidth="150" text="Tipo Entrega" />
+                            </columns>
+                        </TableView>
+                        <Button onAction="#generarReporteDomicilio" maxWidth="Infinity" prefHeight="45" styleClass="btn-primary" text="📄 GENERAR REPORTE DE VENTAS A DOMICILIO" />
+                    </VBox>
                 </VBox>
 
             </children>

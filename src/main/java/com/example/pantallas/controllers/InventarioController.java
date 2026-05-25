@@ -553,15 +553,10 @@ public class InventarioController {
     @FXML
     private void volverAlMenu() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/pantallas/MenuPrincipal/MenuPrincipal.fxml"));
-            Parent root = loader.load();
+            Parent root = FXMLLoader.load(getClass().getResource("/com/example/pantallas/MenuPrincipal/MenuPrincipal.fxml"));
             Stage stage = (Stage) contentArea.getScene().getWindow();
-            boolean wasMaximized = stage.isMaximized();
-            stage.setScene(new Scene(root));
+            stage.getScene().setRoot(root);
             stage.setResizable(true);
-            stage.setMaximized(wasMaximized);
-            if (!wasMaximized) stage.centerOnScreen();
-            stage.show();
         } catch (Exception e) {
             com.example.pantallas.utils.LoggerUtil.error("Excepción detectada", e);
             mostrarAlerta("Error de Navegación", "No se pudo cargar el Menú Principal.");

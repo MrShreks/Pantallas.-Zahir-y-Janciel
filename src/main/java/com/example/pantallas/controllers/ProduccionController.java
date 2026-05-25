@@ -22,7 +22,7 @@ public class ProduccionController {
 
     @FXML private VBox paneProduccion, paneCalidad, paneInventario, paneSeguimiento;
     @FXML private Node contentArea;
-    @FXML private ComboBox<String> cbResultadoCalidad, cbCambiarEstado, cbTipoQueso, cbLotesTerminados;
+    @FXML private ComboBox<String> cbResultadoCalidad, cbCambiarEstado, cbTipoQueso, cbLotesTerminados, cbUnidadMedida;
     @FXML private TextField txtCantidadProyectada, txtLoteId;
     @FXML private TextArea txtObservaciones;
     @FXML private CheckBox chkTextura, chkSabor, chkHumedad, chkColor;
@@ -48,6 +48,9 @@ public class ProduccionController {
         cbResultadoCalidad.setItems(FXCollections.observableArrayList("Aprobado", "Rechazado"));
         cbCambiarEstado.setItems(FXCollections.observableArrayList("En Producción", "Completado"));
         cargarTiposQueso();
+
+        cbUnidadMedida.setItems(FXCollections.observableArrayList("Libras (Lbs)", "Kilos (Kg)", "Unidades", "Paquetes"));
+        cbUnidadMedida.setValue("Libras (Lbs)");
 
         cbTipoQueso.valueProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) cargarReceta(newVal);
@@ -282,7 +285,7 @@ public class ProduccionController {
             if (rs.next()) return rs.getDouble("cantidad_stock") >= cantidadRequerida;
         } catch (Exception e) { }
 
-        return true;
+        return false;
     }
 
     private void descontarMaterialesStock(String tipoQueso, double cantidadProyectada) {
@@ -519,15 +522,10 @@ public class ProduccionController {
     @FXML
     private void irAMenuPrincipal() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/pantallas/MenuPrincipal/MenuPrincipal.fxml"));
-            Parent root = loader.load();
+            Parent root = FXMLLoader.load(getClass().getResource("/com/example/pantallas/MenuPrincipal/MenuPrincipal.fxml"));
             Stage stage = (Stage) contentArea.getScene().getWindow();
-            boolean wasMaximized = stage.isMaximized();
-            stage.setScene(new Scene(root));
+            stage.getScene().setRoot(root);
             stage.setResizable(true);
-            stage.setMaximized(wasMaximized);
-            if (!wasMaximized) stage.centerOnScreen();
-            stage.show();
         } catch (Exception e) {
             com.example.pantallas.utils.LoggerUtil.error("Excepción detectada", e);
             mostrarAlerta("Error de Navegación", "No se pudo cargar el Menú Principal.");

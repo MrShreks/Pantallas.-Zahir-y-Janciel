@@ -45,26 +45,33 @@ public class UsuarioRepository {
     }
 
     public void seedUsuariosIniciales() {
-        String sqlCount = "SELECT COUNT(*) FROM tbl_usuarios";
+        String[][] iniciales = {
+            {"admin", "1234", "Administrador", "ADMINISTRADOR"},
+            {"emil", "1234", "Emil Gomez Gomez", "VENTAS"},
+            {"repartidor1", "1234", "Carlos Reyes", "REPARTIDOR"},
+            {"repartidor2", "1234", "Luis Jimenez", "REPARTIDOR"},
+            {"bodega", "1234", "Ana Polanco", "INVENTARIO"},
+            {"compras", "1234", "Pedro Suarez", "COMPRAS"},
+            {"produccion", "1234", "Maria Diaz", "PRODUCCION"},
+            {"mantenimiento", "1234", "Jose Rodriguez", "MANTENIMIENTO"},
+            {"distribucion", "1234", "Distribucion General", "DISTRIBUCION"}
+        };
+        String sqlCheck = "SELECT COUNT(*) FROM tbl_usuarios WHERE usuario = ?";
+        String sqlInsert = "INSERT INTO tbl_usuarios (usuario, clave, nombre_completo, rol) VALUES (?, ?, ?, ?)";
         try (Connection con = ConnectionManager.getConnection();
-             Statement st = con.createStatement();
-             ResultSet rs = st.executeQuery(sqlCount)) {
-            if (rs.next() && rs.getInt(1) == 0) {
-                String[][] iniciales = {
-                    {"admin", "admin123", "Administrador", "ADMINISTRADOR"},
-                    {"emil", "emil123", "Emil Gomez Gomez", "VENTAS"}
-                };
-                String sql = "INSERT INTO tbl_usuarios (usuario, clave, nombre_completo, rol) VALUES (?, ?, ?, ?)";
-                try (PreparedStatement ps = con.prepareStatement(sql)) {
-                    for (String[] u : iniciales) {
-                        ps.setString(1, u[0]);
-                        ps.setString(2, PasswordUtil.hashPassword(u[1]));
-                        ps.setString(3, u[2]);
-                        ps.setString(4, u[3]);
-                        ps.addBatch();
+             PreparedStatement psCheck = con.prepareStatement(sqlCheck);
+             PreparedStatement psInsert = con.prepareStatement(sqlInsert)) {
+            for (String[] u : iniciales) {
+                psCheck.setString(1, u[0]);
+                try (ResultSet rs = psCheck.executeQuery()) {
+                    if (rs.next() && rs.getInt(1) == 0) {
+                        psInsert.setString(1, u[0]);
+                        psInsert.setString(2, PasswordUtil.hashPassword(u[1]));
+                        psInsert.setString(3, u[2]);
+                        psInsert.setString(4, u[3]);
+                        psInsert.executeUpdate();
+                        LoggerUtil.info("Usuario creado: " + u[0] + " (" + u[3] + ")");
                     }
-                    ps.executeBatch();
-                    LoggerUtil.info("Usuarios iniciales creados: admin (ADMINISTRADOR), emil (COMPRAS)");
                 }
             }
         } catch (Exception e) {

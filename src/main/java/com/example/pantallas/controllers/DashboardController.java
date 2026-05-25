@@ -276,10 +276,8 @@ public class DashboardController implements Initializable {
             ObservableList<String> items = FXCollections.observableArrayList();
             for (Map<String, String> a : alertas) {
                 String sev = a.get("severidad");
-                String emoji = "CRITICA".equals(sev) ? "\u26A0\uFE0F" :
-                               "ALTA".equals(sev) ? "\u26A0" : "\u2139\uFE0F";
-                items.add(String.format("%s [%s] %s — Stock: %s %s (Mín: %s)",
-                    emoji, sev, a.get("producto"), a.get("stock"), a.get("unidad"), a.get("minimo")));
+                items.add(String.format("[%s] %s — Stock: %s %s (Mín: %s)",
+                    sev, a.get("producto"), a.get("stock"), a.get("unidad"), a.get("minimo")));
             }
 
             if (items.isEmpty()) items.add("No hay productos con stock bajo");
@@ -305,15 +303,10 @@ public class DashboardController implements Initializable {
     @FXML
     private void irAMenuPrincipal() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/pantallas/MenuPrincipal/MenuPrincipal.fxml"));
-            Parent root = loader.load();
+            Parent root = FXMLLoader.load(getClass().getResource("/com/example/pantallas/MenuPrincipal/MenuPrincipal.fxml"));
             Stage stage = (Stage) tablaMovimientos.getScene().getWindow();
-            boolean wasMaximized = stage.isMaximized();
-            stage.setScene(new Scene(root));
+            stage.getScene().setRoot(root);
             stage.setResizable(true);
-            stage.setMaximized(wasMaximized);
-            if (!wasMaximized) stage.centerOnScreen();
-            stage.show();
         } catch (Exception e) {
             LoggerUtil.error("Error al regresar al menú principal", e);
         }

@@ -99,7 +99,7 @@ public class CompraController {
 
         Map<String, ProductoInfo> insumos = new HashMap<>();
         insumos.put("Sal Industrial", new ProductoInfo(45.00, "Kilos"));
-        insumos.put("Cuajo Liquido", new ProductoInfo(2500.00, "Litros"));
+        insumos.put("Cuajo Líquido", new ProductoInfo(2500.00, "Litros"));
         insumos.put("Cuajo en Polvo", new ProductoInfo(3200.00, "Paquetes"));
         insumos.put("Fundas para Queso", new ProductoInfo(120.00, "Paquetes"));
         insumos.put("Colorante Alimenticio", new ProductoInfo(850.00, "Unidades"));
@@ -125,6 +125,8 @@ public class CompraController {
     public void initialize() {
         FabricaBase.asegurarEsquemaProveedores();
         asegurarTablaOrdenesCompra();
+        asegurarTablaInventarioProductos();
+        migrarNombresProductos();
         asegurarProveedoresIniciales();
         asegurarTablaProductos();
         asegurarTablaHistorialCalidad();
@@ -470,15 +472,10 @@ public class CompraController {
 
     @FXML private void irAMenuPrincipal() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/pantallas/MenuPrincipal/MenuPrincipal.fxml"));
-            Parent root = loader.load();
+            Parent root = FXMLLoader.load(getClass().getResource("/com/example/pantallas/MenuPrincipal/MenuPrincipal.fxml"));
             Stage stage = (Stage) paneNuevaOrden.getScene().getWindow();
-            boolean wasMaximized = stage.isMaximized();
-            stage.setScene(new Scene(root));
+            stage.getScene().setRoot(root);
             stage.setResizable(true);
-            stage.setMaximized(wasMaximized);
-            if (!wasMaximized) stage.centerOnScreen();
-            stage.show();
         } catch (Exception e) {
             com.example.pantallas.utils.LoggerUtil.error("Excepcion detectada", e);
             mostrarAlerta("Error de Navegacion", "No se pudo cargar el Menu Principal.");
@@ -645,22 +642,170 @@ public class CompraController {
     }
 
     private void guardarMovimientoInventario(int idOrden, double cantidadRecibida, String unidad) {
+        asegurarTablaMovimientosInventario();
         String sqlSelect = "SELECT insumo FROM tbl_ordenes_compra WHERE id_orden = ?";
-        String sqlInsert = "INSERT INTO tbl_movimientos_inventario (producto, tipo, cantidad, unidad, fecha_movimiento) VALUES (?, 'ENTRADA', ?, ?, GETDATE())";
         try (Connection con = com.example.pantallas.config.ConnectionManager.getConnection();
              PreparedStatement psSel = con.prepareStatement(sqlSelect)) {
             psSel.setInt(1, idOrden);
             ResultSet rs = psSel.executeQuery();
             if (rs.next()) {
                 String insumo = rs.getString("insumo");
-                try (PreparedStatement psIns = con.prepareStatement(sqlInsert)) {
+                String nombreProducto = insumo;
+                int idx = insumo.lastIndexOf(" (");
+                if (idx > 0) nombreProducto = insumo.substring(0, idx);
+
+                // Stock update runs FIRST (critical path), logs separately on failure
+                actualizarStockEntrada(nombreProducto, cantidadRecibida, unidad.isEmpty() ? "Unidades" : unidad);
+
+                // Then try to register the movement (non-critical)
+                try (PreparedStatement psIns = con.prepareStatement(
+                    "INSERT INTO tbl_movimientos_inventario (producto, tipo, cantidad, unidad, fecha_movimiento) VALUES (?, 'ENTRADA', ?, ?, GETDATE())")) {
                     psIns.setString(1, insumo);
                     psIns.setDouble(2, cantidadRecibida);
                     psIns.setString(3, unidad.isEmpty() ? "Unidades" : unidad);
                     psIns.executeUpdate();
+                } catch (Exception e) {
+                    com.example.pantallas.utils.LoggerUtil.error("No se pudo registrar el movimiento de inventario", e);
                 }
             }
-        } catch (Exception e) { com.example.pantallas.utils.LoggerUtil.error("Excepcion detectada", e); }
+        } catch (Exception e) {
+            com.example.pantallas.utils.LoggerUtil.error("Error en guardarMovimientoInventario", e);
+            mostrarAlerta("Error", "No se pudo procesar el ingreso al inventario:\n" + e.getMessage());
+        }
+    }
+
+    private void asegurarTablaMovimientosInventario() {
+        String sql = "IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='tbl_movimientos_inventario' AND xtype='U') "
+                + "CREATE TABLE tbl_movimientos_inventario ("
+                + "id_movimiento INT IDENTITY PRIMARY KEY, "
+                + "producto VARCHAR(255) NOT NULL, "
+                + "tipo VARCHAR(20) NOT NULL, "
+                + "cantidad DECIMAL(18,2) NOT NULL, "
+                + "unidad VARCHAR(50), "
+                + "fecha_movimiento DATETIME DEFAULT GETDATE(), "
+                + "justificacion VARCHAR(500))";
+        try (Connection con = com.example.pantallas.config.ConnectionManager.getConnection();
+             Statement st = con.createStatement()) {
+            st.execute(sql);
+        } catch (Exception e) {
+            com.example.pantallas.utils.LoggerUtil.error("Error creando tbl_movimientos_inventario", e);
+        }
+    }
+
+    private void actualizarStockEntrada(String producto, double cantidad, String unidad) {
+        asegurarTablaInventarioProductos();
+
+        // UPSERT en Productos (tabla maestra de catálogo)
+        String sqlProd = "MERGE INTO Productos AS target "
+                + "USING (SELECT ? AS nombre) AS source ON target.nombre_producto = source.nombre "
+                + "WHEN MATCHED THEN "
+                + "    UPDATE SET stock_actual = COALESCE(target.stock_actual, 0) + ? "
+                + "WHEN NOT MATCHED THEN "
+                + "    INSERT (codigo_producto, nombre_producto, descripcion, categoria, unidad_medida, stock_actual, stock_minimo, precio_venta_base, activo) "
+                + "    VALUES (?, ?, '', 'Insumos', ?, ?, 0, 1, 1);";
+        try (Connection con = com.example.pantallas.config.ConnectionManager.getConnection();
+             PreparedStatement ps = con.prepareStatement(sqlProd)) {
+            String codigo = "MAT" + String.format("%05d", Math.abs(producto.hashCode() % 100000));
+            ps.setString(1, producto);
+            ps.setDouble(2, cantidad);
+            ps.setString(3, codigo);
+            ps.setString(4, producto);
+            ps.setString(5, unidad);
+            ps.setDouble(6, cantidad);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            com.example.pantallas.utils.LoggerUtil.error("Error al actualizar Productos", e);
+            mostrarAlerta("Error de Stock", "No se pudo actualizar el stock en Productos:\n" + e.getMessage());
+        }
+
+        // UPSERT en tbl_inventario_productos (para inventario)
+        String sqlInv = "MERGE INTO tbl_inventario_productos AS target "
+                + "USING (SELECT ? AS nombre) AS source ON target.nombre_producto = source.nombre "
+                + "WHEN MATCHED THEN "
+                + "    UPDATE SET cantidad_stock = COALESCE(CAST(cantidad_stock AS DECIMAL(18,2)), 0) + ? "
+                + "WHEN NOT MATCHED THEN "
+                + "    INSERT (lote_id, nombre_producto, cantidad_stock, unidad_medida, categoria, fecha_entrada) "
+                + "    VALUES (?, ?, ?, ?, ?, GETDATE());";
+        try (Connection con = com.example.pantallas.config.ConnectionManager.getConnection();
+             PreparedStatement ps = con.prepareStatement(sqlInv)) {
+            String loteId = "CMP" + String.format("%05d", Math.abs(producto.hashCode() % 100000));
+            ps.setString(1, producto);
+            ps.setDouble(2, cantidad);
+            ps.setString(3, loteId);
+            ps.setString(4, producto);  // nombre_producto
+            ps.setDouble(5, cantidad);  // cantidad_stock
+            ps.setString(6, unidad);    // unidad_medida
+            ps.setString(7, "Insumos"); // categoria
+            ps.executeUpdate();
+        } catch (Exception e) {
+            com.example.pantallas.utils.LoggerUtil.error("Error al actualizar tbl_inventario_productos", e);
+            mostrarAlerta("Error de Stock", "No se pudo actualizar el inventario:\n" + e.getMessage());
+        }
+    }
+
+    private void migrarNombresProductos() {
+        String[][] pares = {{"Cuajo Liquido", "Cuajo Líquido"}};
+        for (String[] p : pares) {
+            for (String tabla : new String[]{"Productos", "tbl_inventario_productos"}) {
+                try (Connection con = com.example.pantallas.config.ConnectionManager.getConnection();
+                     PreparedStatement ps = con.prepareStatement(
+                         "UPDATE " + tabla + " SET nombre_producto = ? WHERE nombre_producto = ?")) {
+                    ps.setString(1, p[1]);
+                    ps.setString(2, p[0]);
+                    ps.executeUpdate();
+                } catch (Exception ignored) { }
+            }
+            // Also fix old order records so receipt confirmation extracts the correct name
+            try (Connection con = com.example.pantallas.config.ConnectionManager.getConnection();
+                 PreparedStatement ps = con.prepareStatement(
+                     "UPDATE tbl_ordenes_compra SET insumo = REPLACE(insumo, ?, ?) WHERE insumo LIKE ?")) {
+                ps.setString(1, p[0]);
+                ps.setString(2, p[1]);
+                ps.setString(3, "%" + p[0] + "%");
+                ps.executeUpdate();
+            } catch (Exception ignored) { }
+        }
+    }
+
+    private void asegurarTablaInventarioProductos() {
+        String sql = "IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='tbl_inventario_productos' AND xtype='U') "
+                + "CREATE TABLE tbl_inventario_productos ("
+                + "id INT IDENTITY PRIMARY KEY, "
+                + "lote_id VARCHAR(50), "
+                + "nombre_producto VARCHAR(200), "
+                + "cantidad_stock DECIMAL(18,2) DEFAULT 0, "
+                + "cantidad_disponible DECIMAL(18,2) DEFAULT 0, "
+                + "unidad_medida VARCHAR(50), "
+                + "categoria VARCHAR(100), "
+                + "tipo_queso VARCHAR(200), "
+                + "ultimo_costo DECIMAL(18,2) DEFAULT 0, "
+                + "cantidad_minima DECIMAL(18,2) DEFAULT 0, "
+                + "fecha_entrada DATETIME DEFAULT GETDATE())";
+        try (Connection con = com.example.pantallas.config.ConnectionManager.getConnection();
+             Statement st = con.createStatement()) {
+            st.execute(sql);
+        } catch (Exception e) { }
+
+        // Add missing columns if table already existed with old schema
+        String[][] columnas = {
+            {"nombre_producto", "VARCHAR(200)"},
+            {"cantidad_stock", "DECIMAL(18,2) DEFAULT 0"},
+            {"cantidad_disponible", "DECIMAL(18,2) DEFAULT 0"},
+            {"unidad_medida", "VARCHAR(50)"},
+            {"categoria", "VARCHAR(100)"},
+            {"tipo_queso", "VARCHAR(200)"},
+            {"ultimo_costo", "DECIMAL(18,2) DEFAULT 0"},
+            {"cantidad_minima", "DECIMAL(18,2) DEFAULT 0"},
+            {"fecha_entrada", "DATETIME DEFAULT GETDATE()"}
+        };
+        try (Connection con = com.example.pantallas.config.ConnectionManager.getConnection();
+             Statement st = con.createStatement()) {
+            for (String[] col : columnas) {
+                try {
+                    st.executeUpdate("ALTER TABLE tbl_inventario_productos ADD " + col[0] + " " + col[1]);
+                } catch (Exception ignored) { }
+            }
+        } catch (Exception e) { }
     }
 
     @FXML private void actualizarEstadoMasivo() {
@@ -684,7 +829,13 @@ public class CompraController {
                 listaOrdenes.add(new OrdenCompra(rs.getInt("id_orden"), rs.getString("suplidor"),
                         rs.getString("insumo"), rs.getDouble("cantidad"), rs.getString("estado"), rs.getDouble("precio_unitario")));
             }
-            tablaOrdenesPendientes.setItems(listaOrdenes);
+            ObservableList<OrdenCompra> soloPendientes = FXCollections.observableArrayList();
+            for (OrdenCompra oc : listaOrdenes) {
+                if ("Pendiente".equals(oc.getEstado())) {
+                    soloPendientes.add(oc);
+                }
+            }
+            tablaOrdenesPendientes.setItems(soloPendientes);
             aplicarFiltroEstado();
         } catch (SQLException e) { com.example.pantallas.utils.LoggerUtil.error("Excepcion detectada", e); }
     }
@@ -693,6 +844,7 @@ public class CompraController {
         boolean mostrarPendiente = chkFiltrarPendiente.isSelected();
         boolean mostrarRecibido = chkFiltrarRecibido.isSelected();
         boolean mostrarCancelado = chkFiltrarCancelado.isSelected();
+
         ObservableList<OrdenCompra> filtradas = FXCollections.observableArrayList();
         for (OrdenCompra oc : listaOrdenes) {
             String est = oc.getEstado();
@@ -778,7 +930,7 @@ public class CompraController {
     }
 
     private void configurarTablas() {
-        // Tablas de ordenes
+        // Columnas para tablaHistorial (independientes)
         TableColumn<OrdenCompra, Integer> colId = new TableColumn<>("ID");
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));
         TableColumn<OrdenCompra, String> colSup = new TableColumn<>("Suplidor");
@@ -793,7 +945,18 @@ public class CompraController {
         colEst.setCellValueFactory(new PropertyValueFactory<>("estado"));
 
         tablaHistorial.getColumns().setAll(colId, colSup, colIns, colCant, colPre, colEst);
-        tablaOrdenesPendientes.getColumns().setAll(colId, colSup, colIns, colCant);
+
+        // Columnas independientes para tablaOrdenesPendientes (no compartir con tablaHistorial)
+        TableColumn<OrdenCompra, Integer> colId2 = new TableColumn<>("ID");
+        colId2.setCellValueFactory(new PropertyValueFactory<>("id"));
+        TableColumn<OrdenCompra, String> colSup2 = new TableColumn<>("Suplidor");
+        colSup2.setCellValueFactory(new PropertyValueFactory<>("suplidor"));
+        TableColumn<OrdenCompra, String> colIns2 = new TableColumn<>("Insumo");
+        colIns2.setCellValueFactory(new PropertyValueFactory<>("insumo"));
+        TableColumn<OrdenCompra, Double> colCant2 = new TableColumn<>("Cant.");
+        colCant2.setCellValueFactory(new PropertyValueFactory<>("cantidad"));
+
+        tablaOrdenesPendientes.getColumns().setAll(colId2, colSup2, colIns2, colCant2);
 
         // Tabla de historial de calidad
         TableColumn<ObservacionCalidad, Integer> colOcId = new TableColumn<>("ID");

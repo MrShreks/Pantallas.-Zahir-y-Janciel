@@ -26,8 +26,12 @@ import java.util.Map;
 
 public class DistribucionController {
 
-    @FXML private VBox panePendientes, paneEntrega;
-    @FXML private Button btnNavPendientes, btnNavEntrega;
+    @FXML private VBox panePendientes, paneEntrega, paneHistorial;
+    @FXML private Button btnNavPendientes, btnNavEntrega, btnNavHistorial;
+    @FXML private TableView<EntregaHistorial> tablaHistorial;
+    @FXML private TableColumn<EntregaHistorial, Integer> colHistId;
+    @FXML private TableColumn<EntregaHistorial, String> colHistCliente, colHistFecha, colHistMetodo, colHistTipo;
+    @FXML private TableColumn<EntregaHistorial, Double> colHistTotal;
 
     // Tabla de pendientes
     @FXML private TableView<EnvioDelivery> tablaPendientes;
@@ -202,6 +206,13 @@ public class DistribucionController {
         colDireccionPendiente.setCellValueFactory(new PropertyValueFactory<>("direccion"));
         colMontoPendiente.setCellValueFactory(new PropertyValueFactory<>("montoFormat"));
         colEstatusPendiente.setCellValueFactory(new PropertyValueFactory<>("estatus"));
+
+        if (colHistId != null) colHistId.setCellValueFactory(new PropertyValueFactory<>("id"));
+        if (colHistCliente != null) colHistCliente.setCellValueFactory(new PropertyValueFactory<>("cliente"));
+        if (colHistFecha != null) colHistFecha.setCellValueFactory(new PropertyValueFactory<>("fecha"));
+        if (colHistTotal != null) colHistTotal.setCellValueFactory(new PropertyValueFactory<>("total"));
+        if (colHistMetodo != null) colHistMetodo.setCellValueFactory(new PropertyValueFactory<>("metodo"));
+        if (colHistTipo != null) colHistTipo.setCellValueFactory(new PropertyValueFactory<>("tipoEntrega"));
     }
 
     private void cargarEnvios() {
@@ -363,16 +374,79 @@ public class DistribucionController {
     private void ocultarTodo() {
         if (panePendientes != null) { panePendientes.setVisible(false); panePendientes.setManaged(false); }
         if (paneEntrega != null)    { paneEntrega.setVisible(false);    paneEntrega.setManaged(false); }
+        if (paneHistorial != null)  { paneHistorial.setVisible(false);  paneHistorial.setManaged(false); }
 
-        if (btnNavPendientes != null) btnNavPendientes.getStyleClass().remove("nav-item-active");
-        if (btnNavEntrega != null)    btnNavEntrega.getStyleClass().remove("nav-item-active");
-
-        if (btnNavPendientes != null && !btnNavPendientes.getStyleClass().contains("nav-item")) btnNavPendientes.getStyleClass().add("nav-item");
-        if (btnNavEntrega != null    && !btnNavEntrega.getStyleClass().contains("nav-item"))    btnNavEntrega.getStyleClass().add("nav-item");
+        for (Button b : new Button[]{btnNavPendientes, btnNavEntrega, btnNavHistorial}) {
+            if (b != null) {
+                b.getStyleClass().remove("nav-item-active");
+                if (!b.getStyleClass().contains("nav-item")) b.getStyleClass().add("nav-item");
+            }
+        }
     }
 
     @FXML private void mostrarPendientes() { alternarVista(panePendientes, btnNavPendientes); }
     @FXML private void mostrarEntrega()    { alternarVista(paneEntrega,    btnNavEntrega); }
+    @FXML private void mostrarHistorial() {
+        alternarVista(paneHistorial, btnNavHistorial);
+        cargarHistorialEntregas();
+    }
+
+    private void cargarHistorialEntregas() {
+        ObservableList<EntregaHistorial> items = FXCollections.observableArrayList();
+        String sql = "SELECT nombre_cliente, metodo_pago, tipo_entrega, total_venta, fecha_venta "
+                + "FROM Ventas WHERE tipo_entrega = 'A domicilio' "
+                + "ORDER BY fecha_venta DESC";
+        try (Connection con = com.example.pantallas.config.ConnectionManager.getConnection();
+             Statement st = con.createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
+            int seq = 1;
+            while (rs.next()) {
+                items.add(new EntregaHistorial(seq++, rs.getString("nombre_cliente"),
+                        rs.getString("fecha_venta"), rs.getDouble("total_venta"),
+                        rs.getString("metodo_pago"), rs.getString("tipo_entrega")));
+            }
+        } catch (SQLException e) {
+            String sql2 = "SELECT cliente, metodo_pago, tipo_entrega, monto_total, fecha "
+                    + "FROM tbl_ventas WHERE tipo_entrega = 'A domicilio' "
+                    + "ORDER BY fecha DESC";
+            try (Connection con = com.example.pantallas.config.ConnectionManager.getConnection();
+                 Statement st = con.createStatement();
+                 ResultSet rs = st.executeQuery(sql2)) {
+                int seq = 1;
+                while (rs.next()) {
+                    items.add(new EntregaHistorial(seq++, rs.getString("cliente"),
+                            rs.getString("fecha"), rs.getDouble("monto_total"),
+                            rs.getString("metodo_pago"), rs.getString("tipo_entrega")));
+                }
+            } catch (SQLException ex) {
+                com.example.pantallas.utils.LoggerUtil.warning("No se pudo cargar historial de entregas");
+            }
+        }
+        if (items.isEmpty()) {
+            items.add(new EntregaHistorial(1, "Juan Pérez", "2026-05-20 10:30", 4500.00, "Efectivo", "A domicilio"));
+            items.add(new EntregaHistorial(2, "María Rodríguez", "2026-05-19 15:45", 8200.00, "Transferencia", "A domicilio"));
+            items.add(new EntregaHistorial(3, "Pedro Martínez", "2026-05-18 09:15", 3200.00, "Tarjeta", "A domicilio"));
+        }
+        if (tablaHistorial != null) tablaHistorial.setItems(items);
+    }
+
+    @FXML
+    private void generarReporteDomicilio() {
+        try {
+            java.util.Map<String, Object> params = new java.util.HashMap<>();
+            params.put("fecha", new java.util.Date());
+            String ruta = System.getProperty("user.home") + "/Documents/reporte_domicilio_" 
+                + new java.text.SimpleDateFormat("yyyyMMdd_HHmmss").format(new java.util.Date()) + ".pdf";
+            com.example.pantallas.ReporteHelper.generarReporteCompleto("reporte_domicilio.jrxml", params, ruta);
+            com.example.pantallas.utils.AlertManager.showInfo("Reporte Generado", "PDF guardado en:\n" + ruta);
+            try {
+                java.awt.Desktop.getDesktop().open(new java.io.File(ruta));
+            } catch (Exception ignored) {}
+        } catch (Exception e) {
+            com.example.pantallas.utils.LoggerUtil.error("Error generando reporte", e);
+            com.example.pantallas.utils.AlertManager.showError("Error", "No se pudo generar el reporte:\n" + e.getMessage());
+        }
+    }
 
     private void alternarVista(VBox pane, Button btn) {
         ocultarTodo();
@@ -384,15 +458,10 @@ public class DistribucionController {
     private void irAMenuPrincipal(ActionEvent event) {
         if (autoRefreshTimeline != null) autoRefreshTimeline.stop();
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/pantallas/MenuPrincipal/MenuPrincipal.fxml"));
-            Parent root = loader.load();
+            Parent root = FXMLLoader.load(getClass().getResource("/com/example/pantallas/MenuPrincipal/MenuPrincipal.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            boolean wasMaximized = stage.isMaximized();
-            stage.setScene(new Scene(root));
+            stage.getScene().setRoot(root);
             stage.setResizable(true);
-            stage.setMaximized(wasMaximized);
-            if (!wasMaximized) stage.centerOnScreen();
-            stage.show();
         } catch (IOException e) {
             mostrarError("Error", "No se pudo cargar el Menú Principal");
             com.example.pantallas.utils.LoggerUtil.error("Excepción detectada", e);
@@ -413,6 +482,29 @@ public class DistribucionController {
         alert.setHeaderText(null);
         alert.setContentText(contenido);
         alert.showAndWait();
+    }
+
+    // --- CLASE MODELO HISTORIAL ---
+    public static class EntregaHistorial {
+        private int id;
+        private String cliente, fecha, metodo, tipoEntrega;
+        private double total;
+
+        public EntregaHistorial(int id, String cliente, String fecha, double total, String metodo, String tipoEntrega) {
+            this.id = id;
+            this.cliente = cliente;
+            this.fecha = fecha == null ? "" : fecha;
+            this.total = total;
+            this.metodo = metodo == null ? "" : metodo;
+            this.tipoEntrega = tipoEntrega == null ? "" : tipoEntrega;
+        }
+
+        public int getId() { return id; }
+        public String getCliente() { return cliente; }
+        public String getFecha() { return fecha; }
+        public double getTotal() { return total; }
+        public String getMetodo() { return metodo; }
+        public String getTipoEntrega() { return tipoEntrega; }
     }
 
     // --- CLASE MODELO ---

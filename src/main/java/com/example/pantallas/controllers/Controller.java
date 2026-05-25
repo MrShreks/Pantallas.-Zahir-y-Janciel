@@ -32,8 +32,7 @@ public class Controller {
     private void cambiarEscena(ActionEvent event, String fxml) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource(fxml));
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        stage.setScene(scene);
+        stage.getScene().setRoot(root);
         stage.show();
     }
 }

@@ -43,7 +43,10 @@
                                 <HBox spacing="30">
                                     <VBox spacing="10" HBox.hgrow="ALWAYS">
                                         <Label styleClass="label-bold" text="CANTIDAD PROYECTADA" />
-                                        <TextField fx:id="txtCantidadProyectada" prefHeight="50.0" promptText="Ej. 50" style="-fx-font-size: 18;" />
+                                        <HBox spacing="10">
+                                            <TextField fx:id="txtCantidadProyectada" prefHeight="50.0" promptText="Ej. 50" style="-fx-font-size: 18;" HBox.hgrow="ALWAYS" />
+                                            <ComboBox fx:id="cbUnidadMedida" prefHeight="50.0" prefWidth="150.0" promptText="Unidad..." />
+                                        </HBox>
                                     </VBox>
                                     <VBox spacing="10" HBox.hgrow="ALWAYS">
                                         <Label styleClass="label-bold" text="VARIEDAD DE QUESO" />

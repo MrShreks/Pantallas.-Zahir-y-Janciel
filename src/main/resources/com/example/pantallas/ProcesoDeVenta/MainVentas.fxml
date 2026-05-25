@@ -21,6 +21,7 @@
 
                 <VBox spacing="10" style="-fx-padding: 0 20;">
                     <Button fx:id="btnNavFacturacion" maxWidth="Infinity" onAction="#mostrarVentas" styleClass="nav-item-active" text="🛒 Punto de Venta" />
+                    <Button fx:id="btnNavHistorial" maxWidth="Infinity" onAction="#mostrarHistorialVentas" styleClass="nav-item" text="📋 Historial del Mes" />
                 </VBox>
 
                 <Region VBox.vgrow="ALWAYS" />
@@ -156,6 +157,23 @@
                             <Button maxWidth="Infinity" onAction="#guardarCliente" prefHeight="55" styleClass="btn-primary" text="REGISTRAR CLIENTE" />
                             <Button maxWidth="Infinity" onAction="#mostrarVentas" styleClass="btn-danger" style="-fx-background-color: transparent; -fx-text-fill: -danger;" text="DESCARTAR" />
                         </VBox>
+                    </VBox>
+                </VBox>
+
+                <!-- VISTA: HISTORIAL DE VENTAS DEL MES -->
+                <VBox fx:id="viewHistorial" managed="false" spacing="20.0" visible="false" style="-fx-padding: 30;">
+                    <Label styleClass="title-large" text="Historial de Ventas del Mes" />
+                    <VBox spacing="10" styleClass="card-premium" VBox.vgrow="ALWAYS">
+                        <TableView fx:id="tablaHistorialVentas" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="colHvId" prefWidth="60" text="ID" />
+                                <TableColumn fx:id="colHvCliente" prefWidth="200" text="Cliente" />
+                                <TableColumn fx:id="colHvFecha" prefWidth="150" text="Fecha" />
+                                <TableColumn fx:id="colHvTotal" prefWidth="130" text="Total" />
+                                <TableColumn fx:id="colHvMetodo" prefWidth="150" text="Método de Pago" />
+                                <TableColumn fx:id="colHvTipo" prefWidth="150" text="Tipo Entrega" />
+                            </columns>
+                        </TableView>
                     </VBox>
                 </VBox>
             </children>

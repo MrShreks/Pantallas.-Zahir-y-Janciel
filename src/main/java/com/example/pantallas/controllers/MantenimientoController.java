@@ -190,33 +190,22 @@ public class MantenimientoController {
     @FXML
     private void volverMenu(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/pantallas/MenuPrincipal/MenuPrincipal.fxml"));
-            Parent root = loader.load();
+            Parent root = FXMLLoader.load(getClass().getResource("/com/example/pantallas/MenuPrincipal/MenuPrincipal.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            boolean wasMaximized = stage.isMaximized();
-            stage.setScene(new Scene(root));
+            stage.getScene().setRoot(root);
             stage.setResizable(true);
-            stage.setMaximized(wasMaximized);
-            if (!wasMaximized) stage.centerOnScreen();
-            stage.show();
         } catch (IOException e) {
             com.example.pantallas.utils.LoggerUtil.error("Excepción detectada", e);
         }
     }
-
-    // Método duplicado oculltarTodo() eliminado — era un typo de ocultarTodo()
 
     @FXML
     private void irAMenuPrincipal(ActionEvent event) {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/com/example/pantallas/MenuPrincipal/MenuPrincipal.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            boolean wasMaximized = stage.isMaximized();
-            stage.setScene(new Scene(root));
+            stage.getScene().setRoot(root);
             stage.setResizable(true);
-            stage.setMaximized(wasMaximized);
-            if (!wasMaximized) stage.centerOnScreen();
-            stage.show();
         } catch (Exception e) {
             com.example.pantallas.utils.LoggerUtil.error("Error al navegar: " + e.getMessage());
         }

@@ -25,9 +25,7 @@
                 </VBox>
                 
                 <VBox spacing="10" style="-fx-padding: 0 20;">
-                    <Button maxWidth="Infinity" onAction="#abrirDashboard" styleClass="nav-item" text="🏠 Dashboard" />
-                    <Button maxWidth="Infinity" styleClass="nav-item" text="📊 Reportes" />
-                    <Button maxWidth="Infinity" styleClass="nav-item" text="⚙️Ajustes" />
+                    <Button fx:id="btnDashboard" maxWidth="Infinity" onAction="#abrirDashboard" styleClass="nav-item" text="🏠 Dashboard" />
                 </VBox>
 
                 <Region VBox.vgrow="ALWAYS" />

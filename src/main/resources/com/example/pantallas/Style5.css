@@ -5,9 +5,6 @@
 
 .root {
     /* Paleta de Colores Primaria */
-    -primary-dark: #061e12;
-    -primary: #0f3d24;
-    -primary-light: #1e7a46;
     -primary-dark: #5c3d1a;
     -primary: #b8860b;
     -primary-light: #daa520;
@@ -504,5 +501,24 @@ RadioButton {
 
 .scroll-bar:vertical .track {
     -fx-background-color: transparent;
+}
+
+/* === MENU MODULE BUTTONS === */
+.card-premium.button {
+    -fx-transition: all 0.3s ease;
+    -fx-cursor: hand;
+}
+
+.card-premium.button:hover {
+    -fx-translate-y: -6;
+    -fx-effect: dropshadow(gaussian, rgba(184, 134, 11, 0.25), 25, 0, 0, 12);
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
+}
+
+.card-premium.button:pressed {
+    -fx-translate-y: -2;
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
 }
 

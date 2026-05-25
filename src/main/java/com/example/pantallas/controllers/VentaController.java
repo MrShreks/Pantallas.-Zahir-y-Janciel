@@ -5,6 +5,10 @@ import com.example.pantallas.config.ConnectionManager;
 import com.example.pantallas.models.ItemQueso;
 import com.example.pantallas.utils.AlertManager;
 import com.example.pantallas.utils.LoggerUtil;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -16,6 +20,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
@@ -30,8 +36,31 @@ import java.util.Map;
 
 public class VentaController {
 
-    @FXML private VBox viewVentas, viewEnvios, viewCobro, viewNuevoCliente;
-    @FXML private Button btnNavVentas, btnNavEnvios, btnNavFacturacion;
+    private static final Map<String, String> IMAGEN_QUESOS = new HashMap<>();
+    static {
+        IMAGEN_QUESOS.put("queso crema", "QuesoCrema");
+        IMAGEN_QUESOS.put("queso mozzarella", "QuesoMozarrella");
+        IMAGEN_QUESOS.put("queso blanco", "QuesoBlancoFresco");
+        IMAGEN_QUESOS.put("queso blanco fresco", "QuesoBlancoFresco");
+        IMAGEN_QUESOS.put("queso parmesano", "QuesoParmesano");
+        IMAGEN_QUESOS.put("queso gouda", "QuesoGouda");
+        IMAGEN_QUESOS.put("queso camembert", "QuesoCamembert");
+        IMAGEN_QUESOS.put("queso de bola", "QuesoDeBola");
+        IMAGEN_QUESOS.put("queso ricotta", "QuesoRicota");
+        IMAGEN_QUESOS.put("queso romano", "QuesoRomano");
+        IMAGEN_QUESOS.put("queso campesino", "QuesoCampesino");
+        IMAGEN_QUESOS.put("queso amarillo", "QuesoAmarillo");
+        IMAGEN_QUESOS.put("queso cheddar", "QuesoCheddar");
+        IMAGEN_QUESOS.put("queso de hoja", "QuesoDeHoja");
+        IMAGEN_QUESOS.put("queso suizo", "QuesoSuizo");
+    }
+
+    @FXML private VBox viewVentas, viewEnvios, viewCobro, viewNuevoCliente, viewHistorial;
+    @FXML private Button btnNavVentas, btnNavEnvios, btnNavFacturacion, btnNavHistorial;
+    @FXML private TableView<VentaHistorial> tablaHistorialVentas;
+    @FXML private TableColumn<VentaHistorial, Integer> colHvId;
+    @FXML private TableColumn<VentaHistorial, String> colHvCliente, colHvFecha, colHvMetodo, colHvTipo;
+    @FXML private TableColumn<VentaHistorial, Double> colHvTotal;
     @FXML private FlowPane productGrid;
     @FXML private Label lblProductoSeleccionado;
     @FXML private TextField txtCantidad, txtPrecioUnitario, txtImporteTotal, txtEfectivoRecibido;
@@ -89,6 +118,13 @@ public class VentaController {
 
         if (productGrid != null && cbCliente != null) cargarDatosDesdeDB();
         else if (productGrid != null) cargarProductosDesdeDB();
+
+        if (colHvId != null) colHvId.setCellValueFactory(new PropertyValueFactory<>("id"));
+        if (colHvCliente != null) colHvCliente.setCellValueFactory(new PropertyValueFactory<>("cliente"));
+        if (colHvFecha != null) colHvFecha.setCellValueFactory(new PropertyValueFactory<>("fecha"));
+        if (colHvTotal != null) colHvTotal.setCellValueFactory(new PropertyValueFactory<>("total"));
+        if (colHvMetodo != null) colHvMetodo.setCellValueFactory(new PropertyValueFactory<>("metodo"));
+        if (colHvTipo != null) colHvTipo.setCellValueFactory(new PropertyValueFactory<>("tipoEntrega"));
     }
 
     private void cargarProductosDesdeDB() {
@@ -123,6 +159,7 @@ public class VentaController {
 
     private void cargarProductos(Connection con) {
         productGrid.getChildren().clear();
+        Set<String> agregados = new HashSet<>();
         String[][] tablas = {
             {"Productos", "nombre_producto", "precio_venta_base", "stock_actual", "nombre_producto LIKE '%Queso%' AND activo = 1"},
             {"tbl_productos", "nombre", "precio_libra", "cantidad_stock", "nombre LIKE '%Queso%'"},
@@ -134,6 +171,7 @@ public class VentaController {
             try (Statement st = con.createStatement(); ResultSet rs = st.executeQuery(sql)) {
                 while (rs.next()) {
                     String nombre = rs.getString(t[1]);
+                    if (!agregados.add(nombre)) continue;
                     double precio = rs.getDouble(t[2]);
                     double stock = rs.getDouble(t[3]);
                     productGrid.getChildren().add(crearCardProducto(nombre, precio, stock));
@@ -150,8 +188,9 @@ public class VentaController {
     private void cargarProductosDemo() {
         String[][] demo = {
             {"Queso Crema", "280.00", "15"},
-            {"Queso Mozzarella", "320.00", "8"},
+            {"Queso Mozzarella", "320.00", "5"},
             {"Queso Blanco", "250.00", "12"},
+            {"Queso Blanco Fresco", "270.00", "10"},
             {"Queso Amarillo", "290.00", "5"},
             {"Queso Cheddar", "350.00", "0"},
             {"Queso Parmesano", "420.00", "3"},
@@ -170,18 +209,43 @@ public class VentaController {
     private VBox crearCardProducto(String nombre, double precioLibra, double stock) {
         VBox card = new VBox(8);
         card.setPrefWidth(170);
-        card.setPrefHeight(210);
+        card.setPrefHeight(240);
         card.setPadding(new Insets(12));
         card.setAlignment(Pos.TOP_CENTER);
         card.setStyle("-fx-background-color: " + COLOR_CARD_BG + "; -fx-background-radius: 16; -fx-border-radius: 16; -fx-border-color: #e2e8f0; -fx-border-width: 1;");
         card.setEffect(new DropShadow(8, 0, 2, Color.rgb(0, 0, 0, 0.08)));
 
-        StackPane iconArea = new StackPane();
-        iconArea.setPrefSize(60, 60);
-        iconArea.setStyle("-fx-background-color: #f0f4f8; -fx-background-radius: 30;");
-        Label icon = new Label("🧀");
-        icon.setStyle("-fx-font-size: 28;");
-        iconArea.getChildren().add(icon);
+        ImageView imgView = new ImageView();
+        imgView.setFitWidth(80);
+        imgView.setFitHeight(80);
+        imgView.setPreserveRatio(true);
+        String imgBase = IMAGEN_QUESOS.get(nombre.trim().toLowerCase());
+        if (imgBase != null) {
+            Image loaded = null;
+            String[] exts = {".png", ".jpg", ".jpeg", ".webp"};
+            for (String ext : exts) {
+                String path = "/imagenes quesos/" + imgBase + ext;
+                try (java.io.InputStream is = getClass().getResourceAsStream(path)) {
+                    if (is != null) {
+                        Image img = new Image(is);
+                        if (!img.isError()) { loaded = img; break; }
+                    }
+                } catch (Exception ignored) {}
+            }
+            if (loaded != null) imgView.setImage(loaded);
+            else imgView = null;
+        }
+        if (imgView == null) {
+            StackPane fallback = new StackPane();
+            fallback.setPrefSize(60, 60);
+            fallback.setStyle("-fx-background-color: #f0f4f8; -fx-background-radius: 30;");
+            Label icon = new Label("🧀");
+            icon.setStyle("-fx-font-size: 28;");
+            fallback.getChildren().add(icon);
+            card.getChildren().add(fallback);
+        } else {
+            card.getChildren().add(imgView);
+        }
 
         Label lblNombre = new Label(nombre);
         lblNombre.setWrapText(true);
@@ -209,7 +273,7 @@ public class VentaController {
 
         btnAdd.setMaxWidth(Double.MAX_VALUE);
 
-        card.getChildren().addAll(iconArea, lblNombre, lblPrecio, lblStock, btnAdd);
+        card.getChildren().addAll(lblNombre, lblPrecio, lblStock, btnAdd);
         VBox.setVgrow(btnAdd, Priority.ALWAYS);
         return card;
     }
@@ -240,6 +304,51 @@ public class VentaController {
     private void mostrarEnvios() { alternarVista(viewEnvios, btnNavEnvios); }
 
     @FXML
+    private void mostrarHistorialVentas() {
+        alternarVista(viewHistorial, btnNavHistorial);
+        cargarHistorialVentas();
+    }
+
+    private void cargarHistorialVentas() {
+        ObservableList<VentaHistorial> items = FXCollections.observableArrayList();
+        String sql = "SELECT nombre_cliente, metodo_pago, tipo_entrega, total_venta, fecha_venta "
+                + "FROM Ventas WHERE fecha_venta >= DATEADD(MONTH, DATEDIFF(MONTH, 0, GETDATE()), 0) "
+                + "ORDER BY fecha_venta DESC";
+        try (Connection con = ConnectionManager.getConnection();
+             Statement st = con.createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
+            int seq = 1;
+            while (rs.next()) {
+                items.add(new VentaHistorial(seq++, rs.getString("nombre_cliente"),
+                        rs.getString("fecha_venta"), rs.getDouble("total_venta"),
+                        rs.getString("metodo_pago"), rs.getString("tipo_entrega")));
+            }
+        } catch (SQLException e) {
+            String sql2 = "SELECT cliente, metodo_pago, tipo_entrega, monto_total, fecha "
+                    + "FROM tbl_ventas WHERE fecha >= DATEADD(MONTH, DATEDIFF(MONTH, 0, GETDATE()), 0) "
+                    + "ORDER BY fecha DESC";
+            try (Connection con = ConnectionManager.getConnection();
+                 Statement st = con.createStatement();
+                 ResultSet rs = st.executeQuery(sql2)) {
+                int seq = 1;
+                while (rs.next()) {
+                    items.add(new VentaHistorial(seq++, rs.getString("cliente"),
+                            rs.getString("fecha"), rs.getDouble("monto_total"),
+                            rs.getString("metodo_pago"), rs.getString("tipo_entrega")));
+                }
+            } catch (SQLException ex) {
+                LoggerUtil.warning("No se pudo cargar historial de ventas");
+            }
+        }
+        if (items.isEmpty()) {
+            items.add(new VentaHistorial(1, "Juan Pérez", "2026-05-20 10:30", 4500.00, "Efectivo", "En tienda (Caja)"));
+            items.add(new VentaHistorial(2, "María Rodríguez", "2026-05-19 15:45", 8200.00, "Transferencia", "A domicilio"));
+            items.add(new VentaHistorial(3, "Supermercado XYZ", "2026-05-18 09:15", 15600.00, "Crédito", "En tienda (Caja)"));
+        }
+        if (tablaHistorialVentas != null) tablaHistorialVentas.setItems(items);
+    }
+
+    @FXML
     private void mostrarNuevoCliente() {
         txtNewNombre.clear();
         txtNewRnc.clear();
@@ -248,12 +357,12 @@ public class VentaController {
     }
 
     private void alternarVista(VBox vista, Button btn) {
-        for (VBox v : new VBox[]{viewVentas, viewEnvios, viewCobro, viewNuevoCliente}) {
+        for (VBox v : new VBox[]{viewVentas, viewEnvios, viewCobro, viewNuevoCliente, viewHistorial}) {
             if (v != null) { v.setVisible(false); v.setManaged(false); }
         }
         vista.setVisible(true); vista.setManaged(true);
         if (btn != null) {
-            for (Button b : new Button[]{btnNavVentas, btnNavEnvios, btnNavFacturacion}) {
+            for (Button b : new Button[]{btnNavVentas, btnNavEnvios, btnNavFacturacion, btnNavHistorial}) {
                 if (b != null) {
                     b.getStyleClass().remove("nav-item-active");
                     if (!b.getStyleClass().contains("nav-item")) b.getStyleClass().add("nav-item");
@@ -612,17 +721,34 @@ public class VentaController {
     @FXML
     private void volverAlMenu() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/pantallas/MenuPrincipal/MenuPrincipal.fxml"));
-            Parent root = loader.load();
+            Parent root = FXMLLoader.load(getClass().getResource("/com/example/pantallas/MenuPrincipal/MenuPrincipal.fxml"));
             Stage stage = (Stage) tablaVentas.getScene().getWindow();
-            boolean wasMaximized = stage.isMaximized();
-            stage.setScene(new Scene(root));
+            stage.getScene().setRoot(root);
             stage.setResizable(true);
-            stage.setMaximized(wasMaximized);
-            if (!wasMaximized) stage.centerOnScreen();
-            stage.show();
         } catch (Exception e) {
             LoggerUtil.error("Error al regresar al menu principal", e);
         }
+    }
+
+    public static class VentaHistorial {
+        private int id;
+        private String cliente, fecha, metodo, tipoEntrega;
+        private double total;
+
+        public VentaHistorial(int id, String cliente, String fecha, double total, String metodo, String tipoEntrega) {
+            this.id = id;
+            this.cliente = cliente;
+            this.fecha = fecha;
+            this.total = total;
+            this.metodo = metodo;
+            this.tipoEntrega = tipoEntrega;
+        }
+
+        public int getId() { return id; }
+        public String getCliente() { return cliente; }
+        public String getFecha() { return fecha; }
+        public double getTotal() { return total; }
+        public String getMetodo() { return metodo; }
+        public String getTipoEntrega() { return tipoEntrega; }
     }
 }
