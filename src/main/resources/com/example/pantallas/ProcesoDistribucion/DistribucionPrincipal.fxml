@@ -136,7 +136,14 @@
                                 <TableColumn fx:id="colHistTipo" prefWidth="150" text="Tipo Entrega" />
                             </columns>
                         </TableView>
-                        <Button onAction="#generarReporteDomicilio" maxWidth="Infinity" prefHeight="45" styleClass="btn-primary" text="📄 GENERAR REPORTE DE VENTAS A DOMICILIO" />
+                        <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-padding: 10 0;">
+                            <Label styleClass="label-bold" text="Período del reporte:" />
+                            <ComboBox fx:id="cbPeriodoReporte" prefWidth="180" />
+                            <DatePicker fx:id="dpFechaDesde" promptText="Desde..." style="-fx-pref-width: 150;" visible="false" managed="false" />
+                            <DatePicker fx:id="dpFechaHasta" promptText="Hasta..." style="-fx-pref-width: 150;" visible="false" managed="false" />
+                            <Region HBox.hgrow="ALWAYS" />
+                            <Button onAction="#generarReporteDomicilio" prefHeight="45" styleClass="btn-primary" text="📄 GENERAR REPORTE" />
+                        </HBox>
                     </VBox>
                 </VBox>
 

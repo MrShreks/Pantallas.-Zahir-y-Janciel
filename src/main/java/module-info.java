@@ -3,12 +3,13 @@ module com.example.pantallas {
     requires javafx.fxml;
     requires java.sql;
     requires com.microsoft.sqlserver.jdbc;
-    requires jasperreports;
     requires java.desktop;
     requires java.xml;
     requires com.zaxxer.hikari;
     requires org.slf4j;
     requires jbcrypt;
+    requires jasperreports;
+    requires org.apache.pdfbox;
     
     opens com.example.pantallas to javafx.fxml;
     opens com.example.pantallas.controllers to javafx.fxml;

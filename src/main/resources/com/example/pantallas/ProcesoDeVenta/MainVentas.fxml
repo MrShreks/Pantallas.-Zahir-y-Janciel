@@ -40,7 +40,8 @@
                         <!-- Cliente selector -->
                         <HBox alignment="CENTER_LEFT" spacing="15">
                             <Label styleClass="label-bold" text="CLIENTE:" />
-                            <ComboBox fx:id="cbCliente" prefWidth="300.0" promptText="Seleccionar cliente..." />
+                            <TextField fx:id="txtBuscarCliente" promptText="Buscar cliente..." onKeyReleased="#buscarCliente" onMouseClicked="#onClickBuscarCliente" HBox.hgrow="ALWAYS" maxWidth="300" />
+                            <Label fx:id="lblClienteOk" text="" style="-fx-text-fill: #16a34a; -fx-font-weight: 700; -fx-font-size: 13;" visible="false" managed="false" />
                             <Button onAction="#mostrarNuevoCliente" styleClass="btn-primary" text="+ NUEVO" />
                             <Region HBox.hgrow="ALWAYS" />
                         </HBox>

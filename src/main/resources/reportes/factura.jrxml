@@ -51,8 +51,8 @@
                 <textElement textAlignment="Center">
                     <font fontName="Segoe UI" size="24" isBold="true"/>
                 </textElement>
-                <text><![CDATA[QUESERÍA SANTIAGUERO]]></text>
-            </staticText>
+                <text><![CDATA[Fábrica de Queso]]></text>
+    </staticText>
 
             <staticText>
                 <reportElement x="0" y="48" width="555" height="18" mode="Opaque" backcolor="#0f3d24" forecolor="#c9a96e"/>

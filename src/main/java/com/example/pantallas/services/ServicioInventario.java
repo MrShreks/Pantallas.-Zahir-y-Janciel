@@ -415,6 +415,11 @@ public final class ServicioInventario {
 
     public static Map<String, Double> obtenerVentasMensuales(int ultimosMeses) {
         Map<String, Double> ventas = new LinkedHashMap<>();
+        LocalDate hoy = LocalDate.now();
+        for (int i = ultimosMeses - 1; i >= 0; i--) {
+            LocalDate mes = hoy.minusMonths(i);
+            ventas.put(String.format("%02d/%d", mes.getMonthValue(), mes.getYear()), 0.0);
+        }
         String[][] tablas = {
             {"Ventas", "fecha_venta", "total_venta"},
             {"tbl_ventas", "fecha", "monto_total"},
@@ -431,7 +436,9 @@ public final class ServicioInventario {
                 boolean hay = false;
                 while (rs.next()) {
                     String label = String.format("%02d/%d", rs.getInt("mes"), rs.getInt("anio"));
-                    ventas.put(label, rs.getDouble("total"));
+                    if (ventas.containsKey(label)) {
+                        ventas.put(label, rs.getDouble("total"));
+                    }
                     hay = true;
                 }
                 if (hay) return ventas;

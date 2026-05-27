@@ -56,6 +56,11 @@ public class DistribucionController {
     @FXML private VBox paneDetalleEntrega;
     @FXML private Label lblEntregaDireccion;
 
+    // Filtro de fecha para reporte
+    @FXML private ComboBox<String> cbPeriodoReporte;
+    @FXML private DatePicker dpFechaDesde;
+    @FXML private DatePicker dpFechaHasta;
+
     private final ObservableList<EnvioDelivery> listaPendientes = FXCollections.observableArrayList();
     private final Map<String, EnvioDelivery> enviosEnRutaMap = new HashMap<>();
     private Timeline autoRefreshTimeline;
@@ -65,10 +70,12 @@ public class DistribucionController {
     public void initialize() {
         configurarTablas();
         crearTablaEnviosSiNoExiste();
+        com.example.pantallas.services.FabricaBase.asegurarTablaVentas();
         cargarEnvios();
         iniciarAutoRefresh();
         configurarSeleccionTabla();
         configurarComboEntrega();
+        configurarFiltroReporte();
     }
 
     /** Listener en la tabla: al seleccionar un envío muestra el panel de detalle de ubicación. */
@@ -157,6 +164,18 @@ public class DistribucionController {
         } catch (Exception e) {
             mostrarError("Error al abrir mapa", "No se pudo abrir Google Maps.\n" + e.getMessage());
         }
+    }
+
+    private void configurarFiltroReporte() {
+        if (cbPeriodoReporte == null) return;
+        cbPeriodoReporte.setItems(FXCollections.observableArrayList(
+                "Hoy", "Esta semana", "Este mes", "Últimos 2 meses", "Últimos 6 meses", "Personalizado"));
+        cbPeriodoReporte.setValue("Este mes");
+        cbPeriodoReporte.valueProperty().addListener((obs, old, val) -> {
+            boolean personalizado = "Personalizado".equals(val);
+            if (dpFechaDesde != null) { dpFechaDesde.setVisible(personalizado); dpFechaDesde.setManaged(personalizado); }
+            if (dpFechaHasta != null) { dpFechaHasta.setVisible(personalizado); dpFechaHasta.setManaged(personalizado); }
+        });
     }
 
     /** Crea tbl_envios si no existe Y agrega columnas faltantes si ya existe sin ellas. */
@@ -333,8 +352,8 @@ public class DistribucionController {
         if (envio == null) return;
 
         String sqlUpdateEnvio  = "UPDATE tbl_envios SET estatus = 'Entregado' WHERE id_envio = ?";
-        String sqlInsertVenta  = "INSERT INTO Ventas (nombre_cliente, metodo_pago, tipo_entrega, total_venta, fecha_venta) VALUES (?, 'Efectivo', 'Delivery', ?, GETDATE())";
-        String sqlInsertVentaAlt = "INSERT INTO tbl_ventas (cliente, metodo_pago, tipo_entrega, monto_total, fecha) VALUES (?, 'Efectivo', 'Delivery', ?, GETDATE())";
+        String sqlInsertVenta  = "INSERT INTO Ventas (nombre_cliente, metodo_pago, tipo_entrega, total_venta, fecha_venta) VALUES (?, 'Efectivo', 'A domicilio', ?, GETDATE())";
+        String sqlInsertVentaAlt = "INSERT INTO tbl_ventas (cliente, metodo_pago, tipo_entrega, monto_total, fecha) VALUES (?, 'Efectivo', 'A domicilio', ?, GETDATE())";
 
         try (Connection con = com.example.pantallas.config.ConnectionManager.getConnection()) {
 
@@ -393,29 +412,29 @@ public class DistribucionController {
 
     private void cargarHistorialEntregas() {
         ObservableList<EntregaHistorial> items = FXCollections.observableArrayList();
-        String sql = "SELECT nombre_cliente, metodo_pago, tipo_entrega, total_venta, fecha_venta "
-                + "FROM Ventas WHERE tipo_entrega = 'A domicilio' "
-                + "ORDER BY fecha_venta DESC";
+        String sql = "SELECT cliente, metodo_pago, tipo_entrega, monto_total, fecha "
+                + "FROM tbl_ventas WHERE tipo_entrega = 'A domicilio' "
+                + "ORDER BY fecha DESC";
         try (Connection con = com.example.pantallas.config.ConnectionManager.getConnection();
              Statement st = con.createStatement();
              ResultSet rs = st.executeQuery(sql)) {
             int seq = 1;
             while (rs.next()) {
-                items.add(new EntregaHistorial(seq++, rs.getString("nombre_cliente"),
-                        rs.getString("fecha_venta"), rs.getDouble("total_venta"),
+                items.add(new EntregaHistorial(seq++, rs.getString("cliente"),
+                        rs.getString("fecha"), rs.getDouble("monto_total"),
                         rs.getString("metodo_pago"), rs.getString("tipo_entrega")));
             }
         } catch (SQLException e) {
-            String sql2 = "SELECT cliente, metodo_pago, tipo_entrega, monto_total, fecha "
-                    + "FROM tbl_ventas WHERE tipo_entrega = 'A domicilio' "
-                    + "ORDER BY fecha DESC";
+            String sql2 = "SELECT nombre_cliente, metodo_pago, tipo_entrega, total_venta, fecha_venta "
+                    + "FROM Ventas WHERE tipo_entrega = 'A domicilio' "
+                    + "ORDER BY fecha_venta DESC";
             try (Connection con = com.example.pantallas.config.ConnectionManager.getConnection();
                  Statement st = con.createStatement();
                  ResultSet rs = st.executeQuery(sql2)) {
                 int seq = 1;
                 while (rs.next()) {
-                    items.add(new EntregaHistorial(seq++, rs.getString("cliente"),
-                            rs.getString("fecha"), rs.getDouble("monto_total"),
+                    items.add(new EntregaHistorial(seq++, rs.getString("nombre_cliente"),
+                            rs.getString("fecha_venta"), rs.getDouble("total_venta"),
                             rs.getString("metodo_pago"), rs.getString("tipo_entrega")));
                 }
             } catch (SQLException ex) {
@@ -430,18 +449,211 @@ public class DistribucionController {
         if (tablaHistorial != null) tablaHistorial.setItems(items);
     }
 
+    private String obtenerFiltroFecha() {
+        String periodo = cbPeriodoReporte.getValue();
+        if (periodo == null || "Personalizado".equals(periodo)) {
+            if (dpFechaDesde != null && dpFechaHasta != null
+                && dpFechaDesde.getValue() != null && dpFechaHasta.getValue() != null) {
+                return " AND fecha >= '" + dpFechaDesde.getValue() + "' AND fecha < DATEADD(DAY, 1, '" + dpFechaHasta.getValue() + "')";
+            }
+            if (dpFechaDesde != null && dpFechaDesde.getValue() != null) {
+                return " AND fecha >= '" + dpFechaDesde.getValue() + "'";
+            }
+            if (dpFechaHasta != null && dpFechaHasta.getValue() != null) {
+                return " AND fecha < DATEADD(DAY, 1, '" + dpFechaHasta.getValue() + "')";
+            }
+            return "";
+        }
+        switch (periodo) {
+            case "Hoy":
+                return " AND CAST(fecha AS DATE) = CAST(GETDATE() AS DATE)";
+            case "Esta semana":
+                return " AND fecha >= DATEADD(WEEK, DATEDIFF(WEEK, 0, GETDATE()), 0)";
+            case "Este mes":
+                return " AND MONTH(fecha) = MONTH(GETDATE()) AND YEAR(fecha) = YEAR(GETDATE())";
+            case "Últimos 2 meses":
+                return " AND fecha >= DATEADD(MONTH, -2, GETDATE())";
+            case "Últimos 6 meses":
+                return " AND fecha >= DATEADD(MONTH, -6, GETDATE())";
+            default:
+                return "";
+        }
+    }
+
     @FXML
     private void generarReporteDomicilio() {
-        try {
-            java.util.Map<String, Object> params = new java.util.HashMap<>();
-            params.put("fecha", new java.util.Date());
-            String ruta = System.getProperty("user.home") + "/Documents/reporte_domicilio_" 
-                + new java.text.SimpleDateFormat("yyyyMMdd_HHmmss").format(new java.util.Date()) + ".pdf";
-            com.example.pantallas.ReporteHelper.generarReporteCompleto("reporte_domicilio.jrxml", params, ruta);
+        String ruta = System.getProperty("user.home") + "/Documents/reporte_domicilio_"
+            + new java.text.SimpleDateFormat("yyyyMMdd_HHmmss").format(new java.util.Date()) + ".pdf";
+        String filtroFecha = obtenerFiltroFecha();
+        try (Connection con = com.example.pantallas.config.ConnectionManager.getConnection()) {
+            java.util.List<Object[]> filas = new java.util.ArrayList<>();
+            double totalGlobal = 0;
+            String sql = "SELECT cliente, metodo_pago, tipo_entrega, monto_total, fecha FROM tbl_ventas WHERE tipo_entrega = 'A domicilio'"
+                + filtroFecha + " ORDER BY fecha DESC";
+            try (Statement st = con.createStatement(); ResultSet rs = st.executeQuery(sql)) {
+                while (rs.next()) {
+                    filas.add(new Object[]{rs.getString("cliente"), rs.getString("metodo_pago"),
+                            rs.getString("tipo_entrega"), rs.getDouble("monto_total"),
+                            rs.getTimestamp("fecha")});
+                    totalGlobal += rs.getDouble("monto_total");
+                }
+            }
+            if (filas.isEmpty()) {
+                try {
+                    String sql2 = "SELECT nombre_cliente, metodo_pago, tipo_entrega, total_venta, fecha_venta FROM Ventas WHERE tipo_entrega = 'A domicilio'"
+                        + filtroFecha.replace("fecha", "fecha_venta") + " ORDER BY fecha_venta DESC";
+                    try (Statement st = con.createStatement(); ResultSet rs = st.executeQuery(sql2)) {
+                        while (rs.next()) {
+                            filas.add(new Object[]{rs.getString("nombre_cliente"), rs.getString("metodo_pago"),
+                                    rs.getString("tipo_entrega"), rs.getDouble("total_venta"),
+                                    rs.getTimestamp("fecha_venta")});
+                            totalGlobal += rs.getDouble("total_venta");
+                        }
+                    }
+                } catch (SQLException ignored) {
+                    // La tabla Ventas puede no existir; los datos se guardan en tbl_ventas
+                }
+            }
+
+            try (org.apache.pdfbox.pdmodel.PDDocument doc = new org.apache.pdfbox.pdmodel.PDDocument()) {
+                org.apache.pdfbox.pdmodel.PDPage page = new org.apache.pdfbox.pdmodel.PDPage(org.apache.pdfbox.pdmodel.common.PDRectangle.A4);
+                doc.addPage(page);
+                float pw = page.getMediaBox().getWidth();
+                float ml = 40, mr = 40;
+                float cw = pw - ml - mr;
+                float y = page.getMediaBox().getHeight() - 20;
+
+                org.apache.pdfbox.pdmodel.PDPageContentStream cs = null;
+                try {
+                    cs = new org.apache.pdfbox.pdmodel.PDPageContentStream(doc, page);
+                    // Header background
+                    cs.setNonStrokingColor(new java.awt.Color(92, 61, 26));
+                    cs.addRect(0, y - 60, pw, 75);
+                    cs.fill();
+
+                    // Title
+                    cs.setNonStrokingColor(new java.awt.Color(218, 165, 32));
+                    cs.beginText();
+                    cs.setFont(org.apache.pdfbox.pdmodel.font.PDType1Font.HELVETICA_BOLD, 20);
+                    cs.newLineAtOffset(ml, y - 35);
+                    cs.showText("REPORTE DE VENTAS A DOMICILIO");
+                    cs.endText();
+
+                    // Subtitle
+                    cs.setNonStrokingColor(new java.awt.Color(224, 184, 120));
+                    cs.beginText();
+                    cs.setFont(org.apache.pdfbox.pdmodel.font.PDType1Font.HELVETICA, 10);
+                    cs.newLineAtOffset(ml, y - 52);
+                    cs.showText("Queser\u00eda Santiaguero - M\u00f3dulo de Distribuci\u00f3n");
+                    cs.endText();
+
+                    y -= 85;
+
+                    // Column widths
+                    float[] cws = {120, 90, 60, 120, cw - 120 - 90 - 60 - 120 - 10};
+                    String[] headers = {"CLIENTE", "M\u00c9TODO PAGO", "TIPO", "FECHA", "TOTAL"};
+                    float x0 = ml;
+
+                    // Header row
+                    cs.setNonStrokingColor(new java.awt.Color(184, 134, 11));
+                    cs.addRect(x0, y - 18, cw, 18);
+                    cs.fill();
+                    cs.setNonStrokingColor(new java.awt.Color(255, 255, 255));
+                    cs.beginText();
+                    cs.setFont(org.apache.pdfbox.pdmodel.font.PDType1Font.HELVETICA_BOLD, 9);
+                    float cx = x0;
+                    for (int i = 0; i < headers.length; i++) {
+                        cs.newLineAtOffset(cx - (cx == x0 ? 0 : 0), i == 0 ? 0 : 0);
+                        // Reset position for each header
+                        cs.endText();
+                        cs.beginText();
+                        cs.newLineAtOffset(cx + 4, y - 14);
+                        cs.showText(headers[i]);
+                        cx += cws[i] + 2;
+                    }
+                    cs.endText();
+                    y -= 22;
+
+                    // Data rows
+                    java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm");
+                    java.text.DecimalFormat df = new java.text.DecimalFormat("#,##0.00");
+                    for (int i = 0; i < filas.size(); i++) {
+                        Object[] f = filas.get(i);
+                        if (y < 60) {
+                            cs.close();
+                            page = new org.apache.pdfbox.pdmodel.PDPage(org.apache.pdfbox.pdmodel.common.PDRectangle.A4);
+                            doc.addPage(page);
+                            y = page.getMediaBox().getHeight() - 30;
+                            cs = new org.apache.pdfbox.pdmodel.PDPageContentStream(doc, page);
+                        }
+                        if (i % 2 == 0) {
+                            cs.setNonStrokingColor(new java.awt.Color(245, 242, 237));
+                            cs.addRect(x0, y - 16, cw, 16);
+                            cs.fill();
+                        }
+                        cs.setNonStrokingColor(new java.awt.Color(0, 0, 0));
+                        cs.beginText();
+                        cs.setFont(org.apache.pdfbox.pdmodel.font.PDType1Font.HELVETICA, 8);
+                        cx = x0 + 4;
+                        String[] vals = {(String) f[0], (String) f[1], (String) f[2],
+                                f[4] != null ? sdf.format((java.util.Date) f[4]) : "",
+                                "RD$ " + df.format((Double) f[3])};
+                        for (int j = 0; j < vals.length; j++) {
+                            cs.newLineAtOffset(cx - (j == 0 ? x0 + 4 : cx), (j == 0) ? y - 12 : 0);
+                            cs.endText();
+                            cs.beginText();
+                            cs.newLineAtOffset(cx, y - 12);
+                            if (j == 4) {
+                                float tw = org.apache.pdfbox.pdmodel.font.PDType1Font.HELVETICA.getStringWidth(vals[j]) / 1000f * 8;
+                                cs.newLineAtOffset(cws[j] - tw - 4, 0);
+                            }
+                            cs.showText(vals[j]);
+                            cx += cws[j] + 2;
+                        }
+                        cs.endText();
+                        y -= 18;
+                    }
+
+                    // Line before total
+                    y -= 4;
+                    cs.setStrokingColor(new java.awt.Color(184, 134, 11));
+                    cs.setLineWidth(1.5f);
+                    cs.moveTo(x0, y);
+                    cs.lineTo(x0 + cw, y);
+                    cs.stroke();
+                    y -= 4;
+
+                    // Total row
+                    cs.setNonStrokingColor(new java.awt.Color(92, 61, 26));
+                    cs.beginText();
+                    cs.setFont(org.apache.pdfbox.pdmodel.font.PDType1Font.HELVETICA_BOLD, 11);
+                    cs.newLineAtOffset(x0 + 4, y - 14);
+                    cs.showText("TOTAL GENERAL");
+                    cs.endText();
+                    String totalStr = "RD$ " + df.format(totalGlobal);
+                    float tw = org.apache.pdfbox.pdmodel.font.PDType1Font.HELVETICA_BOLD.getStringWidth(totalStr) / 1000f * 11;
+                    cs.beginText();
+                    cs.setFont(org.apache.pdfbox.pdmodel.font.PDType1Font.HELVETICA_BOLD, 11);
+                    cs.newLineAtOffset(x0 + cw - tw - 4, y - 14);
+                    cs.showText(totalStr);
+                    cs.endText();
+
+                    // Footer
+                    cs.setNonStrokingColor(new java.awt.Color(148, 163, 184));
+                    cs.beginText();
+                    cs.setFont(org.apache.pdfbox.pdmodel.font.PDType1Font.HELVETICA, 8);
+                    cs.newLineAtOffset(ml, 30);
+                    cs.showText("Generado el: " + new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm").format(new java.util.Date()));
+                    cs.endText();
+                } finally {
+                    if (cs != null) cs.close();
+                }
+
+                doc.save(ruta);
+            }
+
             com.example.pantallas.utils.AlertManager.showInfo("Reporte Generado", "PDF guardado en:\n" + ruta);
-            try {
-                java.awt.Desktop.getDesktop().open(new java.io.File(ruta));
-            } catch (Exception ignored) {}
+            try { Desktop.getDesktop().open(new java.io.File(ruta)); } catch (Exception ignored) {}
         } catch (Exception e) {
             com.example.pantallas.utils.LoggerUtil.error("Error generando reporte", e);
             com.example.pantallas.utils.AlertManager.showError("Error", "No se pudo generar el reporte:\n" + e.getMessage());

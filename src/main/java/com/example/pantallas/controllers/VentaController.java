@@ -3,11 +3,10 @@ package com.example.pantallas.controllers;
 import com.example.pantallas.ReporteHelper;
 import com.example.pantallas.config.ConnectionManager;
 import com.example.pantallas.models.ItemQueso;
+import com.example.pantallas.services.FabricaBase;
 import com.example.pantallas.utils.AlertManager;
 import com.example.pantallas.utils.LoggerUtil;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -25,6 +24,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 import java.awt.Desktop;
 import java.io.File;
@@ -66,7 +66,11 @@ public class VentaController {
     @FXML private TextField txtCantidad, txtPrecioUnitario, txtImporteTotal, txtEfectivoRecibido;
     @FXML private TextField txtLibras;
     @FXML private TextField txtNewNombre, txtNewRnc, txtNewTel;
-    @FXML private ComboBox<String> cbUnidadMedida, cbCliente, comboMetodoPago;
+    @FXML private TextField txtBuscarCliente;
+    @FXML private Label lblClienteOk;
+    private Popup popupClientes;
+    private ListView<String> lvClientes;
+    @FXML private ComboBox<String> cbUnidadMedida, comboMetodoPago;
     @FXML private Label lblTotal, lblMontoCobro, lblDevuelta;
     @FXML private TableView<ItemQueso> tablaVentas;
     @FXML private TableColumn<ItemQueso, String> colDesc;
@@ -79,13 +83,16 @@ public class VentaController {
     @FXML private TextField txtDireccion, txtApartamento, txtSector, txtCiudad;
 
     private final ObservableList<ItemQueso> listaVenta = FXCollections.observableArrayList();
+    private final ObservableList<String> todosClientes = FXCollections.observableArrayList();
     private String productoSeleccionado;
+    private String clienteSeleccionado;
     private static final String COLOR_CARD_BG = "#ffffff";
     private static final String COLOR_STOCK_OK = "#2ecc71";
     private static final String COLOR_NO_STOCK = "#e74c3c";
 
     @FXML
     public void initialize() {
+        FabricaBase.asegurarTablaVentas();
         if (colDesc != null) colDesc.setCellValueFactory(new PropertyValueFactory<>("descripcion"));
         if (colLbs != null) colLbs.setCellValueFactory(new PropertyValueFactory<>("libras"));
         if (colPre != null) colPre.setCellValueFactory(new PropertyValueFactory<>("precioUnitario"));
@@ -94,7 +101,7 @@ public class VentaController {
         if (tablaVentas != null) tablaVentas.setItems(listaVenta);
 
         if (comboMetodoPago != null)
-            comboMetodoPago.setItems(FXCollections.observableArrayList("Efectivo", "Tarjeta de Débito", "Tarjeta de Crédito"));
+            comboMetodoPago.setItems(FXCollections.observableArrayList("Efectivo", "Tarjeta de Débito", "Tarjeta de Crédito", "Transferencia"));
         if (cbUnidadMedida != null)
             cbUnidadMedida.setItems(FXCollections.observableArrayList("Libras", "Kilos", "Paquete"));
 
@@ -113,11 +120,12 @@ public class VentaController {
 
         if (tgEntrega != null) tgEntrega.selectedToggleProperty().addListener((obs, oldVal, newVal) -> toggleEnvio());
 
-        if (cbCliente != null) cargarDatosDesdeDB();
         if (cbRepartidor != null) cargarRepartidores();
 
-        if (productGrid != null && cbCliente != null) cargarDatosDesdeDB();
-        else if (productGrid != null) cargarProductosDesdeDB();
+        crearPopupClientes();
+        cargarClientes();
+        configurarBusquedaClientes();
+        if (productGrid != null) cargarProductosDesdeDB();
 
         if (colHvId != null) colHvId.setCellValueFactory(new PropertyValueFactory<>("id"));
         if (colHvCliente != null) colHvCliente.setCellValueFactory(new PropertyValueFactory<>("cliente"));
@@ -143,17 +151,103 @@ public class VentaController {
         panelEnvio.setDisable(!envio);
     }
 
-    private void cargarDatosDesdeDB() {
+    private void crearPopupClientes() {
+        lvClientes = new ListView<>();
+        lvClientes.setPrefHeight(150);
+        lvClientes.setStyle("-fx-background-radius: 0 0 8 8; -fx-border-color: #0f3d24; -fx-border-width: 0 1 1 1; -fx-border-radius: 0 0 8 8; -fx-font-size: 13;");
+
+        popupClientes = new Popup();
+        popupClientes.setAutoHide(true);
+        popupClientes.getContent().add(lvClientes);
+
+        lvClientes.getSelectionModel().selectedItemProperty().addListener((obs, old, sel) -> {
+            if (sel != null) {
+                clienteSeleccionado = sel;
+                txtBuscarCliente.setText(sel);
+                txtBuscarCliente.setStyle("-fx-background-color: #f0fdf4; -fx-border-color: #16a34a; -fx-border-width: 2; -fx-font-weight: bold;");
+                lblClienteOk.setText("✔ " + sel);
+                lblClienteOk.setVisible(true);
+                lblClienteOk.setManaged(true);
+                popupClientes.hide();
+            }
+        });
+    }
+
+    private void cargarClientes() {
+        todosClientes.clear();
         try (Connection con = ConnectionManager.getConnection()) {
-            cbCliente.getItems().clear();
-            if (!cargarLista(con, cbCliente, "Clientes", "nombre_cliente")
-                && !cargarLista(con, cbCliente, "tbl_clientes", "nombre")) {
+            if (!cargarClientesDeTabla(con, "Clientes", "nombre_cliente")
+                && !cargarClientesDeTabla(con, "tbl_clientes", "nombre")) {
                 LoggerUtil.warning("No se encontraron clientes en la base de datos.");
             }
-            cargarProductos(con);
         } catch (SQLException e) {
-            LoggerUtil.error("Error cargando datos para ventas", e);
-            AlertManager.showError("Error de Base de Datos", "No se pudieron cargar datos.");
+            LoggerUtil.error("Error cargando clientes", e);
+            todosClientes.addAll("Cliente A", "Cliente B", "Cliente C");
+        }
+    }
+
+    private boolean cargarClientesDeTabla(Connection con, String tabla, String columna) {
+        try (ResultSet rs = con.createStatement().executeQuery(
+                "SELECT " + columna + " AS nombre FROM " + tabla)) {
+            boolean found = false;
+            while (rs.next()) {
+                todosClientes.add(rs.getString("nombre"));
+                found = true;
+            }
+            return found;
+        } catch (SQLException e) {
+            return false;
+        }
+    }
+
+    private void configurarBusquedaClientes() {
+        // No inicializamos nada del ListView aquí, se maneja en crearPopupClientes
+    }
+
+    private void limpiarSeleccionCliente() {
+        clienteSeleccionado = null;
+        txtBuscarCliente.setStyle("");
+        txtBuscarCliente.clear();
+        lblClienteOk.setVisible(false);
+        lblClienteOk.setManaged(false);
+        popupClientes.hide();
+    }
+
+    @FXML
+    private void onClickBuscarCliente() {
+        if (clienteSeleccionado != null) {
+            limpiarSeleccionCliente();
+        }
+    }
+
+    @FXML
+    private void buscarCliente() {
+        String texto = txtBuscarCliente.getText();
+        if (clienteSeleccionado != null) {
+            clienteSeleccionado = null;
+            txtBuscarCliente.setStyle("");
+            lblClienteOk.setVisible(false);
+            lblClienteOk.setManaged(false);
+            popupClientes.hide();
+        }
+        if (texto == null || texto.trim().isEmpty()) {
+            popupClientes.hide();
+            return;
+        }
+        ObservableList<String> filtrados = FXCollections.observableArrayList();
+        String busqueda = texto.toLowerCase().trim();
+        for (String c : todosClientes) {
+            if (c.toLowerCase().contains(busqueda)) {
+                filtrados.add(c);
+            }
+        }
+        if (!filtrados.isEmpty()) {
+            lvClientes.setItems(filtrados);
+            lvClientes.setPrefWidth(txtBuscarCliente.getWidth());
+            popupClientes.show(txtBuscarCliente, txtBuscarCliente.localToScreen(0, txtBuscarCliente.getHeight()).getX(),
+                txtBuscarCliente.localToScreen(0, txtBuscarCliente.getHeight()).getY());
+        } else {
+            popupClientes.hide();
         }
     }
 
@@ -311,29 +405,29 @@ public class VentaController {
 
     private void cargarHistorialVentas() {
         ObservableList<VentaHistorial> items = FXCollections.observableArrayList();
-        String sql = "SELECT nombre_cliente, metodo_pago, tipo_entrega, total_venta, fecha_venta "
-                + "FROM Ventas WHERE fecha_venta >= DATEADD(MONTH, DATEDIFF(MONTH, 0, GETDATE()), 0) "
-                + "ORDER BY fecha_venta DESC";
+        String sql = "SELECT cliente, metodo_pago, tipo_entrega, monto_total, fecha "
+                + "FROM tbl_ventas WHERE fecha >= DATEADD(MONTH, -6, GETDATE()) "
+                + "ORDER BY fecha DESC";
         try (Connection con = ConnectionManager.getConnection();
              Statement st = con.createStatement();
              ResultSet rs = st.executeQuery(sql)) {
             int seq = 1;
             while (rs.next()) {
-                items.add(new VentaHistorial(seq++, rs.getString("nombre_cliente"),
-                        rs.getString("fecha_venta"), rs.getDouble("total_venta"),
+                items.add(new VentaHistorial(seq++, rs.getString("cliente"),
+                        rs.getString("fecha"), rs.getDouble("monto_total"),
                         rs.getString("metodo_pago"), rs.getString("tipo_entrega")));
             }
         } catch (SQLException e) {
-            String sql2 = "SELECT cliente, metodo_pago, tipo_entrega, monto_total, fecha "
-                    + "FROM tbl_ventas WHERE fecha >= DATEADD(MONTH, DATEDIFF(MONTH, 0, GETDATE()), 0) "
-                    + "ORDER BY fecha DESC";
+            String sql2 = "SELECT nombre_cliente, metodo_pago, tipo_entrega, total_venta, fecha_venta "
+                    + "FROM Ventas WHERE fecha_venta >= DATEADD(MONTH, -6, GETDATE()) "
+                    + "ORDER BY fecha_venta DESC";
             try (Connection con = ConnectionManager.getConnection();
                  Statement st = con.createStatement();
                  ResultSet rs = st.executeQuery(sql2)) {
                 int seq = 1;
                 while (rs.next()) {
-                    items.add(new VentaHistorial(seq++, rs.getString("cliente"),
-                            rs.getString("fecha"), rs.getDouble("monto_total"),
+                    items.add(new VentaHistorial(seq++, rs.getString("nombre_cliente"),
+                            rs.getString("fecha_venta"), rs.getDouble("total_venta"),
                             rs.getString("metodo_pago"), rs.getString("tipo_entrega")));
                 }
             } catch (SQLException ex) {
@@ -444,20 +538,6 @@ public class VentaController {
         lblTotal.setText(String.format("RD$ %.2f", total));
     }
 
-    private boolean cargarLista(Connection con, ComboBox<String> combo, String tabla, String columna) {
-        try (ResultSet rs = con.createStatement().executeQuery(
-                "SELECT " + columna + " AS nombre FROM " + tabla)) {
-            boolean found = false;
-            while (rs.next()) {
-                combo.getItems().add(rs.getString("nombre"));
-                found = true;
-            }
-            return found;
-        } catch (SQLException e) {
-            return false;
-        }
-    }
-
     private void cargarRepartidores() {
         try (Connection con = ConnectionManager.getConnection()) {
             cbRepartidor.getItems().clear();
@@ -482,8 +562,9 @@ public class VentaController {
             AlertManager.showError("Metodo de Pago", "Seleccione un metodo de pago.");
             return;
         }
-        if (cbCliente.getValue() == null || cbCliente.getValue().isEmpty()) {
-            AlertManager.showError("Cliente requerido", "Seleccione un cliente antes de procesar el pago.");
+        String cliente = txtBuscarCliente.getText();
+        if (cliente == null || cliente.trim().isEmpty()) {
+            AlertManager.showError("Cliente requerido", "Busque y seleccione un cliente antes de procesar el pago.");
             return;
         }
         if (listaVenta.isEmpty()) {
@@ -504,11 +585,10 @@ public class VentaController {
         }
 
         String metodo = comboMetodoPago.getValue();
-        String tipoEntrega = esEnvio ? "Envio" : "Venta en sucursal";
+        String tipoEntrega = esEnvio ? "A domicilio" : "Venta en sucursal";
 
         try {
             String facturaNo = "VTA-" + new SimpleDateFormat("yyyyMMdd-HHmmss").format(new Date());
-            String cliente = cbCliente.getValue();
             double subtotalVal = listaVenta.stream().mapToDouble(ItemQueso::getSubtotal).sum();
             double itbisVal = subtotalVal * 0.18;
             double totalVal = subtotalVal + itbisVal;
@@ -551,7 +631,7 @@ public class VentaController {
         listaVenta.clear();
         actualizarTotal();
         limpiarCampos();
-        if (cbCliente != null) cbCliente.setValue(null);
+        limpiarSeleccionCliente();
         if (rbTienda != null) rbTienda.setSelected(true);
         if (txtDireccion != null) txtDireccion.clear();
         if (txtApartamento != null) txtApartamento.clear();
@@ -683,7 +763,7 @@ public class VentaController {
             ps.executeUpdate();
             AlertManager.showInfo("Cliente Registrado", "Cliente guardado correctamente.");
             txtNewNombre.clear(); txtNewRnc.clear(); txtNewTel.clear();
-            cargarDatosDesdeDB();
+            cargarClientes();
             mostrarVentas();
             return;
         } catch (SQLException e) {
@@ -697,7 +777,7 @@ public class VentaController {
             ps.executeUpdate();
             AlertManager.showInfo("Cliente Registrado", "Cliente guardado correctamente.");
             txtNewNombre.clear(); txtNewRnc.clear(); txtNewTel.clear();
-            cargarDatosDesdeDB();
+            cargarClientes();
             mostrarVentas();
         } catch (SQLException e2) {
             AlertManager.showError("Error al guardar cliente",

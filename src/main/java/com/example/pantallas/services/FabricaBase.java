@@ -44,6 +44,37 @@ public class FabricaBase {
         }
     }
 
+    public static void asegurarTablaVentas() {
+        String sql = "IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='tbl_ventas' AND xtype='U') "
+                + "CREATE TABLE tbl_ventas ("
+                + "id INT IDENTITY PRIMARY KEY, "
+                + "cliente VARCHAR(200), "
+                + "metodo_pago VARCHAR(50), "
+                + "tipo_entrega VARCHAR(50), "
+                + "monto_total DECIMAL(18,2), "
+                + "fecha DATETIME DEFAULT GETDATE())";
+        try (Connection con = ConnectionManager.getConnection();
+             Statement st = con.createStatement()) {
+            st.execute(sql);
+        } catch (SQLException e) {
+            com.example.pantallas.utils.LoggerUtil.error("Error creando tbl_ventas", e);
+        }
+        String[][] columnas = {
+            {"cliente", "VARCHAR(200)"},
+            {"metodo_pago", "VARCHAR(50)"},
+            {"tipo_entrega", "VARCHAR(50)"},
+            {"monto_total", "DECIMAL(18,2)"},
+            {"fecha", "DATETIME DEFAULT GETDATE()"}
+        };
+        try (Connection con = ConnectionManager.getConnection();
+             Statement st = con.createStatement()) {
+            for (String[] col : columnas) {
+                try { st.executeUpdate("ALTER TABLE tbl_ventas ADD " + col[0] + " " + col[1]); }
+                catch (Exception ignored) { }
+            }
+        } catch (Exception e) { }
+    }
+
     public static void seedFactoresConversion() {
         String sql = "IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='tbl_factores_conversion' AND xtype='U') "
                 + "CREATE TABLE tbl_factores_conversion ("
